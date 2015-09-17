@@ -2,12 +2,10 @@
 class Sphero
 {
 public:
-	
 	Sphero(){
 		health = 100;
 		movementSpeed = 1;
 	};
-	
 	~Sphero();
 
 	int getHealth(){
