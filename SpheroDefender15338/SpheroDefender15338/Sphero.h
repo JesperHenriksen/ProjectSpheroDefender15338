@@ -3,7 +3,11 @@ class Sphero
 {
 public:
 	
-	Sphero();
+	Sphero(){
+		health = 100;
+		movementSpeed = 1;
+	};
+	
 	~Sphero();
 
 	int getHealth(){
@@ -16,11 +20,16 @@ public:
 		return movementSpeed;
 	}
 	void setMovementSpeed(double newMovementSpeed){
-		movementSpeed = newMovementSpeed;
+		if (newMovementSpeed <= 1 || newMovementSpeed >= -1)
+			movementSpeed = newMovementSpeed;
 	}
+
+	void startSpheroTracking(){}
+	void turnLeft(){}
+	void turnRight(){}
 private:
-	int health = 0;
-	double movementSpeed = 1;
+	int health; //health is the health of the sphero. At 0 the sphero looses the game
+	double movementSpeed; //A scalar for the movement speed. 1 is full speed and -1
 
 };
 
