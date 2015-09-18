@@ -21,9 +21,15 @@
     <ClCompile Include="Sphero.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SpheroCoordinate.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sphero.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SpheroCoordinate.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
