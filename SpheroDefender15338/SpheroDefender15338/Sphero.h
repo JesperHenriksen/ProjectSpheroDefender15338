@@ -33,8 +33,7 @@ public:
 	!*/
 	void turnRight();
 private:
-	int health; //health is the health of the sphero. At 0 the sphero looses the game
-	int test; //DONT USE THIS  
+	int health; //health is the health of the sphero. At 0 the sphero looses the game.
 	double movementSpeed; //A scalar for the movement speed. 1 is full speed and -1
 
 };
