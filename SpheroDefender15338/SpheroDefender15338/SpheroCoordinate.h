@@ -2,6 +2,7 @@
 class SpheroCoordinate
 {
 public:
+	SpheroCoordinate();
 	SpheroCoordinate(int xCoord,int yCoord);
 	~SpheroCoordinate();
 	/*!

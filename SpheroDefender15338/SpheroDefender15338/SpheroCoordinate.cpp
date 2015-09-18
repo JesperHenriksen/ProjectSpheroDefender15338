@@ -1,6 +1,6 @@
 #include "SpheroCoordinate.h"
 
-
+SpheroCoordinate::SpheroCoordinate(){}
 SpheroCoordinate::SpheroCoordinate(int xCoord, int yCoord)
 {
 	setXCoord(xCoord);
