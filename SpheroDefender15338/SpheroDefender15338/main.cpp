@@ -1,4 +1,5 @@
 #include "opencv2/opencv.hpp"
+#include "Sphero.h"
 
 using namespace cv;
 
