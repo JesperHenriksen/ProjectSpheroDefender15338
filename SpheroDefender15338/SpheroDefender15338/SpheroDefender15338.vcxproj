@@ -11,11 +11,13 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Battlefield.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Sphero.cpp" />
     <ClCompile Include="SpheroCoordinate.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Battlefield.h" />
     <ClInclude Include="Sphero.h" />
     <ClInclude Include="SpheroCoordinate.h" />
   </ItemGroup>
