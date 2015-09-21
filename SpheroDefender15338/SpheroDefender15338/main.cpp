@@ -5,30 +5,32 @@
 using namespace cv;
 using namespace std;
 
-
-Mat selectChannel(Mat frame);
+Mat getImageFromWebcam(VideoCapture cap);
+Mat negateChannel(Mat frame);
 void displayChannel(Mat channel[], int channelNegate1, int channelNegate2, Mat frame, String color);
 
 int main(int, char)
 {
 	VideoCapture cap(0); // open the default camera
 	if (!cap.isOpened()) // check if we succeeded
-		return -1;
+		return 0;
 	Mat original;
+	Mat frame;
+	cap >> frame; // get a new frame from camera
+	//thread getImageThread (getImageFromWebcam,cap);
+	cvtColor(frame, original, CV_8U); // RGB 8-Bit Color image
 	Mat channel[3], red[3], green[3], blue[3];
-	bool gR = true, rR = true, bR = true;
-	for (;;)
+	//bool gR = true, rR = true, bR = true;
+	/*for (;;)
 	{
-		Mat frame;
-		cap >> frame; // get a new frame from camera
 		//cvtColor(frame, edges, CV_BGR2GRAY); //greyscale
-		cvtColor(frame, original, CV_8U); // RGB 8-Bit Color image
+
 		//displayChannel(red,0,1,frame,"red");
 		//displayChannel(blue, 1, 2, frame, "Blue");
 		//displayChannel( green, 0, 2, frame, "Green");
 		if (waitKey(30) >= 0)
 			break;
-	}
+	}*/
 	// the camera will be deinitialized automatically in VideoCapture destructor
 	return 0;
 }
@@ -37,13 +39,14 @@ void displayChannel(Mat channel[], int channelNegate1, int channelNegate2, Mat f
 {
 	Mat newFrame = frame;
 	split(newFrame, channel);
-	channel[channelNegate1] = selectChannel(newFrame);
-	channel[channelNegate2] = selectChannel(newFrame);
+	channel[channelNegate1] = negateChannel(newFrame);
+	channel[channelNegate2] = negateChannel(newFrame);
 	merge(channel, 3, newFrame);
 	imshow(color, newFrame);
+	
 }
 
-Mat selectChannel(Mat frame){
+Mat negateChannel(Mat frame){
 	Mat newFrame = frame;
 	return Mat::zeros(newFrame.rows, newFrame.cols, CV_8UC1);
 }
