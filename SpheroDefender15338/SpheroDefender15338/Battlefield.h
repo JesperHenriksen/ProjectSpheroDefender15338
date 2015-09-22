@@ -1,5 +1,4 @@
 #pragma once
-#pragma once
 #include "Utility.h"
 #include "SpheroCoordinate.h"
 class Battlefield : public Utility
