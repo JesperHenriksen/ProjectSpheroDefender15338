@@ -18,10 +18,8 @@ void doesSpheroGetHit(){
 
 }
 
-SpheroCoordinate sendContinuesSpheroPosition(){
-	SpheroCoordinate h;
-	h.getYCoord;
-	h.getXCoord;
+SpheroCoordinate sendContinuesSpheroPosition( SpheroCoordinate hej){
+	return hej;
 }
 
 void spheroOutOfBounds(SpheroCoordinate){

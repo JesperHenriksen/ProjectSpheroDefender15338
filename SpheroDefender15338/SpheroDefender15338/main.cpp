@@ -21,16 +21,15 @@ int main(int, char)
 	cvtColor(frame, original, CV_8U); // RGB 8-Bit Color image
 	Mat channel[3], red[3], green[3], blue[3];
 	//bool gR = true, rR = true, bR = true;
-	/*for (;;)
+	for (;;)
 	{
 		//cvtColor(frame, edges, CV_BGR2GRAY); //greyscale
-
-		//displayChannel(red,0,1,frame,"red");
+		displayChannel(red,0,1,frame,"red");
 		//displayChannel(blue, 1, 2, frame, "Blue");
 		//displayChannel( green, 0, 2, frame, "Green");
 		if (waitKey(30) >= 0)
 			break;
-	}*/
+	}
 	// the camera will be deinitialized automatically in VideoCapture destructor
 	return 0;
 }
