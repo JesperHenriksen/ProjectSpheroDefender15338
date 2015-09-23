@@ -18,8 +18,8 @@ void doesSpheroGetHit(){
 
 }
 
-SpheroCoordinate sendContinuesSpheroPosition(){
-	
+SpheroCoordinate sendContinuesSpheroPosition( SpheroCoordinate hej){
+	return hej;
 }
 
 void spheroOutOfBounds(SpheroCoordinate){

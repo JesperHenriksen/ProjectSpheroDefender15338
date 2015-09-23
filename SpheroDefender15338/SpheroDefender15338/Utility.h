@@ -1,46 +1,39 @@
+#pragma once
 #include <string>
 #include <ctime>
-using namespace std;
+
 class Utility{
+private:
+	int score;
+	clock_t timer;
+	static struct leaderboard {
+		int score = 0;
+		char name = ' ';
+		char playerType = ' ';
+	};
 public:
 	/*!
 		Returns the leaderboard.
 	!*/
-	void getLeaderboad(){};
+	void getLeaderboard(struct leaderboard);
 	/*!
 		Returns the score value
 	!*/
-	int getScore(){
-		return score;
-	}
+	int getScore();
 	/*!
 		Returns the timer object
 	!*/
-	clock_t getTimer(){
-		return timer;
-	}
+	clock_t getTimer();
 	/*!
 		Resets the leaderboard.
 	!*/
-	void resetLeaderboard(){
-		leaderboard lb;
-		lb.score = 0;
-		lb.name = "";
-		lb.playerType = "";
-	}
+	void resetLeaderboard();
 	/*!
 		Resets the game.
 	!*/
-	virtual void resetGame(){}
-	virtual void startGame(){}
-	virtual void gameOver(){}
+	virtual void resetGame() = 0;
+	virtual void startGame() = 0;
+	virtual void gameOver() = 0;
 
-private:
-	static struct leaderboard{
-		int score;
-		string name;
-		string playerType;
-	};
-	int score;
-	clock_t timer;
+
 };

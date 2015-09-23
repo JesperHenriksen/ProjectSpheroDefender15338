@@ -24,7 +24,6 @@ int main(int, char)
 	for (;;)
 	{
 		//cvtColor(frame, edges, CV_BGR2GRAY); //greyscale
-
 		displayChannel(red,0,1,frame,"red");
 		//displayChannel(blue, 1, 2, frame, "Blue");
 		//displayChannel( green, 0, 2, frame, "Green");
