@@ -13,12 +13,13 @@
   <ItemGroup>
     <ClCompile Include="Battlefield.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Minimap.cpp" />
     <ClCompile Include="Sphero.cpp" />
     <ClCompile Include="SpheroCoordinate.cpp" />
-    <ClCompile Include="Utility.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Battlefield.h" />
+    <ClInclude Include="Minimap.h" />
     <ClInclude Include="Sphero.h" />
     <ClInclude Include="SpheroCoordinate.h" />
     <ClInclude Include="Utility.h" />
