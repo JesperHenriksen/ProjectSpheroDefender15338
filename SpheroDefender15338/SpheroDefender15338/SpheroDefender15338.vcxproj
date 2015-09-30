@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Battlefield.cpp" />
+    <ClCompile Include="CameraFeed.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Minimap.cpp" />
     <ClCompile Include="Sphero.cpp" />
@@ -19,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Battlefield.h" />
+    <ClInclude Include="CameraFeed.h" />
     <ClInclude Include="Minimap.h" />
     <ClInclude Include="Sphero.h" />
     <ClInclude Include="SpheroCoordinate.h" />

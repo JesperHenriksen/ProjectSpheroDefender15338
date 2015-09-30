@@ -6,10 +6,6 @@
 using namespace cv;
 using namespace std;
 
-Mat getImageFromWebcam(VideoCapture cap);
-Mat negateChannel(Mat frame);
-void displayChannel(Mat channel[], int channelNegate1, int channelNegate2, Mat frame, String color);
-
 int main(int, char)
 {
 	Minimap minimap;
@@ -37,20 +33,7 @@ int main(int, char)
 	return 0;
 }
 
-void displayChannel(Mat channel[], int channelNegate1, int channelNegate2, Mat frame, String color) 
-{
-	Mat newFrame = frame;
-	split(newFrame, channel);
-	channel[channelNegate1] = negateChannel(newFrame);
-	channel[channelNegate2] = negateChannel(newFrame);
-	merge(channel, 3, newFrame);
-	imshow(color, newFrame);
-}
 
-Mat negateChannel(Mat frame){
-	Mat newFrame = frame;
-	return Mat::zeros(newFrame.rows, newFrame.cols, CV_8UC1);
-}
 
 
 /*imshow("Original", original);
