@@ -27,3 +27,4 @@ int SpheroCoordinate::getXCoord(){
 int SpheroCoordinate::getYCoord(){
 	return this->yCoord;
 }
+void SpheroCoordinate::startSpheroTracking(){}

@@ -5,6 +5,7 @@ public:
 	SpheroCoordinate();
 	SpheroCoordinate(int xCoord,int yCoord);
 	~SpheroCoordinate();
+	
 	/*!
 		Returns the Y coordinate value.
 	!*/
@@ -21,6 +22,11 @@ public:
 		Sets the X coordinate value.
 	!*/
 	void setXCoord(int xCoord);
+	/*!
+		Start tracking of sphero on the Battlefield. This starts a thread that continues sends Sphero coordinates.
+	!*/
+	void startSpheroTracking();
+
 private:
 	int xCoord; //X coordinate of the Sphero.
 	int yCoord; //Y coordinate of the Sphero.

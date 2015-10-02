@@ -5,6 +5,7 @@ class Sphero : public SpheroCoordinate
 public:
 	Sphero();
 	~Sphero();
+	
 	/*!
 		Returns Health value of the Sphero
 	!*/
@@ -14,27 +15,16 @@ public:
 	!*/
 	void setHealth(int newHealth);
 	/*!
-		Returns the Movement Speed Scalar value of the Sphero.
+		Kill of the sphero.
 	!*/
-	double getMovementSpeed();
+	void death();
 	/*!
-		Sets the Movement Speed Scalar value of the Sphero
+		Checks if the sphero is dead
 	!*/
-	void setMovementSpeed(double newMovementSpeed);
-	/*!
-		Start tracking of sphero on the Battlefield. This starts a thread that continues sends Sphero coordinates.
-	!*/
-	void startSpheroTracking();
-	/*!
-		Turn the Sphero left.
-	!*/
-	void turnLeft();
-	/*!
-		Turn the Sphero right.
-	!*/
-	void turnRight();
+	bool isDead();
+
 private:
-	int health; //health is the health of the sphero. At 0 the sphero looses the game.
-	double movementSpeed; //A scalar for the movement speed. 1 is full speed and -1
+	int startingHealth; //The health of the sphero at the beginning.
+	int currentHealth; //The health of the sphero during the game.
 };
 
