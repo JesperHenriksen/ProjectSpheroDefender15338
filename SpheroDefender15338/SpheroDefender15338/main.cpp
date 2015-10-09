@@ -10,11 +10,13 @@ using namespace std;
 int main(int, char)
 {
 	CameraFeed camfeed; 
-	Mat frame;
-	frame = camfeed.getImageFromWebcam(0);
-	frame = camfeed.convertRGBtoGS(frame);
-	frame = camfeed.segmentImage(frame);
+	//Mat frame;
+	//frame = camfeed.getImageFromWebcam(0);
+	//frame = camfeed.convertRGBtoGS(frame);
+	//frame = camfeed.segmentImage(frame);
 	//imshow("test", frame);
+	Minimap hej;
+	hej.segmentImage();
 	waitKey(0);
 	return 0;
 }
