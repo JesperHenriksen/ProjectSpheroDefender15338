@@ -77,6 +77,8 @@ void grassFire(Mat inputImage, Mat output){
 }
 
 
+
+
 int getDirection(){
 	return 0;
 }
