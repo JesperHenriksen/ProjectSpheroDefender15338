@@ -4,8 +4,9 @@
 using namespace cv;
 using namespace std;
 
-CameraFeed::CameraFeed()
+CameraFeed::CameraFeed(int capture)
 {
+	cap.open(capture);
 }
 
 
@@ -14,11 +15,10 @@ CameraFeed::~CameraFeed()
 }
 
 Mat CameraFeed::getImageFromWebcam(int x){
-	VideoCapture capture(x);
 	Mat frame;
-	if (!capture.isOpened())
+	if (!cap.isOpened())
 		return frame;
-	capture >> frame;
+	cap >> frame;
 	return frame;
 }
 

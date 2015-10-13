@@ -4,10 +4,11 @@ using namespace cv;
 class CameraFeed
 {
 public:
-	CameraFeed();
+	CameraFeed(int capture);
 	~CameraFeed();
 	Mat convertRGBtoGS(Mat inputFrame);
 	Mat segmentImage(Mat inputFrame);
+	VideoCapture cap;
 	/**
 	@brief
 		Thresholds an Mat image based on a min value, max value with a new value.

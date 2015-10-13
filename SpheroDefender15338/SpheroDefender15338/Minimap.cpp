@@ -69,7 +69,7 @@ void grassFire(Mat inputImage, Mat output){
 				else
 					output.at<uchar>(y, x) = currentID; //otherwise set the pixel to the current id
 				if (inputImage.at<uchar>(y, x + 1) == 0) //if the next pixel is black,
-					currentID++; //increase id
+					currentID++;//increase id
 			}
 		}
 	}
