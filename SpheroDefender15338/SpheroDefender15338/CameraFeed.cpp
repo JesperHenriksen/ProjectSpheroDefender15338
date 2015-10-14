@@ -22,24 +22,13 @@ Mat CameraFeed::getImageFromWebcam(int x){
 	return frame;
 }
 
-
-/*
-Does the pixel to the left(West) have the same value as the current pixel ?
-	Yes – We are in the same region.Assign the same label to the current pixel
-	No – Check next condition
-Do both pixels to the North and West of the current pixel have the same value as the current pixel but not the same label ?
-	Yes – We know that the North and West pixels belong to the same region and must be merged.Assign the current pixel the minimum of the North and West labels, and record their equivalence relationship
-	No – Check next condition
-Does the pixel to the left(West) have a different value and the one to the North the same value as the current pixel ?
-	Yes – Assign the label of the North pixel to the current pixel
-	No – Check next condition
-Do the pixel's North and West neighbors have different pixel values than current pixel?
-	Yes – Create a new label id and assign it to the current pixel
-*/
 void CameraFeed::grassfireSecondRunthrough(Mat inputImage, Mat outputImage){
 	for (int x = inputImage.cols; x > 0; x--) {
-		for (int y = inputImage.rows; y > 0; y--) { //runs through the pixels
-			if (inputImage.at<uchar>(y, x) == inputImage.at<uchar>(y, x - 1)){
+		for (int y = inputImage.rows; y > 0; y--) { //runs through the pixels backwards
+			if (inputImage.at<uchar>(y, x) == 0){
+				continue;
+			}
+			if (inputImage.at<uchar>(y, x)){
 				inputImage.at<uchar>(y, x) = inputImage.at<uchar>(y, x - 1);
 			}
 			else if (inputImage.at<uchar>(y, x) == inputImage.at<uchar>(y, x - 1)){
