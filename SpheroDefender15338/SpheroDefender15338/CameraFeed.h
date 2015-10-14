@@ -9,6 +9,7 @@ public:
 	Mat convertRGBtoGS(Mat inputFrame);
 	Mat segmentImage(Mat inputFrame);
 	VideoCapture cap;
+	void CameraFeed::grassfireSecondRunthrough(Mat inputImage, Mat outputImage);
 	/**
 	@brief
 		Thresholds an Mat image based on a min value, max value with a new value.
