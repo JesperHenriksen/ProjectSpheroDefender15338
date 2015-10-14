@@ -14,7 +14,7 @@ CameraFeed::~CameraFeed()
 {
 }
 
-Mat CameraFeed::getImageFromWebcam(int x){
+Mat CameraFeed::getImageFromWebcam(){
 	Mat frame;
 	if (!cap.isOpened())
 		return frame;

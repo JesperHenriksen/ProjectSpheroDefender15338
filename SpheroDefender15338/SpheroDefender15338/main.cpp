@@ -9,7 +9,9 @@ using namespace std;
 
 int main(int, char)
 {
-	CameraFeed camfeed; 
+	CameraFeed camfeed(0); 
+    SpheroCoordinate spheros;
+    spheros.startSpheroTracking();  //should run in its own thread
 	//Mat frame;
 	//frame = camfeed.getImageFromWebcam(0);
 	//frame = camfeed.convertRGBtoGS(frame);

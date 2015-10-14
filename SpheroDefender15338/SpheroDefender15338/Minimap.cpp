@@ -15,10 +15,10 @@ Minimap::~Minimap()
 }
 
 void Minimap::segmentImage(){
-	CameraFeed camfeed;
+	CameraFeed camfeed(0);
 	Mat inputArrow, outputArrow, imageThreshold;
-	inputArrow = camfeed.getImageFromWebcam(0);
-	outputArrow = camfeed.getImageFromWebcam(0);
+	inputArrow = camfeed.getImageFromWebcam();
+	outputArrow = camfeed.getImageFromWebcam();
 	inputArrow = camfeed.convertRGBtoGS(inputArrow);
 	outputArrow = camfeed.convertRGBtoGS(outputArrow);
 	camfeed.thresholdImage(inputArrow, outputArrow, 60, 255, 0);
