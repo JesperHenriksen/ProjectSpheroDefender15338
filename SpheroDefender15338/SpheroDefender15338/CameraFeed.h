@@ -33,7 +33,7 @@ public:
 	 @return
 		An image taken with the webcam.
 	*/
-	Mat getImageFromWebcam(int capture);
+	Mat getImageFromWebcam();
 	/**
 	 @brief
 		Negates a given channel of a Mat
