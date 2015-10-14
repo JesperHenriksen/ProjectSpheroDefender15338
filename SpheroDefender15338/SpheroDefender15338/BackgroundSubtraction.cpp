@@ -9,8 +9,6 @@ queue<Mat> stash;
 Mat collectedBackground;
 Mat mask;
 int frameLimit = 300; //Maximum number of frames stored in queue
-int modelSize = 0;
-
 
 
 BackgroundSubtraction::BackgroundSubtraction()
@@ -28,9 +26,8 @@ void BackgroundSubtraction::averageBackground(Mat frame) {
     frame.convertTo(grayFrame, CV_16UC1);
     //add(grayFrame, model, model);
     model.push(grayFrame);
-    modelSize++;
-    for (int i = 0; i < modelSize; i++) {
-        add(model.front, collectedBackground, collectedBackground);
+    for (int i = 0; i < model.size(); i++) {
+        add(model.front(), collectedBackground, collectedBackground);
         stash.push(model.front());
         model.pop();
     }
@@ -38,20 +35,19 @@ void BackgroundSubtraction::averageBackground(Mat frame) {
 
     createMask();
         
-    if (modelSize >= frameLimit) {
+    if (model.size() >= frameLimit) {
         model.pop();
-        modelSize--;
     }
 }
 
 void BackgroundSubtraction::createMask() {
-    convertScaleAbs(collectedBackground, mask, 1.0 / model.size);
+    convertScaleAbs(collectedBackground, mask, 1.0 / model.size());
     mask.convertTo(mask, CV_8UC1);
 }
 
 Mat BackgroundSubtraction::subtractBackground(Mat frame) {
     Mat result;
-    if (modelSize >= frameLimit) {
+    if (model.size() >= frameLimit) {
         subtract(frame, mask, result);
     }
     else {
