@@ -9,7 +9,7 @@ BackgroundSubtraction::BackgroundSubtraction()
 BackgroundSubtraction::~BackgroundSubtraction()
 {
 }
-
+//
 void createMask(Mat frame) {
     Mat grayFrame;
     frame.convertTo(grayFrame, CV_8UC1);
