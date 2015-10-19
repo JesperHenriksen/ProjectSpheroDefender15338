@@ -25,7 +25,7 @@ public:
 	@param output
 		The output Mat matrix
 	*/
-	void CameraFeed::grassFire(Mat inputImage, Mat output);
+	Mat CameraFeed::grassFire(Mat inputImage);
 	/**
 	@brief
 		Thresholds an Mat image based on a min value, max value with a new value.
@@ -75,6 +75,9 @@ private:
 	@param inputImage
 		inputImage is the image you want to change to be the connected blobs
 	*/
-	void CameraFeed::grassfireSecondRunthrough(Mat inputImage);
+	Mat CameraFeed::grassfireSecondRunthrough(Mat inputImage);
+	void CameraFeed::thresholdImageColor(Mat inputImage, Mat outputImage, int minThresholdRed, int maxThresholdRed, int newValueRed,
+		int minThresholdGreen, int maxThresholdGreen, int newValueGreen,
+		int minThresholdBlue, int maxThresholdBlue, int newValueBlue);
 };
 
