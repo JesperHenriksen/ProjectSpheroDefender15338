@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BackgroundSubtraction.cpp" />
     <ClCompile Include="Battlefield.cpp" />
     <ClCompile Include="CameraFeed.cpp" />
     <ClCompile Include="main.cpp" />
@@ -20,6 +21,7 @@
     <ClCompile Include="SpheroCoordinate.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BackgroundSubtraction.h" />
     <ClInclude Include="Battlefield.h" />
     <ClInclude Include="CameraFeed.h" />
     <ClInclude Include="Minimap.h" />

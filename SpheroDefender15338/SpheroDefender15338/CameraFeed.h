@@ -6,9 +6,26 @@ class CameraFeed
 public:
 	CameraFeed(int capture);
 	~CameraFeed();
+	VideoCapture cap;
+	/**
+	@brief
+		Converts RGB Mat into a greyscale Mat
+	@param inputFrame
+		The Mat that should be converted to greyscale
+	@return
+		Returns the greyscale Mat
+	*/
 	Mat convertRGBtoGS(Mat inputFrame);
 	Mat segmentImage(Mat inputFrame);
-	VideoCapture cap;
+	/**
+	@brief 
+		Blob analysis using grassfire algorithm based on a x-1 and y-1 kernel and saves this new blob analysed in output.
+	@param inputImage
+		The input Mat matrix
+	@param output
+		The output Mat matrix
+	*/
+	Mat CameraFeed::grassFire(Mat inputImage);
 	/**
 	@brief
 		Thresholds an Mat image based on a min value, max value with a new value.
@@ -32,7 +49,7 @@ public:
 	 @return
 		An image taken with the webcam.
 	*/
-	Mat getImageFromWebcam(int capture);
+	Mat getImageFromWebcam();
 	/**
 	 @brief
 		Negates a given channel of a Mat
@@ -52,6 +69,15 @@ private:
 		Input Mat frame which the channel is negated.
 	*/
 	Mat setZeroesInChannel(Mat inputFrame);
-
+	/**
+	@brief
+		Takes an inputImage checks if the blobs are connected
+	@param inputImage
+		inputImage is the image you want to change to be the connected blobs
+	*/
+	Mat CameraFeed::grassfireSecondRunthrough(Mat inputImage);
+	void CameraFeed::thresholdImageColor(Mat inputImage, Mat outputImage, int minThresholdRed, int maxThresholdRed, int newValueRed,
+		int minThresholdGreen, int maxThresholdGreen, int newValueGreen,
+		int minThresholdBlue, int maxThresholdBlue, int newValueBlue);
 };
 

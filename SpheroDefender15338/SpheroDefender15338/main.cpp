@@ -9,20 +9,21 @@ using namespace std;
 
 int main(int, char)
 {
-	CameraFeed camfeed(1); 
+	CameraFeed standardWebcam(0); 
 	Minimap minimap;
 	for (;;){
-		Mat frame;
-		frame = minimap.segmentImage(camfeed);
+		Mat frame, raw, blob;
+		raw = standardWebcam.getImageFromWebcam();
+		frame = standardWebcam.getImageFromWebcam();
+		frame = standardWebcam.convertRGBtoGS(frame);
+		standardWebcam.thresholdImage(frame, frame, 0, 100, 0);
+		standardWebcam.thresholdImage(frame, frame, 100, 230, 255);
+		standardWebcam.thresholdImage(frame,frame, 230,255,0);
 		imshow("test", frame);
+		blob = standardWebcam.grassFire(frame);
+		imshow("raw input",blob);
 		if (waitKey(30) >= 0)
 			break;
 	}
-	//Mat frame;
-	//frame = camfeed.getImageFromWebcam(0);
-	//frame = camfeed.convertRGBtoGS(frame);
-	//frame = camfeed.segmentImage(frame);
-	//imshow("test", frame);
-	waitKey(0);
 	return 0;
 }
