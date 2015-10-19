@@ -112,6 +112,27 @@ void CameraFeed::thresholdImage(Mat inputImage, Mat outputImage, int minThreshol
 	}
 }
 
+void CameraFeed::thresholdImageColor(Mat inputImage, Mat outputImage, int minThresholdRed, int maxThresholdRed, int newValueRed, 
+																	  int minThresholdGreen, int maxThresholdGreen, int newValueGreen,
+																	  int minThresholdBlue, int maxThresholdBlue, int newValueBlue){
+	for (int r = 0; r < inputImage.rows; r++){
+		for (int c = 0; c < inputImage.cols; c++){
+			if (inputImage.at<Vec3b>(r, c)[0] < maxThresholdBlue)
+				outputImage.at<Vec3b>(r, c)[0] = newValueBlue;
+			else
+				outputImage.at<Vec3b>(r, c)[0] = inputImage.at<Vec3b>(r, c)[0];
+			if (inputImage.at<Vec3b>(r, c)[1] < maxThresholdGreen)
+				outputImage.at<Vec3b>(r, c)[1] = newValueGreen;
+			else
+				outputImage.at<Vec3b>(r, c)[1] = inputImage.at<Vec3b>(r, c)[1];
+			if (inputImage.at<Vec3b>(r, c)[2] < maxThresholdRed)
+				outputImage.at<Vec3b>(r, c)[2] = newValueRed;
+			else
+				outputImage.at<Vec3b>(r, c)[2] = inputImage.at<Vec3b>(r, c)[1];
+		}
+	}
+}
+
 Mat CameraFeed::negateChannel(int channelNegate1, Mat frame)
 {
 	Mat newFrame = frame;
@@ -123,6 +144,7 @@ Mat CameraFeed::negateChannel(int channelNegate1, Mat frame)
 }
 
 Mat CameraFeed::setZeroesInChannel(Mat inputFrame){
-	Mat newFrame = inputFrame;
+	Mat newFrame;
+	inputFrame.copyTo(newFrame);
 	return Mat::zeros(newFrame.rows, newFrame.cols, CV_8UC1);
 }

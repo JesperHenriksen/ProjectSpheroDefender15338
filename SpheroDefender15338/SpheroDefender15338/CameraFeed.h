@@ -76,5 +76,8 @@ private:
 		inputImage is the image you want to change to be the connected blobs
 	*/
 	Mat CameraFeed::grassfireSecondRunthrough(Mat inputImage);
+	void CameraFeed::thresholdImageColor(Mat inputImage, Mat outputImage, int minThresholdRed, int maxThresholdRed, int newValueRed,
+		int minThresholdGreen, int maxThresholdGreen, int newValueGreen,
+		int minThresholdBlue, int maxThresholdBlue, int newValueBlue);
 };
 
