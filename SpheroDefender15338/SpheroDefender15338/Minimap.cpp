@@ -34,19 +34,18 @@ void Minimap::placeSpell(Mat inputImage, double xCoord, double yCoord){
 				if (x < xMin){
 					xMin = x;
 				}
-				else if (x > xMax){
+				if (x > xMax){
 					xMax = x;
 				}
 				if (y < yMin){
 					yMin = y;
 				}
-				else if (y > yMax){
+				if (y > yMax){
 					yMax = y;
 				}
 			}
 		}
 	}
-
 	xCoord = (xMax - xMin)/2;
 	yCoord = (yMax - yMin)/2;
 }
