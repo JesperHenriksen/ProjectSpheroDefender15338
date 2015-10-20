@@ -8,7 +8,9 @@ public:
     BackgroundSubtraction();
     ~BackgroundSubtraction();
 
-    void createMask(Mat frame);
+    void averageBackground(Mat frame);
+    void createMask();
+    Mat subtractBackground(Mat frame);
 private:
 
 };

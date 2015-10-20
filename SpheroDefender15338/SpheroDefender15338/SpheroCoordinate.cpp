@@ -1,6 +1,7 @@
 #include "SpheroCoordinate.h"
 #include "CameraFeed.h"
 #include "opencv2/opencv.hpp"
+#include "BackgroundSubtraction.h"
 
 using namespace cv;
 using namespace std;
@@ -35,21 +36,21 @@ int SpheroCoordinate::getYCoord(){
 }
 
 void SpheroCoordinate::startSpheroTracking(){
-    char c = cin.get();
     Mat image, background, newImage, fina;
     CameraFeed webcamImage(0);
-    CameraFeed imageThreshold();
-
+    BackgroundSubtraction backgroundSubtraction;
+    Mat bob;
     for (;;) {
-        background = webcamImage.getImageFromWebcam();
-        cvtColor(background, background, CV_RGB2GRAY);
-        //imshow("Webcam", background);
-
+        //background = webcamImage.getImageFromWebcam();
+        //cvtColor(background, background, CV_RGB2GRAY);
+        ////imshow("Webcam", background);
+        //bob = webcamImage.getImageFromWebcam();
         image = webcamImage.getImageFromWebcam();
-        cvtColor(image, image, CV_RGB2GRAY);
-        //imshow("New Image", image);
+        //cvtColor(image, image, CV_RGB2GRAY);
+        ////imshow("New Image", image);
 
-        newImage = abs(background - image);
+        //newImage = abs(background - image);
+        backgroundSubtraction.subtractBackground(image);
         webcamImage.thresholdImage(newImage, newImage, 20, 25, 20);
         medianBlur(newImage, fina, 3);
         //imshow("New Image", newImage);
