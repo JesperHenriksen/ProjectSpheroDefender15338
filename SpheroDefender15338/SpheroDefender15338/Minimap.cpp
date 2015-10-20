@@ -51,7 +51,12 @@ void Minimap::placeSpell(Mat inputImage, double xCoord, double yCoord){
 	yCoord = (yMax - yMin)/2;
 }
 
-int getDirection(){
+int getDirection(Mat inputImage, CameraFeed camfeed){
+	
+	//camfeed.thresholdImage(inputImage, inputImage, 0, 60, 255);
+	//camfeed.thresholdImage(inputImage, inputImage, 200, 255, 0);
+	//camfeed.thresholdImage(inputImage, inputImage, 60, 200, 125);
+
 	return 0;
 }
 
