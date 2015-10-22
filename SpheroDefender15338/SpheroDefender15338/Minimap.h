@@ -6,7 +6,7 @@ public:
 	Minimap();
 	~Minimap();
 	Mat segmentImage(CameraFeed camfeed);
-	void placeSpell(Mat inputFrame,double xCoord, double yCoord);
+	void placeSpell(Mat inputFrame);
 	/**
 	@brief Checks the number of pixels in the input image to see whether or not the current pixel has been "burned". If it hasn't - it burns the pixel. 
 	*/

@@ -26,7 +26,8 @@ Mat Minimap::segmentImage(CameraFeed camfeed){
 	return outputArrow;
 }
 
-void Minimap::placeSpell(Mat inputImage, double xCoord, double yCoord){
+void Minimap::placeSpell(Mat inputImage){
+	double xCoord = 0, yCoord = 0;
 	int xMin = 0, xMax = 0, yMin = 0, yMax = 0;
 	for (int x = 0; x < inputImage.cols; x++) {
 		for (int y = 0; y < inputImage.rows; y++) { //runs through the pixels
@@ -48,6 +49,7 @@ void Minimap::placeSpell(Mat inputImage, double xCoord, double yCoord){
 	}
 	xCoord = (xMax - xMin)/2;
 	yCoord = (yMax - yMin)/2;
+	cout << xCoord << "," << yCoord << " ";
 }
 
 int getDirection(Mat inputImage, CameraFeed camfeed){
