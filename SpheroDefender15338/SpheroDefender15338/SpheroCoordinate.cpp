@@ -51,7 +51,7 @@ void SpheroCoordinate::startSpheroTracking(){
 
         //newImage = abs(background - image);
         backgroundSubtraction.subtractBackground(image);
-        webcamImage.thresholdImage(newImage, newImage, 20, 25, 20);
+        webcamImage.thresholdImage(image, newImage, 20, 25, 20);
         medianBlur(newImage, fina, 3);
         //imshow("New Image", newImage);
         imshow("fina", fina);
