@@ -1,12 +1,13 @@
 #include "BackgroundSubtraction.h"
 #include <queue>
+#include <list>
 
 using namespace cv;
 using namespace std;
 
-queue<Mat> model;
-queue<Mat> stash;
+vector<Mat> model;
 Mat collectedBackground;
+Mat clearBackground;
 Mat mask;
 int frameLimit = 300; //Maximum number of frames stored in queue
 
@@ -22,21 +23,20 @@ BackgroundSubtraction::~BackgroundSubtraction()
 
 void BackgroundSubtraction::averageBackground(Mat frame) {
     Mat grayFrame;
-    
+    //frame.copyTo(grayFrame);
+    frame.convertTo(grayFrame, CV_8UC1);
     frame.convertTo(grayFrame, CV_16UC1);
-    //add(grayFrame, model, model);
-    model.push(grayFrame);
-    for (int i = 0; i < model.size(); i++) {
-        add(model.front(), collectedBackground, collectedBackground);
-        stash.push(model.front());
-        model.pop();
+
+    model.push_back(grayFrame);
+
+    for (int i = 1; i < model.size(); i++) {
+        add(model.at(i), collectedBackground, collectedBackground);
     }
-    model = stash;
 
     createMask();
         
     if (model.size() >= frameLimit) {
-        model.pop();
+        model.erase(model.begin());
     }
 }
 
@@ -46,12 +46,12 @@ void BackgroundSubtraction::createMask() {
 }
 
 Mat BackgroundSubtraction::subtractBackground(Mat frame) {
-    Mat result;
+    
     if (model.size() >= frameLimit) {
-        subtract(frame, mask, result);
+        subtract(frame, mask, frame); 
     }
     else {
         averageBackground(frame);
     }
-    return result;
+    return frame;
 }

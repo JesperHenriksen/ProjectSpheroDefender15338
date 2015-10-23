@@ -13,6 +13,8 @@ int main(int, char)
 	CameraFeed webcamOne(0);
 	Mat frame, raw, blob, gs;
 	Minimap minimap;
+    //SpheroCoordinate spheroTrack;
+    //spheroTrack.startSpheroTracking();
 	//for (;;){
 	//	Mat erosionKernel = Mat::ones(5,5,CV_8UC1);
 	//	raw = standardWebcam.getImageFromWebcam();
