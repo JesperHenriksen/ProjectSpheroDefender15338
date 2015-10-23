@@ -1,13 +1,11 @@
 #include "BackgroundSubtraction.h"
 #include <queue>
 #include <list>
-#include <algorithm>
 
 using namespace cv;
 using namespace std;
 
 vector<Mat> model;
-//vector<Mat> stash;
 Mat collectedBackground;
 Mat clearBackground;
 Mat mask;
@@ -25,21 +23,15 @@ BackgroundSubtraction::~BackgroundSubtraction()
 
 void BackgroundSubtraction::averageBackground(Mat frame) {
     Mat grayFrame;
+    //frame.copyTo(grayFrame);
     frame.convertTo(grayFrame, CV_8UC1);
     frame.convertTo(grayFrame, CV_16UC1);
-    //add(grayFrame, model, model);
+
     model.push_back(grayFrame);
-    list<Mat>::iterator it;
+
     for (int i = 1; i < model.size(); i++) {
-        collectedBackground += model.at(i);
-        //it = find(model.begin(), model.end(), model.);
-        //advance(it, 1);
-        //add(it, collectedBackground, collectedBackground);
-        //add(model.front(), collectedBackground, collectedBackground);
-        //stash.push(model.front());
-        //model.pop_front();
+        add(model.at(i), collectedBackground, collectedBackground);
     }
-    //model = stash;
 
     createMask();
         
@@ -51,13 +43,12 @@ void BackgroundSubtraction::averageBackground(Mat frame) {
 void BackgroundSubtraction::createMask() {
     convertScaleAbs(collectedBackground, mask, 1.0 / model.size());
     mask.convertTo(mask, CV_8UC1);
-    collectedBackground = clearBackground;
 }
 
 Mat BackgroundSubtraction::subtractBackground(Mat frame) {
     
     if (model.size() >= frameLimit) {
-        subtract(frame, mask, frame); // frame = frame - mask
+        subtract(frame, mask, frame); 
     }
     else {
         averageBackground(frame);
