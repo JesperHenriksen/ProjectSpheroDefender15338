@@ -26,23 +26,6 @@ Mat Minimap::segmentImage(CameraFeed camfeed){
 	return outputArrow;
 }
 
-void Minimap::placeSpell(Mat inputImage, int thresholdMin, int thresholdMax){
-	double xCoord = 0, yCoord = 0;
-	int collectiveX = 0, collectiveY = 0;
-	int totalPixels = 0;
-	for (int x = 0; x < inputImage.cols; x++) {
-		for (int y = 0; y < inputImage.rows; y++) { //runs through the pixels
-			if (inputImage.at<uchar>(y, x) > thresholdMin && inputImage.at<uchar>(y, x) < thresholdMax) { //if there is informations in the input pixel
-				collectiveX += x;
-				collectiveY += y;
-				totalPixels++;
-			}
-		}
-	}
-	xCoord = collectiveX/totalPixels;
-	yCoord = collectiveY/totalPixels;
-	cout << xCoord << "," << yCoord << " ";
-}
 
 void Minimap::thresholdImageArrow(Mat inputImage, Mat outputImage, int minThresholdRed, int maxThresholdRed, int newValueRed,
 	int minThresholdGreen, int maxThresholdGreen,

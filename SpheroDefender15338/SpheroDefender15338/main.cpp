@@ -50,6 +50,7 @@ int main(int, char)
 	for (;;){//uncommet if you want the angle
 		Mat frame = webcamOne.getImageFromWebcam(), gs, thresholded;
 		//webcamOne.thresholdImageColor(frame, frame, 100, 160, 150, 0, 255, 0, 0, 255, 0);
+		imshow("color", frame);
 		minimap.thresholdImageArrow(frame, frame, 100, 160, 255, 0, 70, 0, 70);
 		gs.zeros(frame.cols, frame.rows, frame.type());
 		gs = webcamOne.convertRGBtoGS(frame);
@@ -57,11 +58,10 @@ int main(int, char)
 		medianBlur(gs, thresholded, 5);
 		webcamOne.thresholdImage(thresholded, thresholded, 49, 255, 0, 0, 50, 150);
 		double angle = 0; 
-		angle = webcamOne.getAngleOfVector(thresholded, 150, 255);
+		angle = webcamOne.getAngleOfArrow(thresholded, 150, 255);
 		cout << angle << " " << "\n";
-		//imshow("color", frame);
 		//imshow("grayscale", gs);
-		imshow("threshold", thresholded);
+		//imshow("threshold", thresholded);
 		if (waitKey(30) >= 0)
 			break;
 	}
