@@ -17,42 +17,36 @@ CameraFeed::~CameraFeed()
 
 double CameraFeed::getAngleOfVector(Mat inputImage, int thresholdOne, int thresholdTwo){
 	double result = 0;
-	int recCollectiveX = 0, recCollectiveY = 0;
-	int triCollectiveX = 0, triCollectiveY = 0;
-	int recTotalPixels = 0, triTotalPixels = 0;
+	int recCollectiveX = 0, recCollectiveY = 0, recTotalPixels = 0;
+	int triCollectiveX = 0, triCollectiveY = 0, triTotalPixels = 0;
+	int pixel1 = 0, pixel2 = 0;
+	double recCenterX = 0, recCenterY = 0;
+	double triCenterX = 0, triCenterY = 0;
 	for (int y = 0; y < inputImage.rows; y++){
 		for (int x = 0; x < inputImage.cols; x++){
-			if (inputImage.at<uchar>(y, x) > (thresholdOne - 15) && inputImage.at<uchar>(y, x) < (thresholdOne + 15)){
+			if (inputImage.at<uchar>(y, x) > (thresholdOne - 5) && inputImage.at<uchar>(y, x) < (thresholdOne + 5)){
 				recCollectiveX += x;
 				recCollectiveY += y;
 				recTotalPixels++;
+				pixel1 = inputImage.at<uchar>(y, x);
 			}
-			if (inputImage.at<uchar>(y, x) > (thresholdTwo - 15) && inputImage.at<uchar>(y, x) < (thresholdTwo + 15)){
+			if (inputImage.at<uchar>(y, x) > (thresholdTwo - 5) && inputImage.at<uchar>(y, x) < (thresholdTwo + 5)){
 				triCollectiveX += x;
 				triCollectiveY += y;
-				triTotalPixels++;
+				triTotalPixels++; 
+				pixel2 = inputImage.at<uchar>(y, x);
 			}
 		}
 	}
-
-	double recCenterX = 0, recCenterY = 0;
 	if (recTotalPixels != 0){
 		recCenterX = recCollectiveX / recTotalPixels;
 		recCenterY = recCollectiveY / recTotalPixels;
 	}
-	double triCenterX = 0, triCenterY = 0;
 	if (triTotalPixels != 0){
 		triCenterX = triCollectiveX / triTotalPixels;
 		triCenterY = triCollectiveY / triTotalPixels;
 	}
-	//result = atan2(recCenterY - triCenterY, recCenterX - triCenterX) * 180 / 3.14;
-	//result = atan2(triCenterY - recCenterY, triCenterX - recCenterX);
-	result = atan2(1, 0) * 180 / 3.14;
-
-
-	cout << triCenterX << "," << triCenterY << " " << triTotalPixels << " " << triCollectiveX << "," << triCollectiveY << "\n";//" " << recCenterX << "," << recCenterY << "\n";
-	cout << recCenterX << "," << recCenterY << " " << recTotalPixels << " " << recCollectiveX << "," << recCollectiveY << "\n";//" " << recCenterX << "," << recCenterY << "\n";
-
+	result = atan2(triCenterY - recCenterY, triCenterX - recCenterX) * 180 / 3.14;
 	return result;
 }
 

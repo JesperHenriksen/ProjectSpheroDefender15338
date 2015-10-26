@@ -10,7 +10,7 @@ using namespace std;
 int main(int, char)
 {
 	CameraFeed standardWebcam(0); 
-	CameraFeed webcamOne(0);
+	CameraFeed webcamOne(1);
 	Mat frame, raw, blob, gs;
 	Minimap minimap;
     //SpheroCoordinate spheroTrack;
@@ -51,16 +51,16 @@ int main(int, char)
 		Mat frame = webcamOne.getImageFromWebcam(), gs, thresholded;
 		//webcamOne.thresholdImageColor(frame, frame, 100, 160, 150, 0, 255, 0, 0, 255, 0);
 		minimap.thresholdImageArrow(frame, frame, 100, 160, 255, 0, 70, 0, 70);
-		frame.copyTo(gs);
+		gs.zeros(frame.cols, frame.rows, frame.type());
 		gs = webcamOne.convertRGBtoGS(frame);
-		medianBlur(gs, gs, 5);
-		gs.copyTo(thresholded);
-		webcamOne.thresholdImage(thresholded, thresholded, 49, 255, 0, 0, 49, 150);
+		thresholded.zeros(gs.cols,gs.rows,gs.type());
+		medianBlur(gs, thresholded, 5);
+		webcamOne.thresholdImage(thresholded, thresholded, 49, 255, 0, 0, 50, 150);
 		double angle = 0; 
-		angle = webcamOne.getAngleOfVector(gs, 150, 255);
+		angle = webcamOne.getAngleOfVector(thresholded, 150, 255);
 		cout << angle << " " << "\n";
-		imshow("color", frame);
-		imshow("grayscale", gs);
+		//imshow("color", frame);
+		//imshow("grayscale", gs);
 		imshow("threshold", thresholded);
 		if (waitKey(30) >= 0)
 			break;

@@ -6,7 +6,7 @@ public:
 	Minimap();
 	~Minimap();
 	Mat segmentImage(CameraFeed camfeed);
-	void placeSpell(Mat inputFrame);
+	void placeSpell(Mat inputFrame, int thresholdMin, int thresholdMax);
 	void thresholdImageArrow(Mat inputImage, Mat outputImage, int minThresholdRed, int maxThresholdRed, int newValueRed,
 		int minThresholdGreen, int maxThresholdGreen,
 		int minThresholdBlue, int maxThresholdBlue);
