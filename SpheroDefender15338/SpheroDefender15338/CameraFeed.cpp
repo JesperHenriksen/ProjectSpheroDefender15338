@@ -15,7 +15,7 @@ CameraFeed::~CameraFeed()
 {
 }
 
-double CameraFeed::getAngleOfVector(Mat inputImage, int thresholdOne, int thresholdTwo){
+double CameraFeed::getAngleOfArrow(Mat inputImage, int thresholdMin, int thresholdMax){
 	double result = 0;
 	int recCollectiveX = 0, recCollectiveY = 0, recTotalPixels = 0;
 	int triCollectiveX = 0, triCollectiveY = 0, triTotalPixels = 0;
@@ -24,13 +24,13 @@ double CameraFeed::getAngleOfVector(Mat inputImage, int thresholdOne, int thresh
 	double triCenterX = 0, triCenterY = 0;
 	for (int y = 0; y < inputImage.rows; y++){
 		for (int x = 0; x < inputImage.cols; x++){
-			if (inputImage.at<uchar>(y, x) > (thresholdOne - 5) && inputImage.at<uchar>(y, x) < (thresholdOne + 5)){
+			if (inputImage.at<uchar>(y, x) > (thresholdMin - 5) && inputImage.at<uchar>(y, x) < (thresholdMin + 5)){
 				recCollectiveX += x;
 				recCollectiveY += y;
 				recTotalPixels++;
 				pixel1 = inputImage.at<uchar>(y, x);
 			}
-			if (inputImage.at<uchar>(y, x) > (thresholdTwo - 5) && inputImage.at<uchar>(y, x) < (thresholdTwo + 5)){
+			if (inputImage.at<uchar>(y, x) > (thresholdMax - 5) && inputImage.at<uchar>(y, x) < (thresholdMax + 5)){
 				triCollectiveX += x;
 				triCollectiveY += y;
 				triTotalPixels++; 
@@ -49,6 +49,25 @@ double CameraFeed::getAngleOfVector(Mat inputImage, int thresholdOne, int thresh
 	result = atan2(triCenterY - recCenterY, triCenterX - recCenterX) * 180 / 3.14;
 	return result;
 }
+
+void CameraFeed::placeSpell(Mat inputImage, int thresholdMin, int thresholdMax){
+	double xCoord = 0, yCoord = 0;
+	int collectiveX = 0, collectiveY = 0;
+	int totalPixels = 0;
+	for (int x = 0; x < inputImage.cols; x++) {
+		for (int y = 0; y < inputImage.rows; y++) { //runs through the pixels
+			if (inputImage.at<uchar>(y, x) > thresholdMin && inputImage.at<uchar>(y, x) < thresholdMax) { //if there is informations in the input pixel
+				collectiveX += x;
+				collectiveY += y;
+				totalPixels++;
+			}
+		}
+	}
+	xCoord = collectiveX / totalPixels;
+	yCoord = collectiveY / totalPixels;
+	cout << xCoord << "," << yCoord << " ";
+}
+
 
 Mat CameraFeed::getImageFromWebcam(){
 	Mat frame;
