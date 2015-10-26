@@ -26,30 +26,40 @@ Mat Minimap::segmentImage(CameraFeed camfeed){
 	return outputArrow;
 }
 
-void Minimap::placeSpell(Mat inputImage){
+void Minimap::placeSpell(Mat inputImage, int thresholdMin, int thresholdMax){
 	double xCoord = 0, yCoord = 0;
-	int xMin = 0, xMax = 0, yMin = 0, yMax = 0;
+	int collectiveX = 0, collectiveY = 0;
+	int totalPixels = 0;
 	for (int x = 0; x < inputImage.cols; x++) {
 		for (int y = 0; y < inputImage.rows; y++) { //runs through the pixels
-			if (inputImage.at<uchar>(y, x) > 60) { //if there is informations in the input pixel
-				if (x < xMin){
-					xMin = x;
-				}
-				if (x > xMax){
-					xMax = x;
-				}
-				if (y < yMin){
-					yMin = y;
-				}
-				if (y > yMax){
-					yMax = y;
-				}
+			if (inputImage.at<uchar>(y, x) > thresholdMin && inputImage.at<uchar>(y, x) < thresholdMax) { //if there is informations in the input pixel
+				collectiveX += x;
+				collectiveY += y;
+				totalPixels++;
 			}
 		}
 	}
-	xCoord = (xMax - xMin)/2;
-	yCoord = (yMax - yMin)/2;
+	xCoord = collectiveX/totalPixels;
+	yCoord = collectiveY/totalPixels;
 	cout << xCoord << "," << yCoord << " ";
+}
+
+void Minimap::thresholdImageArrow(Mat inputImage, Mat outputImage, int minThresholdRed, int maxThresholdRed, int newValueRed,
+	int minThresholdGreen, int maxThresholdGreen,
+	int minThresholdBlue, int maxThresholdBlue){
+	for (int r = 0; r < inputImage.rows; r++){
+		for (int c = 0; c < inputImage.cols; c++){
+			if (inputImage.at<Vec3b>(r, c)[0] > minThresholdBlue && inputImage.at<Vec3b>(r, c)[0] < maxThresholdBlue)
+				if (inputImage.at<Vec3b>(r, c)[1] >minThresholdGreen && inputImage.at<Vec3b>(r, c)[1] < maxThresholdGreen)
+					if (inputImage.at<Vec3b>(r, c)[2] > minThresholdRed && inputImage.at<Vec3b>(r, c)[2] < maxThresholdRed){
+						outputImage.at<Vec3b>(r, c)[2] = newValueRed;
+						outputImage.at<Vec3b>(r, c)[1] = newValueRed;
+						outputImage.at<Vec3b>(r, c)[0] = newValueRed;
+					}
+					else
+						outputImage.at<Vec3b>(r, c)[2] = inputImage.at<Vec3b>(r, c)[2];
+		}
+	}
 }
 
 int getDirection(Mat inputImage, CameraFeed camfeed){

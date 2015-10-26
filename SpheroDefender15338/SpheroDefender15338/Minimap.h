@@ -6,7 +6,10 @@ public:
 	Minimap();
 	~Minimap();
 	Mat segmentImage(CameraFeed camfeed);
-	void placeSpell(Mat inputFrame);
+	void placeSpell(Mat inputFrame, int thresholdMin, int thresholdMax);
+	void thresholdImageArrow(Mat inputImage, Mat outputImage, int minThresholdRed, int maxThresholdRed, int newValueRed,
+		int minThresholdGreen, int maxThresholdGreen,
+		int minThresholdBlue, int maxThresholdBlue);
 	/**
 	@brief Checks the number of pixels in the input image to see whether or not the current pixel has been "burned". If it hasn't - it burns the pixel. 
 	*/

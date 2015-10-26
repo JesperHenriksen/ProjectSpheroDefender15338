@@ -17,44 +17,36 @@ CameraFeed::~CameraFeed()
 
 double CameraFeed::getAngleOfVector(Mat inputImage, int thresholdOne, int thresholdTwo){
 	double result = 0;
-	int xMinRec = 0, xMaxRec = 0, yMinRec = 0, yMaxRec= 0;
-	int triXMin = 0, triXMax = 0, triYMin = 0, triYMax = 0;
+	int recCollectiveX = 0, recCollectiveY = 0, recTotalPixels = 0;
+	int triCollectiveX = 0, triCollectiveY = 0, triTotalPixels = 0;
+	int pixel1 = 0, pixel2 = 0;
+	double recCenterX = 0, recCenterY = 0;
+	double triCenterX = 0, triCenterY = 0;
 	for (int y = 0; y < inputImage.rows; y++){
 		for (int x = 0; x < inputImage.cols; x++){
-			if (inputImage.at<uchar>(y, x) != 0 && inputImage.at<uchar>(y, x) < thresholdOne && x < xMinRec){
-				xMinRec = x;
+			if (inputImage.at<uchar>(y, x) > (thresholdOne - 5) && inputImage.at<uchar>(y, x) < (thresholdOne + 5)){
+				recCollectiveX += x;
+				recCollectiveY += y;
+				recTotalPixels++;
+				pixel1 = inputImage.at<uchar>(y, x);
 			}
-			if (inputImage.at<uchar>(y, x) != 0 && inputImage.at<uchar>(y, x) < thresholdOne && x > xMaxRec){
-				xMaxRec = x;
-			}
-			if (inputImage.at<uchar>(y, x) != 0 && inputImage.at<uchar>(y, x) < thresholdOne && y < yMinRec){
-				yMinRec = y;
-			}
-			if (inputImage.at<uchar>(y, x) != 0 && inputImage.at<uchar>(y, x) < thresholdOne && y > yMaxRec){
-				yMaxRec = y;
-			}
-
-			if (inputImage.at<uchar>(y, x) > thresholdOne && inputImage.at<uchar>(y, x) < thresholdTwo && triXMin < x){
-				triXMin = x;
-			}
-			if (inputImage.at<uchar>(y, x) > thresholdOne && inputImage.at<uchar>(y, x) < thresholdTwo && triXMax > x){
-				triXMax = x;
-			}
-			if (inputImage.at<uchar>(y, x) > thresholdOne && inputImage.at<uchar>(y, x) < thresholdTwo && triYMin < y){
-				triYMin = y;
-			}
-			if (inputImage.at<uchar>(y, x) > thresholdOne && inputImage.at<uchar>(y, x) < thresholdTwo && triYMax > y){
-				triYMax = y;
+			if (inputImage.at<uchar>(y, x) > (thresholdTwo - 5) && inputImage.at<uchar>(y, x) < (thresholdTwo + 5)){
+				triCollectiveX += x;
+				triCollectiveY += y;
+				triTotalPixels++; 
+				pixel2 = inputImage.at<uchar>(y, x);
 			}
 		}
 	}
-	double recCenterX = 0, recCenterY = 0;
-	recCenterX = (xMinRec - xMaxRec) / 2; 
-	recCenterY = (yMinRec - yMaxRec) / 2;
-	double triCenterX = 0, triCenterY = 0;
-	triCenterX = (triXMin - triXMax) / 2;
-	triCenterY = (triXMin - triYMax) / 2;
-	result = atan2(recCenterY - triCenterY, recCenterX - triCenterX) * 180 / 3.14;
+	if (recTotalPixels != 0){
+		recCenterX = recCollectiveX / recTotalPixels;
+		recCenterY = recCollectiveY / recTotalPixels;
+	}
+	if (triTotalPixels != 0){
+		triCenterX = triCollectiveX / triTotalPixels;
+		triCenterY = triCollectiveY / triTotalPixels;
+	}
+	result = atan2(triCenterY - recCenterY, triCenterX - recCenterX) * 180 / 3.14;
 	return result;
 }
 
@@ -209,20 +201,20 @@ void CameraFeed::thresholdImageColor(Mat inputImage, Mat outputImage, int minThr
 																	  int minThresholdBlue, int maxThresholdBlue, int newValueBlue){
 	for (int r = 0; r < inputImage.rows; r++){
 		for (int c = 0; c < inputImage.cols; c++){
-			if (inputImage.at<Vec3b>(r, c)[0] < maxThresholdBlue)
+			if (inputImage.at<Vec3b>(r, c)[0] > minThresholdBlue && inputImage.at<Vec3b>(r, c)[0] < maxThresholdBlue)
 				outputImage.at<Vec3b>(r, c)[0] = newValueBlue;
 			else
 				outputImage.at<Vec3b>(r, c)[0] = inputImage.at<Vec3b>(r, c)[0];
 
-			if (inputImage.at<Vec3b>(r, c)[1] < maxThresholdGreen)
+			if (inputImage.at<Vec3b>(r, c)[1] >minThresholdGreen && inputImage.at<Vec3b>(r, c)[1] < maxThresholdGreen)
 				outputImage.at<Vec3b>(r, c)[1] = newValueGreen;
 			else
 				outputImage.at<Vec3b>(r, c)[1] = inputImage.at<Vec3b>(r, c)[1];
 
-			if (inputImage.at<Vec3b>(r, c)[2] < maxThresholdRed)
+			if (inputImage.at<Vec3b>(r, c)[2] > minThresholdRed && inputImage.at<Vec3b>(r, c)[2] < maxThresholdRed)
 				outputImage.at<Vec3b>(r, c)[2] = newValueRed;
 			else
-				outputImage.at<Vec3b>(r, c)[2] = inputImage.at<Vec3b>(r, c)[1];
+				outputImage.at<Vec3b>(r, c)[2] = inputImage.at<Vec3b>(r, c)[2];
 		}
 	}
 }
