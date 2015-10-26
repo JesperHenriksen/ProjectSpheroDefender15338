@@ -46,15 +46,15 @@ void SpheroCoordinate::startSpheroTracking(){
         ////imshow("Webcam", background);
         //bob = webcamImage.getImageFromWebcam();
         image = webcamImage.getImageFromWebcam();
+        //image.copyTo(newImage);
         //cvtColor(image, image, CV_RGB2GRAY);
         ////imshow("New Image", image);
-
         //newImage = abs(background - image);
         backgroundSubtraction.subtractBackground(image);
-        webcamImage.thresholdImage(newImage, newImage, 20, 25, 20);
-        medianBlur(newImage, fina, 3);
+        webcamImage.thresholdImage(image, image, 20, 25, 20);
+        medianBlur(image, image, 3);
         //imshow("New Image", newImage);
-        imshow("fina", fina);
+        imshow("fina", image);
         if (waitKey(30) >= 0)
             break;
     }
