@@ -1,4 +1,4 @@
-#include "opencv2/opencv.hpp"
+#include "opencv2\opencv.hpp"
 #pragma once
 using namespace cv;
 class CameraFeed
@@ -7,20 +7,6 @@ public:
 	CameraFeed(int capture);
 	~CameraFeed();
 	VideoCapture cap;
-	/**
-	@brief 
-		Returns the angle value in degrees of the Arrow on the Minimap
-	@param inputImage
-		The input Mat image
-	@param thresholdMin
-		The pixel value of the back of the arrow.
-	@param thresholdMax
-		The pixel value of the front of the arrow.
-	@return
-		Returns the value of the angle in a double variable
-	*/
-	double getAngleOfArrow(Mat inputImage, int thresholdMin, int thresholdMax);
-	void placeSpell(Mat inputFrame, int thresholdMin, int thresholdMax);
 	/**
 	@brief
 		Converts RGB Mat into a greyscale Mat

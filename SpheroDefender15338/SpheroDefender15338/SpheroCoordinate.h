@@ -1,3 +1,5 @@
+#include "opencv2\opencv.hpp"
+#include "CameraFeed.h"
 #pragma once
 class SpheroCoordinate
 {
@@ -25,7 +27,7 @@ public:
 	/*!
 		Start tracking of sphero on the Battlefield. This starts a thread that continues sends Sphero coordinates.
 	!*/
-	void startSpheroTracking();
+	void startSpheroTracking(CameraFeed webcam);
 
 private:
 	int xCoord; //X coordinate of the Sphero.

@@ -35,27 +35,8 @@ int SpheroCoordinate::getYCoord(){
 	return this->yCoord;
 }
 
-void SpheroCoordinate::startSpheroTracking(){
+void SpheroCoordinate::startSpheroTracking(CameraFeed webcam){
     Mat image, background, newImage, fina;
     CameraFeed webcamImage(0);
-    BackgroundSubtraction backgroundSubtraction;
-    Mat bob;
-    for (;;) {
-        //background = webcamImage.getImageFromWebcam();
-        //cvtColor(background, background, CV_RGB2GRAY);
-        ////imshow("Webcam", background);
-        //bob = webcamImage.getImageFromWebcam();
-        image = webcamImage.getImageFromWebcam();
-        //image.copyTo(newImage);
-        //cvtColor(image, image, CV_RGB2GRAY);
-        ////imshow("New Image", image);
-        //newImage = abs(background - image);
-        backgroundSubtraction.subtractBackground(image);
-        webcamImage.thresholdImage(image, image, 20, 25, 20);
-        medianBlur(image, image, 3);
-        //imshow("New Image", newImage);
-        imshow("fina", image);
-        if (waitKey(30) >= 0)
-            break;
-    }
+
 }
