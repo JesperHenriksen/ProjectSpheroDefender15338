@@ -1,4 +1,4 @@
-#include "opencv2/opencv.hpp"
+#include "opencv2\opencv.hpp"
 #pragma once
 using namespace cv;
 class CameraFeed
@@ -25,7 +25,7 @@ public:
 	@param output
 		The output Mat matrix
 	*/
-	Mat CameraFeed::grassFire(Mat inputImage);
+	Mat grassFire(Mat inputImage);
 	/**
 	@brief
 		Thresholds an Mat image based on a min value, max value with a new value.
@@ -41,6 +41,13 @@ public:
 		If pixel matches the threshold then replace the pixel value with the new value.		
 	*/
 	void thresholdImage(Mat inputImage, Mat outputImage, int minThreshold, int maxThreshold, int newValue);
+
+	void thresholdImage(Mat inputImage, Mat outputImage, int minThresholdOne, int maxThresholdOne, int newValueOne,
+														 int minThresholdTwo, int maxThresholdTwo, int newValueTwo);
+
+	void thresholdImage(Mat inputImage, Mat outputImage, int minThresholdOne, int maxThresholdOne, int newValueOne,
+														 int minThresholdTwo, int maxThresholdTwo, int newValueTwo,
+														 int minThresholdThree, int maxThresholdThree, int newValueThree);
 	/**
 	 @brief 
 		Returns an image from the webcam.
@@ -61,6 +68,9 @@ public:
 		Returns an image with a given channel negated 
 	*/
 	Mat negateChannel(int channelNegate, Mat frame);
+	void CameraFeed::thresholdImageColor(Mat inputImage, Mat outputImage, int minThresholdRed, int maxThresholdRed, int newValueRed,
+		int minThresholdGreen, int maxThresholdGreen, int newValueGreen,
+		int minThresholdBlue, int maxThresholdBlue, int newValueBlue);
 private:
 	/**
 	@brief
@@ -76,8 +86,5 @@ private:
 		inputImage is the image you want to change to be the connected blobs
 	*/
 	Mat CameraFeed::grassfireSecondRunthrough(Mat inputImage);
-	void CameraFeed::thresholdImageColor(Mat inputImage, Mat outputImage, int minThresholdRed, int maxThresholdRed, int newValueRed,
-		int minThresholdGreen, int maxThresholdGreen, int newValueGreen,
-		int minThresholdBlue, int maxThresholdBlue, int newValueBlue);
 };
 
