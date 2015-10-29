@@ -39,6 +39,9 @@
     <ClCompile Include="BackgroundSubtraction.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="UserInterface.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sphero.h">
@@ -65,5 +68,33 @@
     <ClInclude Include="BackgroundSubtraction.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="UserInterface.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="SpheroDefender15338.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\..\..\..\..\Google Drev\MTA15338\Project (1)\Design\Obstacles\ArcaneHObstacle.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\..\..\..\..\Google Drev\MTA15338\Project (1)\Design\Obstacles\BoomerangHObstacle.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\..\..\..\..\Google Drev\MTA15338\Project (1)\Design\Obstacles\IceHObstacle.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\..\..\..\..\Google Drev\MTA15338\Project (1)\Design\Obstacles\StoneHObstacle.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\..\..\..\..\Google Drev\MTA15338\Project (1)\Design\Obstacles\WallHObstacle.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

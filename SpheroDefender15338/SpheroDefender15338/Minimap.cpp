@@ -45,7 +45,7 @@ double Minimap::getAngleOfArrow(Mat inputImage, int thresholdMin, int thresholdM
 	return result;
 }
 
-void Minimap::placeSpell(Mat inputImage, int thresholdMin, int thresholdMax, double &xCoord, double &yCoord){
+void Minimap::placeSpell(Mat inputImage, int thresholdMin, int thresholdMax, double& xCoord, double& yCoord){
 
 	int collectiveX = 0, collectiveY = 0;
 	int totalPixels = 0;
@@ -94,12 +94,4 @@ void Minimap::thresholdImageArrow(Mat inputImage, Mat outputImage, int minThresh
 	}
 }
 
-int getDirection(Mat inputImage, CameraFeed camfeed){
-	
-	//camfeed.thresholdImage(inputImage, inputImage, 0, 60, 255);
-	//camfeed.thresholdImage(inputImage, inputImage, 200, 255, 0);
-	//camfeed.thresholdImage(inputImage, inputImage, 60, 200, 125);
-
-	return 0;
-}
 
