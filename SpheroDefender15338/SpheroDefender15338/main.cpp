@@ -5,6 +5,7 @@
 #include <thread>
 #include "BackgroundSubtraction.h"
 #include "UserInterface.h"
+#include <list>
 
 using namespace cv;
 using namespace std;
@@ -12,11 +13,11 @@ using namespace std;
 int main(int, char)
 {
 	CameraFeed standardWebcam(0); 
-	CameraFeed webcamOne(1);
-	Mat frame, raw, blob, gs;
+	CameraFeed webcamOne(0);
+	Mat frame, raw, blob, gs, background;
 	Minimap minimap;
 	//UserInterface userInterface;
-
+ 
 	//for (;;){
 	//	userInterface.interfaceLayers();
 	//	if (waitKey(30) >= 0)
@@ -27,13 +28,18 @@ int main(int, char)
 //	for (;;) {
 	//	frame = standardWebcam.getImageFromWebcam();
 	//	frame = bs.subtractBackground(frame, standardWebcam);
+	BackgroundSubtraction bs;
+	for (;;) {
+		frame = webcamOne.getImageFromWebcam();
+        frame.copyTo(background);
+		background = bs.subtractBackground(background, standardWebcam);
 		//medianBlur(image, image, 3);
 		//webcamImage.thresholdImage(image, image, 20, 25, 20);
 		//imshow("New Image", newImage);
-	/*	imshow("final", frame);
+		imshow("final", background);
 		if (waitKey(30) >= 0)
 			break;
-	}*/
+	}
 
 	//for (;;){
 	//	Mat erosionKernel = Mat::ones(5,5,CV_8UC1);
