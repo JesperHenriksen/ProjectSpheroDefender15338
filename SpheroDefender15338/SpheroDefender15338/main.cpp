@@ -4,6 +4,7 @@
 #include "CameraFeed.h"
 #include <thread>
 #include "BackgroundSubtraction.h"
+#include "UserInterface.h"
 
 using namespace cv;
 using namespace std;
@@ -14,18 +15,25 @@ int main(int, char)
 	CameraFeed webcamOne(1);
 	Mat frame, raw, blob, gs;
 	Minimap minimap;
+	//UserInterface userInterface;
+
+	//for (;;){
+	//	userInterface.interfaceLayers();
+	//	if (waitKey(30) >= 0)
+	//		break;
+	//}
  
-	BackgroundSubtraction bs;
-	for (;;) {
-		frame = standardWebcam.getImageFromWebcam();
-		frame = bs.subtractBackground(frame, standardWebcam);
+	//BackgroundSubtraction bs;
+//	for (;;) {
+	//	frame = standardWebcam.getImageFromWebcam();
+	//	frame = bs.subtractBackground(frame, standardWebcam);
 		//medianBlur(image, image, 3);
 		//webcamImage.thresholdImage(image, image, 20, 25, 20);
 		//imshow("New Image", newImage);
-		imshow("final", frame);
+	/*	imshow("final", frame);
 		if (waitKey(30) >= 0)
 			break;
-	}
+	}*/
 
 	//for (;;){
 	//	Mat erosionKernel = Mat::ones(5,5,CV_8UC1);
