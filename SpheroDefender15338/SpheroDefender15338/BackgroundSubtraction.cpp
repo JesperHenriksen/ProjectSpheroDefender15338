@@ -1,11 +1,12 @@
 #include "BackgroundSubtraction.h"
 #include <queue>
 #include <list>
-
+#include <vector>
 using namespace cv;
 using namespace std;
 
-const int FRAMES_TO_LEARN = 200;
+const int FRAMES_TO_LEARN = 150;
+vector<Mat> model;
 
 BackgroundSubtraction::BackgroundSubtraction()
 {
@@ -16,14 +17,20 @@ BackgroundSubtraction::~BackgroundSubtraction()
 }
 
 Mat BackgroundSubtraction::subtractBackground(Mat inputFrame, CameraFeed webcam){
-	Mat gscale, outputFrame;
-	//outputFrame.zeros(inputFrame.rows, inputFrame.cols, CV_8UC1);
+	Mat gscale, result;
+
 	inputFrame.copyTo(gscale);
 	gscale = webcam.convertRGBtoGS(inputFrame);
-	Mat model = Mat(inputFrame.rows, inputFrame.cols, CV_8UC1, Scalar(0));
-	addMatFrames(gscale,model, model);
-	//subtractFrame(inputFrame, model, outputFrame);
-	return model;
+    model.push_back(gscale);
+
+    if (model.size() >= FRAMES_TO_LEARN)
+        model.erase(model.begin());
+    for (int i = 0; i < model.size(); i++){
+        addWeighted(model.front(), 0.5, model.at(i), 0.5, 0, model.front());
+    }
+    gscale.copyTo(result);
+	subtract(model.front(), model.back(), result);
+    return result;
 }
 
 void BackgroundSubtraction::addMatFrames(Mat inputOne, Mat inputTwo, Mat dst){

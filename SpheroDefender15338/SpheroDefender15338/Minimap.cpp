@@ -25,13 +25,11 @@ double Minimap::getAngleOfArrow(Mat inputImage, int thresholdMin, int thresholdM
 				recCollectiveX += x;
 				recCollectiveY += y;
 				recTotalPixels++;
-				pixel1 = inputImage.at<uchar>(y, x);
 			}
 			if (inputImage.at<uchar>(y, x) > (thresholdMax - 5) && inputImage.at<uchar>(y, x) < (thresholdMax + 5)){
 				triCollectiveX += x;
 				triCollectiveY += y;
 				triTotalPixels++;
-				pixel2 = inputImage.at<uchar>(y, x);
 			}
 		}
 	}
