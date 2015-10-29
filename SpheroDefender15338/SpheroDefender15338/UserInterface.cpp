@@ -26,16 +26,11 @@ void UserInterface::loadSpells() //Loads the images of the different spells
 	wall = imread("WallHObstacle.png", 1);
 }
 
-Mat UserInterface::boomerangSpell(CameraFeed camFeed)
+Mat UserInterface::boomerangSpell(double xCoord, double yCoord, int angle)
 {
-	Mat inputImage = camFeed.getImageFromWebcam(); //Take picture of Minimap
-	Minimap minimap;
-	double turningpointX = 0.0, turningpointY = 0.0;
 	int direction = 0;
-
-	minimap.placeSpell(inputImage, turningpointX, turningpointY);
-	direction = minimap.getDirection();
-
+	direction = tan(angle -180); //opposite direction of the direction of the arrow
+	
 }
 //
 //Mat UserInterface::icePatchSpell()
@@ -53,7 +48,10 @@ Mat UserInterface::boomerangSpell(CameraFeed camFeed)
 //
 //}
 //
-//Mat UserInterface::wallSpell()
-//{
-//
-//}
+Mat UserInterface::wallSpell(double xCoord, double yCoord, int angle)
+{
+	int direction = 0;
+	direction = angle;
+
+
+}

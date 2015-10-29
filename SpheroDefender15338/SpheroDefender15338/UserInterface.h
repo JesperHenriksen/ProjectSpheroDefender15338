@@ -6,10 +6,10 @@ public:
 	UserInterface();
 	~UserInterface();
 	void loadSpells();
-	//Mat boomerangSpell();
+	Mat boomerangSpell(double xCoord, double yCoord, int angle);
 	//Mat icePatchSpell();
 	//Mat stoneSpell();
 	//Mat sentrySpell();
-	//Mat wallSpell();
+	Mat wallSpell(double xCoord, double yCoord, int angle);
 };
 
