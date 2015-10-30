@@ -12,34 +12,30 @@ using namespace std;
 
 int main(int, char)
 {
-	CameraFeed standardWebcam(0); 
+	CameraFeed standardWebcam(0);
 	CameraFeed webcamOne(0);
 	Mat frame, raw, blob, gs, background;
 	Minimap minimap;
-	//UserInterface userInterface;
- 
-	//for (;;){
-	//	userInterface.interfaceLayers();
-	//	if (waitKey(30) >= 0)
-	//		break;
-	//}
- 
-	//BackgroundSubtraction bs;
-//	for (;;) {
-	//	frame = standardWebcam.getImageFromWebcam();
-	//	frame = bs.subtractBackground(frame, standardWebcam);
-	BackgroundSubtraction bs;
-	for (;;) {
-		frame = webcamOne.getImageFromWebcam();
-        frame.copyTo(background);
-		background = bs.subtractBackground(background, standardWebcam);
-		//medianBlur(image, image, 3);
-		//webcamImage.thresholdImage(image, image, 20, 25, 20);
-		//imshow("New Image", newImage);
-		imshow("final", background);
+	UserInterface userInterface;
+	Mat menuLeft = imread("../../../../../Google Drev/MTA15338/Project (1)/Design/ProgramLayers/MenuLeft.png", 1);//Loads the images of the different spells
+	imshow("bob", menuLeft);
+	for (;;){
 		if (waitKey(30) >= 0)
 			break;
 	}
+
+	//BackgroundSubtraction bs;
+	//for (;;) {
+	//	frame = webcamOne.getImageFromWebcam();
+	//       frame.copyTo(background);
+	//	background = bs.subtractBackground(background, standardWebcam);
+	//	//medianBlur(image, image, 3);
+	//	//webcamImage.thresholdImage(image, image, 20, 25, 20);
+	//	//imshow("New Image", newImage);
+	//	imshow("final", background);
+	//	if (waitKey(30) >= 0)
+	//		break;
+	//}
 
 	//for (;;){
 	//	Mat erosionKernel = Mat::ones(5,5,CV_8UC1);
@@ -58,8 +54,8 @@ int main(int, char)
 	//	if (waitKey(30) >= 0)
 	//		break;
 	//}
-	
-	
+
+
 	//for (;;){//uncomment for coordinates (placeSpell)
 	//	Mat frame = webcamOne.getImageFromWebcam(), gs;
 	//	double x = 0, y = 0;
@@ -91,6 +87,7 @@ int main(int, char)
 	//	if (waitKey(30) >= 0)
 	//		break;
 	//}
-	waitKey(0);
-	return 0;
+	//waitKey(0);
+	//return 0;
+	//}
 }

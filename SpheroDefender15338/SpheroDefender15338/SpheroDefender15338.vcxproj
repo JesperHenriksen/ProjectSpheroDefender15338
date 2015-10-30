@@ -27,14 +27,13 @@
     <ClInclude Include="CameraFeed.h" />
     <ClInclude Include="Minimap.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="resource1.h" />
+    <ClInclude Include="resource2.h" />
     <ClInclude Include="Sphero.h" />
     <ClInclude Include="SpheroControls.h" />
     <ClInclude Include="SpheroCoordinate.h" />
     <ClInclude Include="UserInterface.h" />
     <ClInclude Include="Utility.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="SpheroDefender15338.rc" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\..\..\..\..\Google Drev\MTA15338\Project (1)\Design\Obstacles\ArcaneHObstacle.png" />
@@ -44,6 +43,10 @@
     <Image Include="..\..\..\..\..\Google Drev\MTA15338\Project (1)\Design\Obstacles\WallHObstacle.png" />
     <Image Include="..\..\..\..\..\Google Drev\MTA15338\Project (1)\Design\ProgramLayers\MenuLeft.png" />
     <Image Include="..\..\..\..\..\Google Drev\MTA15338\Project (1)\Design\ProgramLayers\MenuTop.png" />
+    <Image Include="bitmap1.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="SpheroDefender153381.rc" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{FD539F90-8A82-45B6-852F-AEFE536C88FE}</ProjectGuid>
