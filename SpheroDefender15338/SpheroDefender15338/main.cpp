@@ -13,18 +13,23 @@ int main(int, char)
 {
 	CameraFeed standardWebcam(0); 
 	CameraFeed webcamOne(0);
-	Mat frame, raw, blob, gs, background;
+	Mat frame, raw, blob, gs, wizardBackground = webcamOne.getImageFromWebcam();
+    Mat foreground;
 	Minimap minimap;
- 
+    wizardBackground = webcamOne.convertRGBtoGS(wizardBackground);
 	BackgroundSubtraction bs;
+ 
 	for (;;) {
-		frame = webcamOne.getImageFromWebcam();
-        frame.copyTo(background);
-		background = bs.subtractBackground(background, standardWebcam);
-		//medianBlur(image, image, 3);
-		//webcamImage.thresholdImage(image, image, 20, 25, 20);
+        frame = webcamOne.getImageFromWebcam();
+        frame = webcamOne.convertRGBtoGS(frame);
+        addWeighted(wizardBackground, 0.995, frame, 0.005, 0, wizardBackground); 
+        foreground.zeros(frame.rows,frame.cols, frame.type());
+        subtract(frame, wizardBackground, foreground);
+        //medianBlur(image, image, 3);
+        // medianBlur(foreground,foreground, 5);
+		threshold(foreground, foreground,0,255,THRESH_BINARY);
 		//imshow("New Image", newImage);
-		imshow("final", background);
+		imshow("final", foreground);
 		if (waitKey(30) >= 0)
 			break;
 	}

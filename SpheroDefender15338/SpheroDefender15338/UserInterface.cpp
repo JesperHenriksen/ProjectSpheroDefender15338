@@ -26,7 +26,7 @@ void UserInterface::loadSpells() //Loads the images of the different spells
 	wall = imread("WallHObstacle.png", 1);
 }
 
-Mat UserInterface::boomerangSpell(double xCoord, double yCoord, int angle)
+void UserInterface::boomerangSpell(double xCoord, double yCoord, int angle)
 {
 	int direction = 0;
 	direction = tan(angle -180); //opposite direction of the direction of the arrow
@@ -48,7 +48,7 @@ Mat UserInterface::boomerangSpell(double xCoord, double yCoord, int angle)
 //
 //}
 //
-Mat UserInterface::wallSpell(double xCoord, double yCoord, int angle)
+void UserInterface::wallSpell(double xCoord, double yCoord, int angle)
 {
 	int direction = 0;
 	direction = angle;
