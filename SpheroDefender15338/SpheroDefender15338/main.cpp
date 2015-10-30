@@ -4,6 +4,7 @@
 #include "CameraFeed.h"
 #include <thread>
 #include "BackgroundSubtraction.h"
+#include "UserInterface.h"
 #include <list>
 
 using namespace cv;
@@ -15,7 +16,18 @@ int main(int, char)
 	CameraFeed webcamOne(0);
 	Mat frame, raw, blob, gs, background;
 	Minimap minimap;
+	//UserInterface userInterface;
  
+	//for (;;){
+	//	userInterface.interfaceLayers();
+	//	if (waitKey(30) >= 0)
+	//		break;
+	//}
+ 
+	//BackgroundSubtraction bs;
+//	for (;;) {
+	//	frame = standardWebcam.getImageFromWebcam();
+	//	frame = bs.subtractBackground(frame, standardWebcam);
 	BackgroundSubtraction bs;
 	for (;;) {
 		frame = webcamOne.getImageFromWebcam();
