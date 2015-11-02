@@ -7,18 +7,46 @@ using namespace std;
 using namespace cv;
 
 
-Mat menuLeft, menuTop, boomerang, icePatch, stone, sentry, wall; //Global variables for the spell images
+
+Mat menuLeft, menuTop, menu, menu2, boomerang, icePatch, stone, sentry, wall, battlefield; //Global variables for the spell images
 
 UserInterface::UserInterface()
 {
 
-	boomerang = imread("BoomerangHObstacle.png", 1);
-	icePatch = imread("IceHObstacle.png", 1);
-	stone = imread("StoneHObstacle.png", 1);
-	sentry = imread("ArcaneHObsracle.png", 1);
-	wall = imread("WallHObstacle.png", 1);
+	boomerang = imread("../../../../../Google Drev/MTA15338/Project (1)/Design/Obstacles/BoomerangHObstacle.png", 1);
+	icePatch = imread("../../../../../Google Drev/MTA15338/Project (1)/Design/Obstacles/IceHObstacle.png", 1);
+	stone = imread("../../../../../Google Drev/MTA15338/Project (1)/Design/Obstacles/StoneHObstacle.png", 1);
+	sentry = imread("../../../../../Google Drev/MTA15338/Project (1)/Design/Obstacles/ArcaneHObstacle.png", 1);
+	wall = imread("../../../../../Google Drev/MTA15338/Project (1)/Design/Obstacles/WallHObstacle.png", 1);
+	menuLeft = imread("../../../../../Google Drev/MTA15338/Project (1)/Design/ProgramLayers/MenuLeft.png", 1);
+	menuTop = imread("../../../../../Google Drev/MTA15338/Project (1)/Design/ProgramLayers/MenuTop.png", 1);
+	battlefield = imread("../../../../../Google Drev/MTA15338/Project (1)/Design/ProgramLayers/Battlefield.png", 1);
 }
 
+Mat UserInterface::getBoomerang(){
+	return boomerang;
+}
+
+
+Mat UserInterface::getIcePatch(){
+	return icePatch;
+}
+
+Mat UserInterface::getStone(){
+	return stone;
+}
+
+Mat UserInterface::getSentry(){
+	return sentry;
+}
+
+Mat UserInterface::getWall(){
+	return wall;
+}
+
+Mat UserInterface::getMenu(){
+	return menu2;
+}
 
 UserInterface::~UserInterface()
 {
@@ -43,43 +71,43 @@ void UserInterface::rotation(Mat input, int degrees, int xOffset, int yOffset){
 
 void UserInterface::interfaceLayers()
 {
-	Mat dst;
-	double  alpha = 0.5, beta = 0;
-	//menuLeft = imread("https://cloud.githubusercontent.com/assets/14328758/10818450/f20a6cf4-7e41-11e5-9eed-85acd5ec79c7.png", 1);//Loads the images of the different spells
-	menuTop = imread("MenuTop.png", 1);
-	//namedWindow("Wizard", 1);
-	//beta = (1.0 - alpha);
-	//addWeighted(menuTop, alpha, menuLeft, beta, 0.0, dst);
-	//imshow("Wizard", menuTop);
+	menuTop.copyTo(menu);
+
+	add(battlefield, menuTop, menu);
+	add(menu, menuLeft, menu2);
 }
 
 
-void UserInterface::boomerangSpell(double xCoord, double yCoord, int angle)
-{
-	int direction = 0;
-	direction = tan(angle -180); //opposite direction of the direction of the arrow
-	
-}
-//
-//Mat UserInterface::icePatchSpell()
+//void UserInterface::boomerangSpell(double xCoord, double yCoord, int angle)
 //{
-//
+//	int direction = 0;
+//	direction = tan(angle -180); //opposite direction of the direction of the arrow
+//	
 //}
 //
-//Mat UserInterface::stoneSpell()
+//Mat UserInterface::icePatchSpell(double xCoord, double yCoord, int angle)
 //{
+//	int direction = 0;
+//	direction = angle;
 //
+//	rotation(icePatch, angle, 0, 0);
 //}
 //
+//void UserInterface::stoneSpell(double xCoord, double yCoord, int angle)
+//{
+//	int direction = 0;
+//	direction = tan(angle -180); //opposite direction of the direction of the arrow
+//}
+
 //Mat UserInterface::sentrySpell()
 //{
 //
 //}
 //
-void UserInterface::wallSpell(double xCoord, double yCoord, int angle)
-{
-	int direction = 0;
-	direction = angle;
-
-	rotation(wall, angle, 0, 0);
-}
+//void UserInterface::wallSpell(double xCoord, double yCoord, int angle)
+//{
+//	int direction = 0;
+//	direction = angle;
+//
+//	rotation(wall, angle, 0, 0);
+//}

@@ -3,7 +3,6 @@
 #include "Minimap.h"
 #include "CameraFeed.h"
 #include <thread>
-#include "BackgroundSubtraction.h"
 #include "UserInterface.h"
 #include <list>
 
@@ -14,11 +13,11 @@ int main(int, char)
 {
 	CameraFeed standardWebcam(0);
 	CameraFeed webcamOne(0);
-	Mat frame, raw, blob, gs, background;
+	Mat frame, raw, blob, gs, background, menuLeft;
 	Minimap minimap;
 	UserInterface userInterface;
-	Mat menuLeft = imread("../../../../../Google Drev/MTA15338/Project (1)/Design/ProgramLayers/MenuLeft.png", 1);//Loads the images of the different spells
-	imshow("bob", menuLeft);
+	userInterface.interfaceLayers();
+	imshow("left menu", userInterface.getMenu());
 	for (;;){
 		if (waitKey(30) >= 0)
 			break;

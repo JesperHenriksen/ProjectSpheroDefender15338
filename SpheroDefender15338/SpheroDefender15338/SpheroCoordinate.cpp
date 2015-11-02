@@ -1,7 +1,6 @@
 #include "SpheroCoordinate.h"
 #include "CameraFeed.h"
 #include "opencv2/opencv.hpp"
-#include "BackgroundSubtraction.h"
 
 using namespace cv;
 using namespace std;
