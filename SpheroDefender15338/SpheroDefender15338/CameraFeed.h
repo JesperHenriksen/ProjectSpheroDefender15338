@@ -17,6 +17,8 @@ public:
 	*/
 	Mat convertRGBtoGS(Mat inputFrame);
 	Mat segmentImage(Mat inputFrame);
+	Mat equalizeHistogram(Mat inputImage, Mat dst);
+	void inputImageFixing(Mat inputImage, Mat dst, int minThreshold, int maxThreshold);
 	/**
 	@brief 
 		Blob analysis using grassfire algorithm based on a x-1 and y-1 kernel and saves this new blob analysed in output.

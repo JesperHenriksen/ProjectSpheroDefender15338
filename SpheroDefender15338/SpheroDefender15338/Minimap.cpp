@@ -42,7 +42,7 @@ double Minimap::getAngleOfArrow(Mat inputImage, int thresholdMin, int thresholdM
 		triCenterY = triCollectiveY / triTotalPixels;
 	}
 	result = atan2(triCenterY - recCenterY, triCenterX - recCenterX) * 180 / 3.14;
-	return result;
+ 	return result;
 }
 
 void Minimap::placeSpell(Mat inputImage, int thresholdMin, int thresholdMax, double& xCoord, double& yCoord){
