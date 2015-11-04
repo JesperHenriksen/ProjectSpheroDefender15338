@@ -15,6 +15,7 @@ public:
 	void interfaceImages();
 	void rotation(Mat input, int degrees, int xOffset, int yOffset);
 	void interfaceLayers();
+    void addLayer(Mat input1, Mat input2, Mat output);
 	void boomerangSpell(double xCoord, double yCoord, int angle);
 	void icePatchSpell(double xCoord, double yCoord, int angle);
 	void stoneSpell(double xCoord, double yCoord, int angle);

@@ -77,6 +77,27 @@ void UserInterface::interfaceLayers()
 	add(menu, menuLeft, menu2);
 }
 
+void UserInterface::addLayer(Mat input1, Mat input2, Mat output) { //Input images
+
+    if (input1.data && !input1.empty()){ //if there is some data to be loaded and the image is not empty,
+        for (int y = 0; y < input1.rows; ++y){ //y starts at 0. When y is smaller than the image rows, the loop keeps running.
+            for (int x = 0; x < input1.cols; ++x){ //x starts a 0. When x is smaller than the image columns, the loop keeps running.
+
+                if (input1.at<Vec3b>(y, x)[0] == 0){ //show Battlefield image
+                    output.at<Vec3b>(y, x)[0] = input2.at<Vec3b>(y, x)[0];
+                    output.at<Vec3b>(y, x)[1] = input2.at<Vec3b>(y, x)[1];
+                    output.at<Vec3b>(y, x)[2] = input2.at<Vec3b>(y, x)[2];
+                }
+                else { //show menus
+                    output.at<Vec3b>(y, x)[0] = input1.at<Vec3b>(y, x)[0];
+                    output.at<Vec3b>(y, x)[1] = input1.at<Vec3b>(y, x)[1];
+                    output.at<Vec3b>(y, x)[2] = input1.at<Vec3b>(y, x)[2];
+                }
+            }
+        }
+    }
+}
+
 
 //void UserInterface::boomerangSpell(double xCoord, double yCoord, int angle)
 //{
@@ -84,7 +105,7 @@ void UserInterface::interfaceLayers()
 //	direction = tan(angle -180); //opposite direction of the direction of the arrow
 //	
 //}
-//
+
 //Mat UserInterface::icePatchSpell(double xCoord, double yCoord, int angle)
 //{
 //	int direction = 0;
@@ -92,7 +113,7 @@ void UserInterface::interfaceLayers()
 //
 //	rotation(icePatch, angle, 0, 0);
 //}
-//
+
 //void UserInterface::stoneSpell(double xCoord, double yCoord, int angle)
 //{
 //	int direction = 0;
@@ -104,6 +125,7 @@ void UserInterface::interfaceLayers()
 //
 //}
 //
+
 //void UserInterface::wallSpell(double xCoord, double yCoord, int angle)
 //{
 //	int direction = 0;
