@@ -11,10 +11,40 @@ using namespace std;
 
 int main(int, char)
 {
-	CameraFeed standardWebcam(0);
-	CameraFeed webcamOne(0);
-	Mat frame, raw, blob, gs, background, menuLeft;
+	//webcam variables
+	CameraFeed standardWebcam(0); 
+	CameraFeed webcamOne(1);
+
+	//arrow position variables
+	double x = 0, y = 0;
+	Mat frame, gs;
+	//angle of arrow variables
+	double angle = 0;
+	Mat angleInput, thresholded, angleGrayscale;
+	//hand tracking variables
+	Mat handInput, handColorThreshold, handGscale, handThreshold;
+
+	//Mat angleBackground = webcamOne.getImageFromWebcam();
+	Mat raw, blob, wizardBackground = webcamOne.getImageFromWebcam();
+
+    Mat foreground;
 	Minimap minimap;
+	double minimapXCoord = 0, minimapYCoord = 0;
+    //wizardBackground = webcamOne.convertRGBtoGS(wizardBackground);
+	//for (;;) {
+ //       frame = webcamOne.getImageFromWebcam();
+ //       frame = webcamOne.convertRGBtoGS(frame);
+ //       addWeighted(wizardBackground, 0.995, frame, 0.005, 0, wizardBackground); 
+ //       foreground.zeros(frame.rows,frame.cols, frame.type());
+ //       subtract(frame, wizardBackground, foreground);
+ //       //medianBlur(image, image, 3);
+ //       // medianBlur(foreground,foreground, 5);
+	//	threshold(foreground, foreground,0,255,THRESH_BINARY);
+	//	//imshow("New Image", newImage);
+	//	imshow("final", foreground);
+	//	if (waitKey(30) >= 0)
+	//		break;
+	//}
 	UserInterface userInterface;
 	userInterface.interfaceLayers();
 	imshow("left menu", userInterface.getMenu());
@@ -53,40 +83,46 @@ int main(int, char)
 	//	if (waitKey(30) >= 0)
 	//		break;
 	//}
+	
+	for (;;){
+		// get coordinates for arrow
+		frame = webcamOne.getImageFromWebcam();
+		frame = webcamOne.convertRGBtoGS(frame);
+		frame.copyTo(gs);
+		standardWebcam.thresholdImage(frame,frame,100,255,0,0,100,255);
+		minimap.placeSpell(frame, 50,255,minimapXCoord,minimapYCoord);
+		//imshow(" ", frame);
+		//imshow(".", gs);
+
+		//get the angle of arrow
+		angleInput = webcamOne.getImageFromWebcam();
+		angleInput *= 1.5;
+		//imshow("raw", angleInput);
+		medianBlur(angleInput, angleInput, 5);
+		webcamOne.thresholdImageColor(angleInput, angleInput, 80, 255, 255, 100, 255, 255, 100, 255, 255);
+		webcamOne.thresholdImageColor(angleInput, angleInput, 0, 80, 0, 0, 100, 0, 0, 100, 0);
+		angleGrayscale = webcamOne.convertRGBtoGS(angleInput);
+		angleGrayscale = angleGrayscale * 1.5;
+		angleGrayscale.copyTo(thresholded);
+		medianBlur(thresholded, thresholded, 7);
+		thresholded *= 2;
+		webcamOne.thresholdImage(thresholded, thresholded, 150, 255, 255, 60, 150, 100, 0, 60, 0);
+		//imshow("threshold", thresholded);
+		angle = minimap.getAngleOfArrow(thresholded, 0, 100);
+		//cout << angle << " " << "\n";
+	
+		//hand thresholding
+		handInput = standardWebcam.getImageFromWebcam();
+		handInput *= 2;
+		handInput.copyTo(handColorThreshold);
+		webcamOne.thresholdImageColor(handInput, handColorThreshold, 100, 255, 0, 140, 200, 255, 100, 255, 0);
+		webcamOne.thresholdImageColor(handColorThreshold, handColorThreshold, 0, 100, 0, 0, 140, 0, 0, 100, 0);
 
 
-	//for (;;){//uncomment for coordinates (placeSpell)
-	//	Mat frame = webcamOne.getImageFromWebcam(), gs;
-	//	double x = 0, y = 0;
-	//	frame = webcamOne.convertRGBtoGS(frame);
-	//	frame.copyTo(gs);
-	//	standardWebcam.thresholdImage(frame,frame,100,255,0,0,100,255);
-	//	minimap.placeSpell(frame);
-	//	imshow(" ", frame);
-	//	imshow(".", gs);
-	//	if (waitKey(30) >= 0)
-	//		break;
-	//}
-
-	//for (;;){//uncommet if you want the angle
-	//	Mat frame = webcamOne.getImageFromWebcam(), gs, thresholded;
-	//	//webcamOne.thresholdImageColor(frame, frame, 100, 160, 150, 0, 255, 0, 0, 255, 0);
-	//	imshow("color", frame);
-	//	minimap.thresholdImageArrow(frame, frame, 100, 160, 255, 0, 70, 0, 70);
-	//	gs.zeros(frame.cols, frame.rows, frame.type());
-	//	gs = webcamOne.convertRGBtoGS(frame);
-	//	thresholded.zeros(gs.cols,gs.rows,gs.type());
-	//	medianBlur(gs, thresholded, 5);
-	//	webcamOne.thresholdImage(thresholded, thresholded, 49, 255, 0, 0, 50, 150);
-	//	double angle = 0; 
-	//	angle = webcamOne.getAngleOfArrow(thresholded, 150, 255);
-	//	cout << angle << " " << "\n";
-	//	//imshow("grayscale", gs);
-	//	//imshow("threshold", thresholded);
-	//	if (waitKey(30) >= 0)
-	//		break;
-	//}
-	//waitKey(0);
-	//return 0;
-	//}
+		//end of code
+		if (waitKey(30) >= 0)
+			break;
+	}
+	waitKey(0);
+	return 0;
 }

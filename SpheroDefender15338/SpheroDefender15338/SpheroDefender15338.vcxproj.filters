@@ -68,12 +68,11 @@
     <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="resource1.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="resource2.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="SpheroDefender15338.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\..\..\..\..\Google Drev\MTA15338\Project (1)\Design\Obstacles\ArcaneHObstacle.png">
@@ -91,22 +90,5 @@
     <Image Include="..\..\..\..\..\Google Drev\MTA15338\Project (1)\Design\Obstacles\WallHObstacle.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="..\..\..\..\..\Google Drev\MTA15338\Project (1)\Design\ProgramLayers\MenuLeft.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="..\..\..\..\..\Google Drev\MTA15338\Project (1)\Design\ProgramLayers\MenuTop.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="bitmap1.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="..\..\..\..\..\Google Drev\MTA15338\Project (1)\Design\ProgramLayers\Battlefield.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="SpheroDefender153381.rc">
-      <Filter>Resource Files</Filter>
-    </ResourceCompile>
   </ItemGroup>
 </Project>
