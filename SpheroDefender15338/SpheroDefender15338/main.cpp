@@ -3,6 +3,7 @@
 #include "Minimap.h"
 #include "CameraFeed.h"
 #include <thread>
+#include "UserInterface.h"
 #include <list>
 
 using namespace cv;
@@ -41,6 +42,26 @@ int main(int, char)
 	//	threshold(foreground, foreground,0,255,THRESH_BINARY);
 	//	//imshow("New Image", newImage);
 	//	imshow("final", foreground);
+	//	if (waitKey(30) >= 0)
+	//		break;
+	//}
+	UserInterface userInterface;
+	userInterface.interfaceLayers();
+	imshow("left menu", userInterface.getMenu());
+	for (;;){
+		if (waitKey(30) >= 0)
+			break;
+	}
+
+	//BackgroundSubtraction bs;
+	//for (;;) {
+	//	frame = webcamOne.getImageFromWebcam();
+	//       frame.copyTo(background);
+	//	background = bs.subtractBackground(background, standardWebcam);
+	//	//medianBlur(image, image, 3);
+	//	//webcamImage.thresholdImage(image, image, 20, 25, 20);
+	//	//imshow("New Image", newImage);
+	//	imshow("final", background);
 	//	if (waitKey(30) >= 0)
 	//		break;
 	//}
@@ -89,7 +110,7 @@ int main(int, char)
 		//imshow("threshold", thresholded);
 		angle = minimap.getAngleOfArrow(thresholded, 0, 100);
 		//cout << angle << " " << "\n";
-
+	
 		//hand thresholding
 		handInput = standardWebcam.getImageFromWebcam();
 		handInput *= 2;
