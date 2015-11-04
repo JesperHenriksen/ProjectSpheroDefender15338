@@ -11,7 +11,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="BackgroundSubtraction.cpp" />
     <ClCompile Include="Battlefield.cpp" />
     <ClCompile Include="CameraFeed.cpp" />
     <ClCompile Include="main.cpp" />
@@ -22,7 +21,6 @@
     <ClCompile Include="UserInterface.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BackgroundSubtraction.h" />
     <ClInclude Include="Battlefield.h" />
     <ClInclude Include="CameraFeed.h" />
     <ClInclude Include="Minimap.h" />
@@ -42,8 +40,6 @@
     <Image Include="..\..\..\..\..\Google Drev\MTA15338\Project (1)\Design\Obstacles\IceHObstacle.png" />
     <Image Include="..\..\..\..\..\Google Drev\MTA15338\Project (1)\Design\Obstacles\StoneHObstacle.png" />
     <Image Include="..\..\..\..\..\Google Drev\MTA15338\Project (1)\Design\Obstacles\WallHObstacle.png" />
-    <Image Include="..\..\..\..\..\Google Drev\MTA15338\Project (1)\Design\ProgramLayers\MenuLeft.png" />
-    <Image Include="..\..\..\..\..\Google Drev\MTA15338\Project (1)\Design\ProgramLayers\MenuTop.png" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{FD539F90-8A82-45B6-852F-AEFE536C88FE}</ProjectGuid>
