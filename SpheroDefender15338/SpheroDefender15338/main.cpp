@@ -14,7 +14,11 @@ int main(int, char)
 	//webcam variables
 	CameraFeed standardWebcam(0); 
 	CameraFeed webcamOne(1);
-
+    SpheroCoordinate spheroCoordinate;
+    double spheroXCoord;
+    double spheroYCoord;
+    spheroCoordinate.trackSphero();
+    
 	//arrow position variables
 	double x = 0, y = 0;
 	Mat frame, gs;
@@ -118,7 +122,9 @@ int main(int, char)
 		webcamOne.thresholdImageColor(handInput, handColorThreshold, 100, 255, 0, 140, 200, 255, 100, 255, 0);
 		webcamOne.thresholdImageColor(handColorThreshold, handColorThreshold, 0, 100, 0, 0, 140, 0, 0, 100, 0);
 
-
+        spheroXCoord = spheroCoordinate.getXCoord();
+        spheroYCoord = spheroCoordinate.getYCoord();
+        cout << "Sphero Coordinate: " << spheroXCoord << ", " << spheroYCoord << "\n";
 
 		//end of code
 		if (waitKey(30) >= 0)
