@@ -119,6 +119,7 @@ int main(int, char)
 		webcamOne.thresholdImageColor(handColorThreshold, handColorThreshold, 0, 100, 0, 0, 140, 0, 0, 100, 0);
 
 
+
 		//end of code
 		if (waitKey(30) >= 0)
 			break;
