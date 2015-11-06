@@ -23,6 +23,48 @@ Mat CameraFeed::getImageFromWebcam(){
 	return frame;
 }
 
+void CameraFeed::inputImageFixing(Mat inputImage, Mat dst, int minThreshold, int maxThreshold){
+	for (int r = 0; r < inputImage.rows; r++){
+		for (int c = 0; c < inputImage.cols; c++){
+			dst.at<uchar>(r, c) = (255 / (maxThreshold - minThreshold)) * (inputImage.at<uchar>(r, c) - minThreshold);
+		}
+	}
+}
+
+Mat CameraFeed::equalizeHistogram(Mat inputImage, Mat dst) {
+	Mat result = inputImage.clone();
+	result.zeros(inputImage.rows, inputImage.cols, inputImage.type());
+	if (inputImage.data && !inputImage.empty()) {
+		int histogram[256]; //Array for storing histogram values
+		int cumuHistogram[256]; //Array for storing the cumulative histogram values
+		int grayscale = 256;
+		//inputImage histogram
+		for (int i = 0; i < grayscale; i++) {
+			histogram[i] = 0;
+		}
+		for (int y = 0; y < inputImage.rows; y++) {
+			for (int x = 0; x < inputImage.cols; x++) {
+				histogram[inputImage.at<unsigned char>(y, x)]++;
+			}
+		}
+
+		//cumulativeHistogram
+		cumuHistogram[0] = histogram[0];
+		for (int i = 1; i < grayscale; i++) {
+			histogram[i] = histogram[i - 1] + cumuHistogram[i];
+		}
+		//equalizedImage
+		int size = inputImage.rows * inputImage.cols;
+		float probability = 255.0 / size;
+		for (int y = 0; y < inputImage.rows; y++) {
+			for (int x = 0; x < inputImage.cols; x++) {
+				result.at<unsigned char>(y, x) = ((cumuHistogram[inputImage.at<unsigned char>(y, x)]) * probability);
+			}
+		}
+	}
+	return result;
+}
+
 Mat CameraFeed::grassfireSecondRunthrough(Mat inputImage){
 	Mat result;
 	inputImage.copyTo(result);
@@ -90,8 +132,8 @@ Mat CameraFeed::grassFire(Mat inputImage){
 
 Mat CameraFeed::convertRGBtoGS(Mat inputFrame){
 	Mat outputFrame;
-	cvtColor(inputFrame, outputFrame, CV_RGB2GRAY);
-	return outputFrame;
+	cvtColor(inputFrame, inputFrame, CV_RGB2GRAY);
+	return inputFrame;
 }
 
 Mat CameraFeed::segmentImage(Mat inputFrame){
@@ -106,7 +148,7 @@ Mat CameraFeed::segmentImage(Mat inputFrame){
 void CameraFeed::thresholdImage(Mat inputImage, Mat outputImage, int minThreshold, int maxThreshold, int newValue){
 	for (int r = 0; r < inputImage.rows; r++){
 		for (int c = 0; c < inputImage.cols; c++){
-			if (inputImage.at<uchar>(r, c) > minThreshold &&
+			if (inputImage.at<uchar>(r, c) >= minThreshold &&
 				inputImage.at<uchar>(r, c) < maxThreshold)
 				outputImage.at<uchar>(r, c) = newValue;
 			else
@@ -114,17 +156,19 @@ void CameraFeed::thresholdImage(Mat inputImage, Mat outputImage, int minThreshol
 		}
 	}
 }
-void CameraFeed::thresholdImage(Mat inputImage, Mat outputImage, int minThresholdOne, int maxThresholdOne, int newValueOne, 
+void CameraFeed::thresholdImage(Mat inputImage, Mat outputImage, 
+	int minThresholdOne, int maxThresholdOne, int newValueOne, 
 	int minThresholdTwo, int maxThresholdTwo, int newValueTwo)
 {
 	for (int r = 0; r < inputImage.rows; r++){
 		for (int c = 0; c < inputImage.cols; c++){
-			if (inputImage.at<uchar>(r, c) > minThresholdOne &&
+			if (inputImage.at<uchar>(r, c) >= minThresholdOne &&
 				inputImage.at<uchar>(r, c) < maxThresholdOne)
 				outputImage.at<uchar>(r, c) = newValueOne;
 			else
 				outputImage.at<uchar>(r, c) = inputImage.at<uchar>(r, c);
-			if (inputImage.at<uchar>(r, c) > minThresholdTwo &&
+			
+			if (inputImage.at<uchar>(r, c) >= minThresholdTwo &&
 				inputImage.at<uchar>(r, c) < maxThresholdTwo)
 				outputImage.at<uchar>(r, c) = newValueTwo;
 			else
@@ -140,19 +184,19 @@ void CameraFeed::thresholdImage(Mat inputImage, Mat outputImage,
 {
 	for (int r = 0; r < inputImage.rows; r++){
 		for (int c = 0; c < inputImage.cols; c++){
-			if (inputImage.at<uchar>(r, c) > minThresholdOne &&
+			if (inputImage.at<uchar>(r, c) >= minThresholdOne &&
 				inputImage.at<uchar>(r, c) < maxThresholdOne)
 				outputImage.at<uchar>(r, c) = newValueOne;
 			else if (true)
 				outputImage.at<uchar>(r, c) = inputImage.at<uchar>(r, c);
 
-			if (inputImage.at<uchar>(r, c) > minThresholdTwo &&
+			if (inputImage.at<uchar>(r, c) >= minThresholdTwo &&
 				inputImage.at<uchar>(r, c) < maxThresholdTwo)
 				outputImage.at<uchar>(r, c) = newValueTwo;
 			else
 				outputImage.at<uchar>(r, c) = inputImage.at<uchar>(r, c);
 
-			if (inputImage.at<uchar>(r, c) > minThresholdThree &&
+			if (inputImage.at<uchar>(r, c) >= minThresholdThree &&
 				inputImage.at<uchar>(r, c) < maxThresholdThree)
 				outputImage.at<uchar>(r, c) = newValueThree;
 			else
