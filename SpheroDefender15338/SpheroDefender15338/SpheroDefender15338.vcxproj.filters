@@ -90,5 +90,26 @@
     <Image Include="..\..\..\..\..\Google Drev\MTA15338\Project (1)\Design\Obstacles\WallHObstacle.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="..\..\..\..\..\Google Drev\MTA15338\Project (1)\Design\LeftMenuInverseMask.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\..\..\..\..\Google Drev\MTA15338\Project (1)\Design\LeftMenuMask.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\..\..\..\..\Google Drev\MTA15338\Project (1)\Design\TopMenuMask.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\..\..\..\..\Google Drev\MTA15338\Project (1)\Design\TopMenuInverseMask.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\..\..\..\..\Google Drev\MTA15338\Project (1)\Design\ProgramLayers\MenuLeftText.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\..\..\..\..\Google Drev\MTA15338\Project (1)\Design\TextMenuMask.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\..\..\..\..\Google Drev\MTA15338\Project (1)\Design\TextMenuMaskInverse.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

@@ -6,9 +6,7 @@
 using namespace std;
 using namespace cv;
 
-
-
-Mat menuLeft, menuTop, menu, menu2, boomerang, icePatch, stone, sentry, wall, battlefield; //Global variables for the spell images
+Mat menuLeft, menuLeftText, menuLeftTextMask, inverseMenuLeftTextMask, menuTop, menu, menu2, topMenuMask, topMenuInverseMask, boomerang, icePatch, stone, sentry, wall, battlefield, leftMenuMask, inverseLeftMenuMask; //Global variables for the spell images
 
 UserInterface::UserInterface()
 {
@@ -21,6 +19,19 @@ UserInterface::UserInterface()
 	menuLeft = imread("../../../../../Google Drev/MTA15338/Project (1)/Design/ProgramLayers/MenuLeft.png", 1);
 	menuTop = imread("../../../../../Google Drev/MTA15338/Project (1)/Design/ProgramLayers/MenuTop.png", 1);
 	battlefield = imread("../../../../../Google Drev/MTA15338/Project (1)/Design/ProgramLayers/Battlefield.png", 1);
+	leftMenuMask = imread("../../../../../Google Drev/MTA15338/Project (1)/Design/LeftMenuMask.png", 1);
+	cvtColor(leftMenuMask, leftMenuMask, CV_RGB2GRAY);
+	inverseLeftMenuMask = imread("../../../../../Google Drev/MTA15338/Project (1)/Design/LeftMenuInverseMask.png", 1);
+	cvtColor(inverseLeftMenuMask, inverseLeftMenuMask, CV_RGB2GRAY);
+	topMenuMask = imread("../../../../../Google Drev/MTA15338/Project (1)/Design/TopMenuMask.png", 1);
+	cvtColor(topMenuMask, topMenuMask, CV_RGB2GRAY);
+	topMenuInverseMask = imread("../../../../../Google Drev/MTA15338/Project (1)/Design/TopMenuInverseMask.png", 1);
+	cvtColor(topMenuInverseMask, topMenuInverseMask, CV_RGB2GRAY);
+	menuLeftText = imread("../../../../../Google Drev/MTA15338/Project (1)/Design/ProgramLayers/MenuLeftText.png", 1);
+	menuLeftTextMask = imread("../../../../../Google Drev/MTA15338/Project(1)/Design/TextMenuMask.png", 0);
+	//cvtColor(menuLeftTextMask, menuLeftTextMask, CV_RGB2GRAY);
+	inverseMenuLeftTextMask = imread("../../../../../Google Drev/MTA15338/Project (1)/Design/TextMenuMaskInverse.png", 1);
+	cvtColor(inverseMenuLeftTextMask, inverseMenuLeftTextMask, CV_RGB2GRAY);
 }
 
 Mat UserInterface::getBoomerang(){
@@ -45,7 +56,7 @@ Mat UserInterface::getWall(){
 }
 
 Mat UserInterface::getMenu(){
-	return menu;
+	return menu2;
 }
 
 UserInterface::~UserInterface()
@@ -72,9 +83,18 @@ void UserInterface::rotation(Mat input, int degrees, int xOffset, int yOffset){
 void UserInterface::interfaceLayers()
 {
 	menuTop.copyTo(menu);
-    
-	addLayer(menuTop, battlefield, menu);
-	addLayer(menuLeft, menu, menu);
+	add(battlefield, menuLeft, menuLeft, inverseLeftMenuMask, -1);
+	add(menuLeft, menuLeft, menuLeft, leftMenuMask, -1);
+	add(battlefield, menuTop, menuTop, topMenuInverseMask, -1);
+	add(menuTop, menuTop, menuTop, topMenuMask, -1);
+	//imshow("topmenu", menuTop);
+	//imshow("leftmenu", menuLeft);
+	addWeighted(menuTop, 0.85, menuLeft, 0.85, -120, menu);
+	add(menu, menuLeftText, menuLeftText, inverseMenuLeftTextMask, -1);
+	add(menuLeftText, menuLeftText, menu2, menuLeftTextMask, -1);
+	addWeighted(menuLeftText, 1, menu, 0, -30, menu2);
+	
+	
 }
 
 void UserInterface::addLayer(Mat input1, Mat input2, Mat output) { //Input images
@@ -102,10 +122,12 @@ void UserInterface::addLayer(Mat input1, Mat input2, Mat output) { //Input image
 //{
 //	int direction = 0;
 //	direction = tan(angle -180); //opposite direction of the direction of the arrow
+//
+//
 //	
 //}
 
-//Mat UserInterface::icePatchSpell(double xCoord, double yCoord, int angle)
+//void UserInterface::icePatchSpell(double xCoord, double yCoord, int angle)
 //{
 //	int direction = 0;
 //	direction = angle;
