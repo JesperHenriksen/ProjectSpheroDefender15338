@@ -16,6 +16,7 @@ public:
 		Returns the greyscale Mat
 	*/
 	Mat convertRGBtoGS(Mat inputFrame);
+	void converRGBToHSV(Mat inputImage, Mat output);
 	Mat segmentImage(Mat inputFrame);
 	Mat equalizeHistogram(Mat inputImage, Mat dst);
 	void inputImageFixing(Mat inputImage, Mat dst, int minThreshold, int maxThreshold);
@@ -70,7 +71,8 @@ public:
 		Returns an image with a given channel negated 
 	*/
 	Mat negateChannel(int channelNegate, Mat frame);
-	void CameraFeed::thresholdImageColor(Mat inputImage, Mat outputImage, int minThresholdRed, int maxThresholdRed, int newValueRed,
+	void thresholdImageColor(Mat inputImage, Mat outputImage, 
+		int minThresholdRed, int maxThresholdRed, int newValueRed,
 		int minThresholdGreen, int maxThresholdGreen, int newValueGreen,
 		int minThresholdBlue, int maxThresholdBlue, int newValueBlue);
 private:
@@ -87,6 +89,9 @@ private:
 	@param inputImage
 		inputImage is the image you want to change to be the connected blobs
 	*/
-	Mat CameraFeed::grassfireSecondRunthrough(Mat inputImage);
+	Mat grassfireSecondRunthrough(Mat inputImage);
+	double getHue(double R, double G, double B); //Declare the functions
+	double getSaturation(double R, double G, double B);
+	int getIntensity(int R, int G, int B);
 };
 
