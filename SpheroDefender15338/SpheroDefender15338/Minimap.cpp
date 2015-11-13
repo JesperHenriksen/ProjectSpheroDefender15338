@@ -45,7 +45,7 @@ double Minimap::getAngleOfArrow(Mat inputImage, int thresholdMin, int thresholdM
  	return result;
 }
 
-void Minimap::placeSpell(Mat inputImage, int thresholdMin, int thresholdMax, double& xCoord, double& yCoord){
+void Minimap::placeSpell(Mat inputImage, int thresholdMin, int thresholdMax, double &xCoord, double &yCoord){
 
 	int collectiveX = 0, collectiveY = 0;
 	int totalPixels = 0;
@@ -58,8 +58,10 @@ void Minimap::placeSpell(Mat inputImage, int thresholdMin, int thresholdMax, dou
 			}
 		}
 	}
-	xCoord = collectiveX / totalPixels;
-	yCoord = collectiveY / totalPixels;
+    if (totalPixels != 0) {
+        xCoord = collectiveX / totalPixels;
+        yCoord = collectiveY / totalPixels;
+    }
 }
 
 Mat Minimap::segmentImage(CameraFeed camfeed){ 

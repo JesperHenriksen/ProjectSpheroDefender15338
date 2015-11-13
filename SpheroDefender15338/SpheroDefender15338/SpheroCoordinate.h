@@ -26,10 +26,10 @@ public:
 	/*!
 		Start tracking of sphero on the Battlefield. This starts a thread that continues sends Sphero coordinates.
 	!*/
-    void trackSphero();
+    void trackSphero(Mat background, CameraFeed webcamSphero);
 
 private:
-	double xCoordSphero; //X coordinate of the Sphero.
-	double yCoordSphero; //Y coordinate of the Sphero.
+    double xCoordSphero = 0.0; //X coordinate of the Sphero.
+    double yCoordSphero = 0.0; //Y coordinate of the Sphero.
 };
 

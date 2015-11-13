@@ -6,7 +6,7 @@
 using namespace cv;
 using namespace std;
 
-CameraFeed webcamSphero(2);
+
 
 SpheroCoordinate::SpheroCoordinate(){}
 
@@ -30,25 +30,20 @@ int SpheroCoordinate::getYCoord(){
 	return yCoordSphero;
 }
 
-void SpheroCoordinate::trackSphero() {
-    Mat backgroundSphero = webcamSphero.getImageFromWebcam();
-    backgroundSphero = webcamSphero.convertRGBtoGS(backgroundSphero);
+void SpheroCoordinate::trackSphero(Mat background, CameraFeed webcamSphero) {
+
     Mat frame, foreground;
     Minimap minimap;
-    double xCoord, yCoord;
 
-
-    for (;;) {
         frame = webcamSphero.getImageFromWebcam();
         frame = webcamSphero.convertRGBtoGS(frame);
-        addWeighted(backgroundSphero, 0.995, frame, 0.005, 0, backgroundSphero);
+        addWeighted(background, 0.995, frame, 0.005, 0, background);
         foreground.zeros(frame.rows, frame.cols, frame.type());
-        subtract(frame, backgroundSphero, foreground);
-        //medianBlur(foreground,foreground, 5);
-        threshold(foreground, foreground, 0, 255, THRESH_BINARY);
-        //imshow("sphero", foreground);
-        minimap.placeSpell(foreground, 200, 255, xCoord, yCoord);
-        setXCoord(xCoord);
-        setYCoord(yCoord);
-    }
+        subtract(frame, background, foreground);
+        medianBlur(foreground,foreground, 5);
+        //threshold(foreground, foreground, 0, 255, THRESH_BINARY);
+        imshow("background", foreground);
+        webcamSphero.thresholdImage(foreground, foreground, 50, 255, 255, 0, 100, 0);
+        imshow("sphero", foreground);
+        minimap.placeSpell(foreground, 200, 256, xCoordSphero, yCoordSphero);
 }
