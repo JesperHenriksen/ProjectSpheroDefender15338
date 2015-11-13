@@ -13,12 +13,13 @@ Minimap::~Minimap()
 {
 }
 
-double Minimap::getAngleOfArrow(Mat inputImage, int thresholdMin, int thresholdMax){
-	double result = 0;
+void Minimap::getCenterOfBlob(Mat inputImage,
+	double &recCenterX, double &recCenterY, 
+	double &triCenterX, double &triCenterY, 
+	int thresholdMin, int thresholdMax)
+{
 	int recCollectiveX = 0, recCollectiveY = 0, recTotalPixels = 0;
 	int triCollectiveX = 0, triCollectiveY = 0, triTotalPixels = 0;
-	double recCenterX = 0, recCenterY = 0;
-	double triCenterX = 0, triCenterY = 0;
 	for (int y = 0; y < inputImage.rows; y++){
 		for (int x = 0; x < inputImage.cols; x++){
 			if (inputImage.at<uchar>(y, x) >(thresholdMin - 5) && inputImage.at<uchar>(y, x) < (thresholdMin + 5)){
@@ -41,11 +42,20 @@ double Minimap::getAngleOfArrow(Mat inputImage, int thresholdMin, int thresholdM
 		triCenterX = triCollectiveX / triTotalPixels;
 		triCenterY = triCollectiveY / triTotalPixels;
 	}
+
+}
+
+double Minimap::getAngleOfArrow(Mat inputImage, int thresholdMin, int thresholdMax){
+	double result = 0;
+
+	double recCenterX = 0, recCenterY = 0;
+	double triCenterX = 0, triCenterY = 0;
+	getCenterOfBlob(inputImage,recCenterX,recCenterY,triCenterX,triCenterY,thresholdMin,thresholdMax);
 	result = atan2(triCenterY - recCenterY, triCenterX - recCenterX) * 180 / 3.14;
  	return result;
 }
 
-void Minimap::placeSpell(Mat inputImage, int thresholdMin, int thresholdMax, double& xCoord, double& yCoord){
+void Minimap::placeSpell(Mat inputImage, int thresholdMin, int thresholdMax, double &xCoord, double &yCoord){
 
 	int collectiveX = 0, collectiveY = 0;
 	int totalPixels = 0;
@@ -58,8 +68,10 @@ void Minimap::placeSpell(Mat inputImage, int thresholdMin, int thresholdMax, dou
 			}
 		}
 	}
-	xCoord = collectiveX / totalPixels;
-	yCoord = collectiveY / totalPixels;
+    if (totalPixels != 0) {
+        xCoord = collectiveX / totalPixels;
+        yCoord = collectiveY / totalPixels;
+    }
 }
 
 Mat Minimap::segmentImage(CameraFeed camfeed){ 

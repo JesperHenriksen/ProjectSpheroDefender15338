@@ -13,7 +13,7 @@ int main(int, char)
 {
 	//webcam variables
 	CameraFeed standardWebcam(0); 
-	CameraFeed webcamOne(0);
+	CameraFeed webcamOne(1);
 
 	//Mat angleBackground = webcamOne.getImageFromWebcam();
 	Mat raw, blob, wizardBackground = webcamOne.getImageFromWebcam();
@@ -25,6 +25,21 @@ int main(int, char)
 
 	userInterface.getStartPoint(wizardBackground, x, y);
 	cout << x << ", " << y;
+	/*UserInterface userInterface;
+	userInterface.interfaceLayers();
+	imshow("left menu", userInterface.getMenu());
+	*/
+	for (;;){
+		//arrow position variables
+		double x = 0, y = 0;
+		double minimapXCoord = 0, minimapYCoord = 0;
+		Mat frame, gs;
+		// get coordinates for arrow
+		frame = webcamOne.getImageFromWebcam();
+		frame = webcamOne.convertRGBtoGS(frame);
+		frame.copyTo(gs);
+		standardWebcam.thresholdImage(frame,frame,100,255,0,0,100,255);
+		//minimap.placeSpell(frame, 50,255,minimapXCoord,minimapYCoord);
 
 	waitKey(0);
 
@@ -40,7 +55,7 @@ int main(int, char)
 	//	frame.copyTo(gs);
 	//	standardWebcam.thresholdImage(frame,frame,100,255,0,0,100,255);
 	//	//minimap.placeSpell(frame, 50,255,minimapXCoord,minimapYCoord);
-
+	
 	//	//angle of arrow variables
 	//	double angle = 0;
 	//	Mat angleInput, thresholded, angleGrayscale;
@@ -72,13 +87,12 @@ int main(int, char)
 
 
 
-	//	//end of code
-	//	if (waitKey(30) >= 0)
-	//		break;
-	//}
-	//waitKey(0);
+		//end of code
+		if (waitKey(30) >= 0)
+			break;
+	}
+	waitKey(0);
 	
-	//wizardBackground = webcamOne.convertRGBtoGS(wizardBackground);
 
 	//for (;;) {
  //       frame = webcamOne.getImageFromWebcam();
@@ -93,7 +107,7 @@ int main(int, char)
 	//	imshow("final", foreground);
 	//	if (waitKey(30) >= 0)
 	//		break;
-	//}
+
 
 
 	//for (;;){
@@ -113,6 +127,5 @@ int main(int, char)
 	//	if (waitKey(30) >= 0)
 	//		break;
 	//}
-	
 	return 0;
 }
