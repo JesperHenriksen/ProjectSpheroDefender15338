@@ -63,6 +63,181 @@ UserInterface::~UserInterface()
 {
 }
 
+void UserInterface::getStartPoint(Mat input, double &startX, double &startY){
+
+	double slope = 0;
+	double b = 0;
+	double x1 = 0;
+	double y1 = 0;
+	double x2 = 0;
+	double y2 = 0;
+	double x3 = 0;
+	double y3 = 0;
+	double x4 = 0;
+	double y4 = 0;
+	int triX = 2;
+	int triY = 2;
+	int recX = 3;
+	int recY = 3;
+
+	//Finding the slope(a) of the vector between two points
+	if ((triX - recX) != 0){
+		slope = (triY - recY) / (triX - recX);
+		cout << slope << " \n";
+	}
+	else {
+		slope = 0;
+	}
+
+	//Finding the intersection point(b) of the vector
+	b = triY - (slope*triX);
+
+
+	if (slope != 0){
+
+		//We want to find when the lines intersect with the fourth axis
+		if (b >= 0 && b < input.rows){
+			x4 = 0;
+			y4 = b;
+
+			//We want to find the intersection between the fourth axis and the first
+			if ((y1 - b) / slope > 0 && (y1 - b) / slope < input.rows) {
+				x1 = (y1 - b) / slope;
+				y1 = 0;
+			}
+
+			//We want to find the intersection between the fourth axis and the third
+			else if (input.rows < b){
+				x3 = (y3 - b) / slope;
+				y3 = input.rows;
+			}
+
+			//We want to find the intersection between the fourth axis and the second
+			else if ((y1 - b) / slope > input.cols || (y3 - b) / slope > input.cols){
+				x2 = input.cols;
+				y2 = slope*input.cols + b;
+			}
+		}
+
+		//We want to find when the lines intersect with the third axis
+		else
+			if (b = input.rows && (y1 - b) / slope < input.cols){
+				x3 = (y3 - b) / slope;
+				y3 = input.rows;
+
+				//We want to find the intersection between the third axis and the first
+				if ((y1 - b) / slope > 0 && (y1 - b) / slope < input.rows){
+					x1 = (y1 - b) / slope;
+					y1 = 0;
+				}
+
+				//We want to find the intersection between the third axis and the second
+				else if ((y1 - b) / slope > input.cols || (y3 - b) / slope > input.cols){
+					x2 = input.cols;
+					y2 = slope*input.cols + b;
+				}
+			}
+
+		//We want to find when the lines intersect with the second axis
+			else
+				if ((y1 - b) / slope > input.cols || (y3 - b) / slope > input.cols){
+					x2 = input.cols;
+					y2 = slope*input.cols + b;
+
+					//We want to find the intersection between the second axis and the first
+					if ((y1 - b) / slope > 0 && (y1 - b) / slope < input.rows){
+						x1 = (y1 - b) / slope;
+						y1 = 0;
+					}
+				}
+	} 
+	
+	//All point have slope = 0.
+	//We sart by finding vertical lines
+	else 
+		if (triX = recX){
+			if (triY < recY){
+				x3 = triX;
+				y3 = input.rows;
+			}
+			else if (triY > recY){
+				x1 = triX;
+				y1 = 0;
+			}
+		}
+
+	//Then we find horizontal lines
+		else
+			if (triY = recY){
+				if (triX < recX){
+					x2 = input.cols;
+					y2 = triY;
+				}
+				else if (triX > recX){
+					x4 = 0;
+					y4 = triY;
+				}
+			}
+
+	//We want to find the start points
+	if (slope < 0){
+		if (triY < recY && (y1 - b) / slope < 0){  //Start point 4
+			startX = x4;
+			startY = y4;
+		}
+		else if (triY < recY && (b = input.rows && (y1 - b) / slope < input.cols)){  //Start point 3
+			startX = x3;
+			startY = y3;
+		}
+		else if (triY > recY && ((y1 - b) / slope > 0 && (y1 - b) / slope < input.rows)){  //Start point 1
+			startX = x1;
+			startY = y1;
+		}
+		else if (triY > recY && ((y1 - b) / slope > input.cols || (y3 - b) / slope > input.cols)){ //Startpoint 2
+			startX = x2;
+			startY = y2;
+		}
+	}
+	else 
+		if (slope > 0){
+			if (triY < recY && ((y1 - b) / slope > input.cols || (y3 - b) / slope > input.cols)) {  //Startpoint 2
+				startX = x2;
+				startY = y2;
+			}
+			else if (triY < recY && (b = input.rows && (y1 - b) / slope < input.cols)){  //Start point 3
+				startX = x3;
+				startY = y3;
+			}
+			else if (triY > recY && ((y1 - b) / slope > 0 && (y1 - b) / slope < input.rows)){  //Start point 1
+				startX = x1;
+				startY = y1;
+			}
+			else if (triY > recY && (y1 - b) / slope < 0){  //Start point 4
+				startX = x4;
+				startY = y4;
+			}
+		}
+	else 
+		if (slope = 0){
+			if (triX > recX){
+				startX = x4;
+				startY = y4;
+			}
+			else if (triX < recX){
+				startX = x2;
+				startY = y2;
+			}
+			else if (triY > recY){
+				startX = x1;
+				startY = y1;
+			}
+			else if (triY < recY){
+				startX = x3;
+				startY = y3;
+			}
+		}
+}
+
 
 void UserInterface::rotation(Mat input, int degrees, int xOffset, int yOffset){
 	Mat rotatedImage(input.rows, input.cols, input.type());
@@ -135,11 +310,13 @@ void UserInterface::addLayer(Mat input1, Mat input2, Mat output) { //Input image
 //	rotation(icePatch, angle, 0, 0);
 //}
 
-//void UserInterface::stoneSpell(double xCoord, double yCoord, int angle)
-//{
-//	int direction = 0;
-//	direction = tan(angle -180); //opposite direction of the direction of the arrow
-//}
+void UserInterface::stoneSpell( Mat input, double xCoord, double yCoord, int angle)
+{
+	int direction = 0;	
+
+	direction = tan(angle - 180); //opposite direction of the direction of the arrow
+
+}
 
 //Mat UserInterface::sentrySpell()
 //{
@@ -153,4 +330,5 @@ void UserInterface::addLayer(Mat input1, Mat input2, Mat output) { //Input image
 //	direction = angle;
 //
 //	rotation(wall, angle, 0, 0);
+//
 //}

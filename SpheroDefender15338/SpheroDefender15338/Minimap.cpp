@@ -68,8 +68,10 @@ void Minimap::placeSpell(Mat inputImage, int thresholdMin, int thresholdMax, dou
 			}
 		}
 	}
-	xCoord = collectiveX / totalPixels;
-	yCoord = collectiveY / totalPixels;
+    if (totalPixels != 0) {
+        xCoord = collectiveX / totalPixels;
+        yCoord = collectiveY / totalPixels;
+    }
 }
 
 Mat Minimap::segmentImage(CameraFeed camfeed){ 

@@ -14,11 +14,12 @@ public:
 	Mat getWall();
 	void interfaceImages();
 	void rotation(Mat input, int degrees, int xOffset, int yOffset);
+	void getStartPoint(Mat input, double &startX, double &startY);
 	void interfaceLayers();
     void addLayer(Mat input1, Mat input2, Mat output);
 	void boomerangSpell(double xCoord, double yCoord, int angle);
 	void icePatchSpell(double xCoord, double yCoord, int angle);
-	void stoneSpell(double xCoord, double yCoord, int angle);
+	void stoneSpell(Mat input, double xCoord, double yCoord, int angle);
 	void sentrySpell(double xCoord, double yCoord, int angle);
 	void wallSpell(double xCoord, double yCoord, int angle);
 };
