@@ -75,10 +75,10 @@ void UserInterface::getStartPoint(Mat input, double &startX, double &startY){
 	double y3 = 0;
 	double x4 = 0;
 	double y4 = 0;
-	int triX = 2;
-	int triY = 2;
-	int recX = 3;
-	int recY = 3;
+	int triX = 3;
+	int triY = 3;
+	int recX = 4;
+	int recY = 2;
 
 	//Finding the slope(a) of the vector between two points
 	if ((triX - recX) != 0){
@@ -101,15 +101,15 @@ void UserInterface::getStartPoint(Mat input, double &startX, double &startY){
 			y4 = b;
 
 			//We want to find the intersection between the fourth axis and the first
-			if ((y1 - b) / slope > 0 && (y1 - b) / slope < input.rows) {
-				x1 = (y1 - b) / slope;
+			if ((y1 - b) / slope > 0 && (y1 - b) / slope < input.cols) {
 				y1 = 0;
+				x1 = (y1 - b) / slope;
 			}
 
 			//We want to find the intersection between the fourth axis and the third
-			else if (input.rows < b){
+			else if (/*input.rows < b ||*/ (y3-b)/slope < input.cols) {
+				y3 = input.rows; 
 				x3 = (y3 - b) / slope;
-				y3 = input.rows;
 			}
 
 			//We want to find the intersection between the fourth axis and the second
@@ -121,14 +121,14 @@ void UserInterface::getStartPoint(Mat input, double &startX, double &startY){
 
 		//We want to find when the lines intersect with the third axis
 		else
-			if (b = input.rows && (y1 - b) / slope < input.cols){
-				x3 = (y3 - b) / slope;
+			if (b = input.rows && (y3 - b) / slope < input.cols){
 				y3 = input.rows;
+				x3 = (y3 - b) / slope;
 
 				//We want to find the intersection between the third axis and the first
-				if ((y1 - b) / slope > 0 && (y1 - b) / slope < input.rows){
-					x1 = (y1 - b) / slope;
+				if ((y1 - b) / slope > 0 && (y1 - b) / slope < input.cols){
 					y1 = 0;
+					x1 = (y1 - b) / slope;
 				}
 
 				//We want to find the intersection between the third axis and the second
@@ -140,14 +140,14 @@ void UserInterface::getStartPoint(Mat input, double &startX, double &startY){
 
 		//We want to find when the lines intersect with the second axis
 			else
-				if ((y1 - b) / slope > input.cols || (y3 - b) / slope > input.cols){
+				if ((y1 - b) / slope == input.cols || (slope*input.cols+b) < input.rows){
 					x2 = input.cols;
 					y2 = slope*input.cols + b;
 
 					//We want to find the intersection between the second axis and the first
-					if ((y1 - b) / slope > 0 && (y1 - b) / slope < input.rows){
-						x1 = (y1 - b) / slope;
+					if ((y1 - b) / slope > 0 && (y1 - b) / slope < input.cols){
 						y1 = 0;
+						x1 = (y1 - b) / slope;
 					}
 				}
 	} 
