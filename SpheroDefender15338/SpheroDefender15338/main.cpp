@@ -19,36 +19,33 @@ int main(int, char)
 	Mat raw, blob, wizardBackground = webcamOne.getImageFromWebcam();
 
     Mat foreground;
-	Minimap minimap;
-	UserInterface userInterface;
-	double x = 0.0, y = 0.0;
+	
+	//UserInterface userInterface;
 
-	userInterface.getStartPoint(wizardBackground, x, y);
+	//arrow variables
+	Mat frame, gs;
+	Minimap minimap;
+	double x = 0.0, y = 0.0;
+	double minimapXCoord = 0, minimapYCoord = 0;
+	//angle
+	double angle = 0;
+	Mat angleInput, thresholded, angleGrayscale;
+
+	//hand tracking variables
+	Mat handInput, handColorThreshold, handGscale, handThreshold;
+
+	//userInterface.getStartPoint(wizardBackground, x, y);
 	cout << x << ", " << y;
 	/*UserInterface userInterface;
 	userInterface.interfaceLayers();
 	imshow("left menu", userInterface.getMenu());
 	*/
-	for (;;){
-		//arrow position variables
-		double x = 0, y = 0;
-		double minimapXCoord = 0, minimapYCoord = 0;
-		Mat frame, gs;
-		// get coordinates for arrow
-		frame = webcamOne.getImageFromWebcam();
-		frame = webcamOne.convertRGBtoGS(frame);
-		frame.copyTo(gs);
-		standardWebcam.thresholdImage(frame,frame,100,255,0,0,100,255);
-		//minimap.placeSpell(frame, 50,255,minimapXCoord,minimapYCoord);
 
-	waitKey(0);
+	Mat sat, hue, intensity;
 
 	
-	//for (;;){
-	//	//arrow position variables
-	//	double x = 0, y = 0;
-	//	double minimapXCoord = 0, minimapYCoord = 0;
-	//	Mat frame, gs;
+	for (;;){
+
 	//	// get coordinates for arrow
 	//	frame = webcamOne.getImageFromWebcam();
 	//	frame = webcamOne.convertRGBtoGS(frame);
@@ -56,9 +53,7 @@ int main(int, char)
 	//	standardWebcam.thresholdImage(frame,frame,100,255,0,0,100,255);
 	//	//minimap.placeSpell(frame, 50,255,minimapXCoord,minimapYCoord);
 	
-	//	//angle of arrow variables
-	//	double angle = 0;
-	//	Mat angleInput, thresholded, angleGrayscale;
+
 	//	//get the angle of arrow
 	//	angleInput = webcamOne.getImageFromWebcam();
 	//	angleInput *= 1.5;
@@ -76,56 +71,64 @@ int main(int, char)
 	//	angle = minimap.getAngleOfArrow(thresholded, 0, 100);
 	//	//cout << angle << " " << "\n";
 	//
-	//	//hand tracking variables
-	//	Mat handInput, handColorThreshold, handGscale, handThreshold;
-	//	//hand thresholding
-	//	handInput = standardWebcam.getImageFromWebcam();
-	//	handInput *= 2;
-	//	handInput.copyTo(handColorThreshold);
-	//	webcamOne.thresholdImageColor(handInput, handColorThreshold, 100, 255, 0, 140, 200, 255, 100, 255, 0);
-	//	webcamOne.thresholdImageColor(handColorThreshold, handColorThreshold, 0, 100, 0, 0, 140, 0, 0, 100, 0);
-
-
-
+		
+		//hand thresholding
+		handInput = standardWebcam.getImageFromWebcam();
+		//webcamOne.thresholdImageColor(handColorThreshold, handColorThreshold, 0, 0, 0, 0, 0, 0, 0, 256, 0);
+		cvtColor(handInput, sat, COLOR_BGR2HSV);
+		//split(handColorThreshold,handColorThreshold);
+		webcamOne.thresholdHand(sat, sat, 40, 90, 255, 0, 256, 0, 256);
+		//cvtColor(handColorThreshold, handColorThreshold, CV_THRESH_BINARY);
+		//webcamOne.negateChannel(1, sat);
+		//webcamOne.negateChannel(2, sat);
+		sat.copyTo(handColorThreshold);
+		cvtColor(sat, handColorThreshold, CV_BGR2GRAY);
+		//sat *= 5;
+		blur(sat, sat, Size(3, 3));
+		medianBlur(sat, sat, 5);
+		webcamOne.thresholdImage(handColorThreshold, handColorThreshold, 50, 255, 0, 0, 20, 0, 20, 50, 255);
+		medianBlur(handColorThreshold, handColorThreshold, 5);
+		imshow("no hand color", handInput);
+		imshow("threshold", handColorThreshold);
+		imshow("sat", sat);
+		//imshow("hue", hue);
+		//imshow("int", intensity);
 		//end of code
 		if (waitKey(30) >= 0)
 			break;
 	}
 	waitKey(0);
-	
-
-	//for (;;) {
- //       frame = webcamOne.getImageFromWebcam();
- //       frame = webcamOne.convertRGBtoGS(frame);
- //       addWeighted(wizardBackground, 0.995, frame, 0.005, 0, wizardBackground); 
- //       foreground.zeros(frame.rows,frame.cols, frame.type());
- //       subtract(frame, wizardBackground, foreground);
- //       //medianBlur(image, image, 3);
- //       // medianBlur(foreground,foreground, 5);
-	//	threshold(foreground, foreground,0,255,THRESH_BINARY);
-	//	//imshow("New Image", newImage);
-	//	imshow("final", foreground);
-	//	if (waitKey(30) >= 0)
-	//		break;
-
-
-
-	//for (;;){
-	//	Mat erosionKernel = Mat::ones(5,5,CV_8UC1);
-	//	raw = standardWebcam.getImageFromWebcam();
-	//	raw.copyTo(frame);
-	//	//standardWebcam.thresholdImageColor(frame,frame,0,0,0,0,0,0,0,255,0);
-	//	imshow("test", frame);
-	//	frame.copyTo(gs);
-	//	frame = standardWebcam.convertRGBtoGS(frame);
-	//	imshow("greyscale",gs);
-	//	standardWebcam.thresholdImage(frame, frame, 0, 50, 0, 50, 150, 255, 150, 255, 0);
-	//	erode(frame,frame,erosionKernel);
-	//	blob = standardWebcam.grassFire(frame);
-	//	imshow("fired the Grassfire",blob);
-	//	imshow("input", raw);
-	//	if (waitKey(30) >= 0)
-	//		break;
-	//}
 	return 0;
 }
+
+//for (;;){
+//	Mat erosionKernel = Mat::ones(5,5,CV_8UC1);
+//	raw = standardWebcam.getImageFromWebcam();
+//	raw.copyTo(frame);
+//	//standardWebcam.thresholdImageColor(frame,frame,0,0,0,0,0,0,0,255,0);
+//	imshow("test", frame);
+//	frame.copyTo(gs);
+//	frame = standardWebcam.convertRGBtoGS(frame);
+//	imshow("greyscale",gs);
+//	standardWebcam.thresholdImage(frame, frame, 0, 50, 0, 50, 150, 255, 150, 255, 0);
+//	erode(frame,frame,erosionKernel);
+//	blob = standardWebcam.grassFire(frame);
+//	imshow("fired the Grassfire",blob);
+//	imshow("input", raw);
+//	if (waitKey(30) >= 0)
+//		break;
+//}
+
+//for (;;) {
+//       frame = webcamOne.getImageFromWebcam();
+//       frame = webcamOne.convertRGBtoGS(frame);
+//       addWeighted(wizardBackground, 0.995, frame, 0.005, 0, wizardBackground); 
+//       foreground.zeros(frame.rows,frame.cols, frame.type());
+//       subtract(frame, wizardBackground, foreground);
+//       //medianBlur(image, image, 3);
+//       // medianBlur(foreground,foreground, 5);
+//	threshold(foreground, foreground,0,255,THRESH_BINARY);
+//	//imshow("New Image", newImage);
+//	imshow("final", foreground);
+//	if (waitKey(30) >= 0)
+//		break;

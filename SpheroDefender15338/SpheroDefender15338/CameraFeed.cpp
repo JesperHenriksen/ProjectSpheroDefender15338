@@ -242,6 +242,28 @@ void CameraFeed::thresholdImageColor(Mat inputImage, Mat outputImage, int minThr
 	}
 }
 
+void CameraFeed::thresholdHand(Mat inputImage, Mat outputImage, int minThresholdHue, int maxThresholdHue, int newValueHue,
+	int minThresholdGreen, int maxThresholdGreen,
+	int minThresholdBlue, int maxThresholdBlue){
+	for (int r = 0; r < inputImage.rows; r++){
+		for (int c = 0; c < inputImage.cols; c++){
+			if (inputImage.at<Vec3b>(r, c)[0] > minThresholdBlue && inputImage.at<Vec3b>(r, c)[0] < maxThresholdBlue
+				&& inputImage.at<Vec3b>(r, c)[2] > minThresholdHue && inputImage.at<Vec3b>(r, c)[2] < maxThresholdHue
+				&& inputImage.at<Vec3b>(r, c)[1] >minThresholdGreen && inputImage.at<Vec3b>(r, c)[1] < maxThresholdGreen){
+				outputImage.at<Vec3b>(r, c)[0] = 255;
+				outputImage.at<Vec3b>(r, c)[1] = 255;
+				outputImage.at<Vec3b>(r, c)[2] = 255;
+
+			}
+			else{
+				outputImage.at<Vec3b>(r, c)[0] = inputImage.at<Vec3b>(r, c)[0];
+				outputImage.at<Vec3b>(r, c)[1] = inputImage.at<Vec3b>(r, c)[1];
+				outputImage.at<Vec3b>(r, c)[2] = inputImage.at<Vec3b>(r, c)[2];			
+			}
+		}
+	}
+}
+
 Mat CameraFeed::negateChannel(int channelNegate1, Mat frame)
 {
 	Mat newFrame = frame;
@@ -262,15 +284,15 @@ Mat CameraFeed::setZeroesInChannel(Mat inputFrame){
 double CameraFeed::getHue(double R, double G, double B) {
 	double H = 0;
 	double maximum = MAX(R, MAX(G, B)); //calculate the maximum of r, g and b.
-
+	int i = getIntensity(R,G,B);
 	//formula to converting hue
 	H = acos((0.5*((R - G) + (R - B)) /
 		(sqrt((R - G)*(R - G) + (R - B)*(G - B)))));
 
-	if (R == maximum) { //if the red value is equal to the maximum value of R, G and B,
+	if (R == i) { //if the red value is equal to the maximum value of R, G and B,
 		H = H;          //set H equal to the formula.
 	}
-	else if (G == maximum){ //if the green value is equal to the maximum of R, G and B,
+	else if (G == i){ //if the green value is equal to the maximum of R, G and B,
 		H = H;                //set H equal to the formula.
 	}
 	else{          //otherwise (if B is equal to the maximum),
@@ -312,27 +334,30 @@ int CameraFeed::getIntensity(int R, int G, int B) {
 	return I;
 }
 
-void CameraFeed::converRGBToHSV(Mat inputImage, Mat output) {
+void CameraFeed::converRGBToHSV(Mat inputImage, Mat imageHue, Mat imageSat, Mat imageInt) {
 	Mat image, result;
 	result = Mat::zeros(inputImage.rows, inputImage.cols, inputImage.type());
 	image = inputImage; //Function that loads the image
-	output.zeros(inputImage.rows, inputImage.cols, inputImage.type()); 
 
-	if (inputImage.data && !inputImage.empty()){ //if there is some data to be loaded and the inputImage is not empty,
-		for (int y = 0; y < inputImage.rows; y++){ //y starts at 0. When y is smaller than the inputImage rows, the loop keeps running.
-			for (int x = 0; x < inputImage.cols; x++){ //x starts a 0. When x is smaller than the inputImage columns, the loop keeps running.
-				result.at<Vec3b>(y, x)[0] = getHue(inputImage.at<Vec3b>(y, x)[2], //we have three channels at a RGB inputImage. Channel 2 is the red channel.
-													inputImage.at<Vec3b>(y, x)[1], //channel 1 is the green channel
-													inputImage.at<Vec3b>(y, x)[0]);//getHue also needs to know about getSaturation, therefore this function is included.;
-				result.at<Vec3b>(y, x)[1] = getSaturation(inputImage.at<Vec3b>(y, x)[2], //convert the getSaturation output to a double, in order for the inputImage to be gray-scaled.
-					inputImage.at<Vec3b>(y, x)[1],
-					inputImage.at<Vec3b>(y, x)[0])*255.;
-				result.at<Vec3b>(y, x)[2] = getIntensity(inputImage.at<Vec3b>(y, x)[2], //Vec3b gives 3 pixel values. This one gives the pixel values of the red pixel
-					inputImage.at<Vec3b>(y, x)[1],
-					inputImage.at<Vec3b>(y, x)[0]);
+	if (image.data && !image.empty()){ //if there is some data to be loaded and the image is not empty,
+		for (int y = 0; y < image.rows; ++y){ //y starts at 0. When y is smaller than the image rows, the loop keeps running.
+			for (int x = 0; x < image.cols; ++x){ //x starts a 0. When x is smaller than the image columns, the loop keeps running.
+				double satVal = getSaturation(image.at<Vec3b>(y, x)[2], //convert the getSaturation output to a double, in order for the image to be gray-scaled.
+					image.at<Vec3b>(y, x)[1],
+					image.at<Vec3b>(y, x)[0])*255.;
+
+				double satHue = getHue(image.at<Vec3b>(y, x)[2], //we have three channels at a RGB image. Channel 2 is the red channel.
+					image.at<Vec3b>(y, x)[1], //channel 1 is the green channel
+					image.at<Vec3b>(y, x)[0]//channel 0 is the blue channel
+					);//getHue also needs to know about getSaturation, therefore this function is included.
+
+				imageHue.at<uchar>(y, x) = satHue;
+				imageSat.at<uchar>(y, x) = satVal;
+				imageInt.at<uchar>(y, x) = getIntensity(image.at<Vec3b>(y, x)[2], //Vec3b gives 3 pixel values. This one gives the pixel values of the red pixel
+					image.at<Vec3b>(y, x)[1],
+					image.at<Vec3b>(y, x)[0]);
 			}
 		}
-		output = result;
 	}
 }
 

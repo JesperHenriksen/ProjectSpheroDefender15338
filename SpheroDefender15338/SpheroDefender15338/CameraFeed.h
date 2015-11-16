@@ -16,7 +16,7 @@ public:
 		Returns the greyscale Mat
 	*/
 	Mat convertRGBtoGS(Mat inputFrame);
-	void converRGBToHSV(Mat inputImage, Mat output);
+	void converRGBToHSV(Mat inputImage, Mat imageHue, Mat imageSat, Mat imageInt);
 	Mat segmentImage(Mat inputFrame);
 	Mat equalizeHistogram(Mat inputImage, Mat dst);
 	void inputImageFixing(Mat inputImage, Mat dst, int minThreshold, int maxThreshold);
@@ -71,6 +71,11 @@ public:
 		Returns an image with a given channel negated 
 	*/
 	Mat negateChannel(int channelNegate, Mat frame);
+
+	void thresholdHand(Mat inputImage, Mat outputImage, int minThresholdRed, int maxThresholdRed,
+		int minThresholdGreen, int maxThresholdGreen, int newValueGreen,
+		int minThresholdBlue, int maxThresholdBlue);
+
 	void thresholdImageColor(Mat inputImage, Mat outputImage, 
 		int minThresholdRed, int maxThresholdRed, int newValueRed,
 		int minThresholdGreen, int maxThresholdGreen, int newValueGreen,
