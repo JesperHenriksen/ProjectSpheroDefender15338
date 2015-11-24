@@ -28,7 +28,7 @@ public:
 	@param output
 		The output Mat matrix
 	*/
-	Mat grassFire(Mat inputImage);
+	void grassFire(Mat inputImage, Mat output);
 	/**
 	@brief
 		Thresholds an Mat image based on a min value, max value with a new value.
@@ -72,14 +72,30 @@ public:
 	*/
 	Mat negateChannel(int channelNegate, Mat frame);
 
-	void thresholdHand(Mat inputImage, Mat outputImage, int minThresholdRed, int maxThresholdRed,
-		int minThresholdGreen, int maxThresholdGreen, int newValueGreen,
-		int minThresholdBlue, int maxThresholdBlue);
+	void thresholdHand(Mat inputImage, Mat outputImage, int minThresholdHue, int maxThresholdHue, int newHueValue);
 
 	void thresholdImageColor(Mat inputImage, Mat outputImage, 
 		int minThresholdRed, int maxThresholdRed, int newValueRed,
 		int minThresholdGreen, int maxThresholdGreen, int newValueGreen,
 		int minThresholdBlue, int maxThresholdBlue, int newValueBlue);
+
+	int CameraFeed::getSentryProbability(Mat inputImage, int r, int c);
+	int CameraFeed::getBoulderProbability(Mat inputImage, int r, int c);
+	int CameraFeed::getWallProbability(Mat inputImage, int r, int c);
+	int CameraFeed::getBoomerangProbability(Mat inputImage, int r, int c);
+
+	/**
+	@brief 
+		Returns the most probable handsign.
+	@param inputImage
+		The input Mat variable.
+	@return
+		Returns 1 if sentry is the most probable, 
+		Returns 2 if boulder is the most probable,
+		Returns 3 if boomerang is the most probable,
+		Returns 4 if wall is the most probable.
+	*/
+	int CameraFeed::chooseHandsign(Mat inputImage);
 private:
 	/**
 	@brief
@@ -94,7 +110,7 @@ private:
 	@param inputImage
 		inputImage is the image you want to change to be the connected blobs
 	*/
-	Mat grassfireSecondRunthrough(Mat inputImage);
+	void grassfireSecondRunthrough(Mat inputImage);
 	double getHue(double R, double G, double B); //Declare the functions
 	double getSaturation(double R, double G, double B);
 	int getIntensity(int R, int G, int B);
