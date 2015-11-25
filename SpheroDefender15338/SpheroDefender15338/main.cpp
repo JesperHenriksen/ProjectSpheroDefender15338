@@ -19,12 +19,13 @@ int main(int, char)
 	Mat raw, blob, wizardBackground = webcamOne.getImageFromWebcam();
 
     Mat foreground;
+	Mat boomerang = imread("../../../../../Google Drev/MTA15338/Project (1)/Design/Obstacles/BoomerangHObstacle.png", 1);
 	Minimap minimap;
 	UserInterface userInterface;
 	double x = 0.0, y = 0.0;
 
-	userInterface.getStartPoint(wizardBackground, x, y);
-	cout << x << ", " << y;
+//	userInterface.getStartEndPoint(boomerang, x, y);
+//	cout << x << ", " << y;
 	/*UserInterface userInterface;
 	userInterface.interfaceLayers();
 	imshow("left menu", userInterface.getMenu());

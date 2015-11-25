@@ -10,17 +10,15 @@ public:
 	Mat getBoomerang();
 	Mat getSentry();
 	Mat getStone();
-	Mat getIcePatch();
 	Mat getWall();
 	void interfaceImages();
 	void rotation(Mat input, int degrees, int xOffset, int yOffset);
-	void getStartPoint(Mat input, double &startX, double &startY);
+	void getStartEndPoint(Mat input, double &startX, double &startY, double &endX, double &endY);
 	void interfaceLayers();
     void addLayer(Mat input1, Mat input2, Mat output);
-	void boomerangSpell(double xCoord, double yCoord, int angle);
-	void icePatchSpell(double xCoord, double yCoord, int angle);
+	void boomerangSpell(Mat boomerang, double xCoord, double yCoord, int angle);
 	void stoneSpell(Mat input, double xCoord, double yCoord, int angle);
-	void sentrySpell(double xCoord, double yCoord, int angle);
-	void wallSpell(double xCoord, double yCoord, int angle);
+	void sentrySpell(Mat input, double xCoord, double yCoord, int angle);
+	void wallSpell(Mat wall, double xCoord, double yCoord, int angle);
 };
 
