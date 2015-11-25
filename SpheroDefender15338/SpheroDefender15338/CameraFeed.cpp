@@ -65,83 +65,107 @@ Mat CameraFeed::equalizeHistogram(Mat inputImage, Mat dst) {
 	return result;
 }
 
-Mat CameraFeed::grassfireSecondRunthrough(Mat inputImage){
-	Mat result;
-	inputImage.copyTo(result);
-	for (int x = inputImage.cols - 1; x > 10; x--) {
-		for (int y = inputImage.rows -1; y > 10; y--) { //runs through the pixels backwards
-			if (result.at<uchar>(y, x) == 0){
-				continue;
-			}
-			if ((y - 1) >= 0) {
-				if (result.at<uchar>(y - 1, x) > result.at<uchar>(y, x))
-					result.at<uchar>(y - 1, x) = result.at<uchar>(y, x);
-			}
-			if ((x - 1) >= 0) {
-				if (result.at<uchar>(y, x - 1) > result.at<uchar>(y, x))
-					result.at<uchar>(y, x - 1) = result.at<uchar>(y, x);
-			}
-		}
-	}
-	return result;
-}
-
-Mat CameraFeed::grassFire(Mat inputImage){
-	Mat output;
-	output = output.zeros(inputImage.rows, inputImage.cols, inputImage.type());
-	int currentID = 1;
+void CameraFeed::grassFire(Mat inputImage, Mat output){
+	int currentID = 150;
+	bool foundInfo = false;
 	for (int y = 0; y < inputImage.rows; y++) { //runs through the pixels
 		for (int x = 0; x < inputImage.cols; x++) {
-			if (inputImage.at<uchar>(y, x) > 60) { //if there is informations in the input pixel
-				if ((x - 1) >= 0 && (y - 1) >= 0) { //if both of the kernel pixels is inside the bounderies of the inputimage
-					if (output.at<uchar>(y, (x - 1)) != 0 || output.at<uchar>((y - 1), x) != 0){ //if there is information either in the pixel above or in the pixel before
-						if (output.at<uchar>(y, x - 1) != 0 && output.at<uchar>(y - 1, x) != 0){ //if there is information in two different blobs in both x and y direction 
-							if (output.at<uchar>(y, x - 1) < output.at<uchar>(y - 1, x)){ //if the x value is lower than the y value
-								output.at<uchar>(y, x) = output.at<uchar>(y, x - 1); // set the y value equal to the x value;
-								continue;
-							}
-							else{
-								output.at<uchar>(y, x) = output.at<uchar>(y - 1, x); //otherwise set x value equal to y value
-								continue;
-							}
-						}// if there is not information in both the pixel above and the pixel behind
-						if ((x - 1) >= 0){ // if there is a pixel behind the current pixel
-							if (output.at<uchar>(y, x - 1) != 0) { // if there is information in the pixel behind the current pixel
-								output.at<uchar>(y, x) = output.at<uchar>(y, x - 1); // set the current pixel value to the value of the x pixel
-								continue;
-							}
+			foundInfo = false;
+			//if there is informations in the input pixel and
+			//if both of the kernel pixels is inside the bounderies of the inputimage
+			if (inputImage.at<uchar>(y, x) > 60 && (x - 1) >= 0 && (y - 1) >= 0) {
+				if ((x - 1) >= 0) // if there is a pixel behind the current pixel
+					if (output.at<uchar>(y, x - 1) != 0)  // if there is information in the pixel behind the current pixel
+						if (output.at<uchar>(y, x - 1) < output.at<uchar>(y, x)){
+							output.at<uchar>(y, x) = output.at<uchar>(y, x - 1); // set the current pixel value to the value of the x
+							foundInfo = true;
 						}
-						if ((y - 1) >= 0){ //if there is a pixel above the current pixel
-							if (output.at<uchar>(y - 1, x) != 0){ // if there is information above the current pixel
-								output.at<uchar>(y, x) = output.at<uchar>(y - 1, x); // set the current pixel value to the value of the y pixel
-								continue;
-							}
+				if ((y - 1) >= 0) //if there is a pixel above the current pixel
+					if (output.at<uchar>(y - 1, x) != 0) // if there is information above the current pixel
+						if (output.at<uchar>(y - 1, x) < output.at<uchar>(y, x)){
+							output.at<uchar>(y, x) = output.at<uchar>(y - 1, x); // set the current pixel value to the value of the y7
+							foundInfo = true;
 						}
-					}
-					else{ //if there is no information in the output image
-						output.at<uchar>(y, x) = currentID; //otherwise set the pixel to the current id
-						currentID++;//increase id
-					}
+				if (inputImage.at<uchar>(y, x) > 60 && foundInfo == false){ //if there is no information in the north pixel or the east pixel 
+					output.at<uchar>(y, x) = currentID; //otherwise set the pixel to the current id
+					currentID+= 50;//increase id
 				}
-				else {//if not both kernels are inside the inputImage aka what should happend at the borders?
-					if ((x - 1) >= 0){ // if there is a pixel behind the current pixel
-						if (output.at<uchar>(y, x - 1) != 0) { // if there is information in the pixel behind the current pixel
-							output.at<uchar>(y, x) = output.at<uchar>(y, x - 1); // set the current pixel value to the value of the x pixel
-							continue;
-						}
-					}
-					if ((y - 1) >= 0){ //if there is a pixel above the current pixel
-						if (output.at<uchar>(y - 1, x) != 0){ // if there is information above the current pixel
-							output.at<uchar>(y, x) = output.at<uchar>(y - 1, x); // set the current pixel value to the value of the y pixel
-							continue;
-						}
-					}
-				}
+			}
+			
+		}
+	}
+	grassfireSecondRunthrough(output); //connect the connected blobs 
+}
+
+void CameraFeed::grassfireSecondRunthrough(Mat inputImage){
+	for (int y = inputImage.rows - 1; y > 0; y--) { //runs through the pixels backwards
+		for (int x = inputImage.cols - 1; x > 0; x--) {
+			if (inputImage.at<uchar>(y, x) != 0){
+				if ((y - 1) >= 0 || (x - 1) >= 0) {
+					if (inputImage.at<uchar>(y - 1, x) > inputImage.at<uchar>(y, x))
+						inputImage.at<uchar>(y - 1, x) = inputImage.at<uchar>(y, x);
+					else
+						inputImage.at<uchar>(y, x - 1) = inputImage.at<uchar>(y, x);
+
+				}				
 			}
 		}
 	}
-	output = grassfireSecondRunthrough(output); //connect the connected blobs 
-	return output;
+}
+
+int CameraFeed::getSentryProbability(Mat inputImage, int r, int c){
+	return 0;
+}
+
+int CameraFeed::getBoulderProbability(Mat inputImage, int r, int c){
+	return 0;
+}
+
+int CameraFeed::getWallProbability(Mat inputImage, int r, int c){
+	
+	return 0;
+}
+
+int CameraFeed::getBoomerangProbability(Mat inputImage, int r, int c){
+	return 0;
+}
+
+int CameraFeed::chooseHandsign(Mat inputImage){
+	int sentryHandsignProbability = 0;
+	int boulderHandsignProbability = 0; 
+	int boomerangHandsignProbability = 0;
+	int wallHandsignProbability = 0;
+	for (int r = 0; r < inputImage.rows; r++){
+		for (int c = 0; c < inputImage.cols; c++){
+			
+		}
+	}
+	int r = 0, c = 0;
+	sentryHandsignProbability = getSentryProbability(inputImage, r, c);
+	boulderHandsignProbability = getBoulderProbability(inputImage, r, c);
+	boomerangHandsignProbability = getBoomerangProbability(inputImage, r, c);
+	wallHandsignProbability = getWallProbability(inputImage, r, c);
+	if (sentryHandsignProbability < boulderHandsignProbability){
+		if (boulderHandsignProbability < boomerangHandsignProbability)
+			if (boomerangHandsignProbability < wallHandsignProbability)
+				return 4;
+			else
+				return 3;
+		else if (boulderHandsignProbability < wallHandsignProbability)
+			return 4;
+		else
+			return 2;
+	}
+	else if(sentryHandsignProbability < boomerangHandsignProbability){
+		if (boomerangHandsignProbability < wallHandsignProbability)
+			return 4;
+		else
+			return 3;
+	}
+	else if (sentryHandsignProbability < wallHandsignProbability){
+		return 1;
+	}
+	return 0;
 }
 
 Mat CameraFeed::convertRGBtoGS(Mat inputFrame){
@@ -242,6 +266,28 @@ void CameraFeed::thresholdImageColor(Mat inputImage, Mat outputImage, int minThr
 	}
 }
 
+void CameraFeed::thresholdHand(Mat inputImage, Mat outputImage, int minThresholdHue, int maxThresholdHue, int newValueHue){
+	for (int r = 0; r < inputImage.rows; r++){
+		for (int c = 0; c < inputImage.cols; c++){
+			if (inputImage.at<Vec3b>(r, c)[0] >= minThresholdHue && 
+				inputImage.at<Vec3b>(r, c)[0] < maxThresholdHue &&
+				inputImage.at<Vec3b>(r, c)[1] > 30 &&
+				inputImage.at<Vec3b>(r, c)[2] > 20 )
+			{
+				outputImage.at<Vec3b>(r, c)[0] = newValueHue;
+				outputImage.at<Vec3b>(r, c)[1] = newValueHue;
+				outputImage.at<Vec3b>(r, c)[2] = newValueHue;
+
+			}
+			else{
+				outputImage.at<Vec3b>(r, c)[0] = 0; //inputImage.at<Vec3b>(r, c)[0];
+				outputImage.at<Vec3b>(r, c)[1] = 0; // inputImage.at<Vec3b>(r, c)[1];
+				outputImage.at<Vec3b>(r, c)[2] = 0; //inputImage.at<Vec3b>(r, c)[2];			
+			}
+		}
+	}
+}
+
 Mat CameraFeed::negateChannel(int channelNegate1, Mat frame)
 {
 	Mat newFrame = frame;
@@ -262,15 +308,15 @@ Mat CameraFeed::setZeroesInChannel(Mat inputFrame){
 double CameraFeed::getHue(double R, double G, double B) {
 	double H = 0;
 	double maximum = MAX(R, MAX(G, B)); //calculate the maximum of r, g and b.
-
+	int i = getIntensity(R,G,B);
 	//formula to converting hue
 	H = acos((0.5*((R - G) + (R - B)) /
 		(sqrt((R - G)*(R - G) + (R - B)*(G - B)))));
 
-	if (R == maximum) { //if the red value is equal to the maximum value of R, G and B,
+	if (R == i) { //if the red value is equal to the maximum value of R, G and B,
 		H = H;          //set H equal to the formula.
 	}
-	else if (G == maximum){ //if the green value is equal to the maximum of R, G and B,
+	else if (G == i){ //if the green value is equal to the maximum of R, G and B,
 		H = H;                //set H equal to the formula.
 	}
 	else{          //otherwise (if B is equal to the maximum),
@@ -312,27 +358,30 @@ int CameraFeed::getIntensity(int R, int G, int B) {
 	return I;
 }
 
-void CameraFeed::converRGBToHSV(Mat inputImage, Mat output) {
+void CameraFeed::converRGBToHSV(Mat inputImage, Mat imageHue, Mat imageSat, Mat imageInt) {
 	Mat image, result;
 	result = Mat::zeros(inputImage.rows, inputImage.cols, inputImage.type());
 	image = inputImage; //Function that loads the image
-	output.zeros(inputImage.rows, inputImage.cols, inputImage.type()); 
 
-	if (inputImage.data && !inputImage.empty()){ //if there is some data to be loaded and the inputImage is not empty,
-		for (int y = 0; y < inputImage.rows; y++){ //y starts at 0. When y is smaller than the inputImage rows, the loop keeps running.
-			for (int x = 0; x < inputImage.cols; x++){ //x starts a 0. When x is smaller than the inputImage columns, the loop keeps running.
-				result.at<Vec3b>(y, x)[0] = getHue(inputImage.at<Vec3b>(y, x)[2], //we have three channels at a RGB inputImage. Channel 2 is the red channel.
-													inputImage.at<Vec3b>(y, x)[1], //channel 1 is the green channel
-													inputImage.at<Vec3b>(y, x)[0]);//getHue also needs to know about getSaturation, therefore this function is included.;
-				result.at<Vec3b>(y, x)[1] = getSaturation(inputImage.at<Vec3b>(y, x)[2], //convert the getSaturation output to a double, in order for the inputImage to be gray-scaled.
-					inputImage.at<Vec3b>(y, x)[1],
-					inputImage.at<Vec3b>(y, x)[0])*255.;
-				result.at<Vec3b>(y, x)[2] = getIntensity(inputImage.at<Vec3b>(y, x)[2], //Vec3b gives 3 pixel values. This one gives the pixel values of the red pixel
-					inputImage.at<Vec3b>(y, x)[1],
-					inputImage.at<Vec3b>(y, x)[0]);
+	if (image.data && !image.empty()){ //if there is some data to be loaded and the image is not empty,
+		for (int y = 0; y < image.rows; ++y){ //y starts at 0. When y is smaller than the image rows, the loop keeps running.
+			for (int x = 0; x < image.cols; ++x){ //x starts a 0. When x is smaller than the image columns, the loop keeps running.
+				double satVal = getSaturation(image.at<Vec3b>(y, x)[2], //convert the getSaturation output to a double, in order for the image to be gray-scaled.
+					image.at<Vec3b>(y, x)[1],
+					image.at<Vec3b>(y, x)[0])*255.;
+
+				double satHue = getHue(image.at<Vec3b>(y, x)[2], //we have three channels at a RGB image. Channel 2 is the red channel.
+					image.at<Vec3b>(y, x)[1], //channel 1 is the green channel
+					image.at<Vec3b>(y, x)[0]//channel 0 is the blue channel
+					);//getHue also needs to know about getSaturation, therefore this function is included.
+
+				imageHue.at<uchar>(y, x) = satHue;
+				imageSat.at<uchar>(y, x) = satVal;
+				imageInt.at<uchar>(y, x) = getIntensity(image.at<Vec3b>(y, x)[2], //Vec3b gives 3 pixel values. This one gives the pixel values of the red pixel
+					image.at<Vec3b>(y, x)[1],
+					image.at<Vec3b>(y, x)[0]);
 			}
 		}
-		output = result;
 	}
 }
 
