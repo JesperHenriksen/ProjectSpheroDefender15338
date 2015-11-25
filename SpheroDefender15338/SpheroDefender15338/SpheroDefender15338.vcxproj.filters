@@ -36,9 +36,6 @@
     <ClCompile Include="Minimap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="BackgroundSubtraction.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="UserInterface.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -63,9 +60,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Minimap.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="BackgroundSubtraction.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="UserInterface.h">
@@ -94,6 +88,27 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="..\..\..\..\..\Google Drev\MTA15338\Project (1)\Design\Obstacles\WallHObstacle.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\..\..\..\..\Google Drev\MTA15338\Project (1)\Design\LeftMenuInverseMask.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\..\..\..\..\Google Drev\MTA15338\Project (1)\Design\LeftMenuMask.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\..\..\..\..\Google Drev\MTA15338\Project (1)\Design\TopMenuMask.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\..\..\..\..\Google Drev\MTA15338\Project (1)\Design\TopMenuInverseMask.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\..\..\..\..\Google Drev\MTA15338\Project (1)\Design\ProgramLayers\MenuLeftText.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\..\..\..\..\Google Drev\MTA15338\Project (1)\Design\TextMenuMask.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\..\..\..\..\Google Drev\MTA15338\Project (1)\Design\TextMenuMaskInverse.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

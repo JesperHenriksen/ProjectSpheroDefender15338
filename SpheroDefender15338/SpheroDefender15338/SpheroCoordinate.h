@@ -5,7 +5,6 @@ class SpheroCoordinate
 {
 public:
 	SpheroCoordinate();
-	SpheroCoordinate(int xCoord,int yCoord);
 	~SpheroCoordinate();
 	
 	/*!
@@ -27,10 +26,10 @@ public:
 	/*!
 		Start tracking of sphero on the Battlefield. This starts a thread that continues sends Sphero coordinates.
 	!*/
-	void startSpheroTracking(CameraFeed webcam);
+    void trackSphero(Mat background, CameraFeed webcamSphero);
 
 private:
-	int xCoord; //X coordinate of the Sphero.
-	int yCoord; //Y coordinate of the Sphero.
+    double xCoordSphero = 0.0; //X coordinate of the Sphero.
+    double yCoordSphero = 0.0; //Y coordinate of the Sphero.
 };
 

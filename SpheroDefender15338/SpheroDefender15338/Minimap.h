@@ -23,6 +23,8 @@ public:
 	void thresholdImageArrow(Mat inputImage, Mat outputImage, int minThresholdRed, int maxThresholdRed, int newValueRed,
 		int minThresholdGreen, int maxThresholdGreen,
 		int minThresholdBlue, int maxThresholdBlue);
+	void Minimap::getCenterOfBlob(Mat inputImage, double &recCenterX, double &recCenterY,
+		double &triCenterY, double &triCenterX, int thresholdMin, int thresholdMax);
 	/**
 	@brief 
 		Checks the number of pixels in the input image to see whether or not the current pixel has been "burned". If it hasn't - it burns the pixel. 
