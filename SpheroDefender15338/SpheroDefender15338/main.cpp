@@ -20,12 +20,13 @@ int main(int, char)
 
     Mat foreground;
 	
-	//UserInterface userInterface;
+	UserInterface userInterface;
 
 	//arrow variables
 	Mat frame, gs;
 	Minimap minimap;
 	double x = 0.0, y = 0.0;
+	double xEnd = 0.0, yEnd = 0.0;
 	double minimapXCoord = 0, minimapYCoord = 0;
 	//angle
 	double angle = 0;
@@ -35,8 +36,9 @@ int main(int, char)
 	Mat handInput, handColorThreshold, handGscale, handThreshold;
 	Mat grassfire;
 
-	//userInterface.getStartPoint(wizardBackground, x, y);
+	userInterface.getStartEndPoint(wizardBackground, x, y, xEnd, yEnd);
 	cout << x << ", " << y;
+	cout << xEnd << "," << yEnd;
 	/*UserInterface userInterface;
 	userInterface.interfaceLayers();
 	imshow("left menu", userInterface.getMenu());
@@ -72,29 +74,29 @@ int main(int, char)
 	//	angle = minimap.getAngleOfArrow(thresholded, 0, 100);
 	//	//cout << angle << " " << "\n";
 	//
-		//threshold hand
-		int kernelSize = 9;
-		handInput = wizardWebcam.getImageFromWebcam();
-		blur(handInput, handInput, Size(kernelSize,kernelSize));
-		cvtColor(handInput, sat, COLOR_BGR2HSV);
-		sat.copyTo(handColorThreshold);
-		minimapWebcam.thresholdHand(sat, handColorThreshold, 30, 90, 255);
-		cvtColor(handColorThreshold, handColorThreshold, CV_BGR2GRAY);
-		medianBlur(handColorThreshold, handColorThreshold, 9);
-		Mat kernel;
-		kernel.ones(kernelSize, kernelSize, CV_8UC1);
-		erode(handColorThreshold,handColorThreshold,kernel);
-		medianBlur(handColorThreshold, handColorThreshold, 9);
-		dilate(handColorThreshold,handColorThreshold,kernel);
-		//grassfire = Mat::zeros(handColorThreshold.rows, handColorThreshold.cols, handColorThreshold.type());
-		//wizardWebcam.grassFire(handColorThreshold, grassfire);
-		//wizardWebcam.grassFire(grassfire, grassfire);
-		imshow("threshold", handColorThreshold);
-		imshow("sat", handInput);
-		//imshow("grassfire", grassfire);
-		
-		//recognize hand
-		
+		////threshold hand
+		//int kernelSize = 9;
+		//handInput = wizardWebcam.getImageFromWebcam();
+		//blur(handInput, handInput, Size(kernelSize,kernelSize));
+		//cvtColor(handInput, sat, COLOR_BGR2HSV);
+		//sat.copyTo(handColorThreshold);
+		//minimapWebcam.thresholdHand(sat, handColorThreshold, 30, 90, 255);
+		//cvtColor(handColorThreshold, handColorThreshold, CV_BGR2GRAY);
+		//medianBlur(handColorThreshold, handColorThreshold, 9);
+		//Mat kernel;
+		//kernel.ones(kernelSize, kernelSize, CV_8UC1);
+		//erode(handColorThreshold,handColorThreshold,kernel);
+		//medianBlur(handColorThreshold, handColorThreshold, 9);
+		//dilate(handColorThreshold,handColorThreshold,kernel);
+		////grassfire = Mat::zeros(handColorThreshold.rows, handColorThreshold.cols, handColorThreshold.type());
+		////wizardWebcam.grassFire(handColorThreshold, grassfire);
+		////wizardWebcam.grassFire(grassfire, grassfire);
+		//imshow("threshold", handColorThreshold);
+		//imshow("sat", handInput);
+		////imshow("grassfire", grassfire);
+		//
+		////recognize hand
+		//
 
 
 		//end of code
