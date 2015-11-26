@@ -130,21 +130,84 @@ int CameraFeed::getBoomerangProbability(Mat inputImage, int r, int c){
 	return 0;
 }
 
+
+int CameraFeed::getSentryProbability(Mat inputImage){
+	int probability = 0;
+	for (int r = 0; r < inputImage.rows; r++){
+		for (int c = 0; c < inputImage.cols; c++){
+
+		}
+	}
+	return probability;
+}
+
+int CameraFeed::getBoulderProbability(Mat inputImage){
+	int maxRow = 0, minRow = 0;
+	double height = 0.0, width = 0.0;
+	int maxCol = 0, minCol = 0;
+	bool firstEncounter = true;
+	for (int r = 0; r < inputImage.rows; r++){
+		for (int c = 0; c < inputImage.cols; c++){
+			if (inputImage.at<uchar>(r,c) > 60){
+				if (firstEncounter){
+					minRow = r;
+					maxRow = r;
+					minCol = c;
+					maxCol = c;
+					firstEncounter = false;
+				}
+				if (r < minRow)
+					minRow = r;
+				if (r > maxRow)
+					maxRow = r;
+				if (c < minCol)
+					minCol = c;
+				if (c > maxCol)
+					maxCol = c;
+			}
+		}
+	}
+	height = maxCol - minCol;
+	width = maxRow - minRow;
+	double tempResult = 0.0;
+	if (height != 0 && width != 0) 
+		tempResult = (height / width) * 100;
+	double probability = (height / width) * 100;
+	cout << "does this change? " << tempResult <<" " << height << " " << width <<  "\n" ;
+	cout << " " << maxRow << " " << minRow << " " << maxCol << " " << minCol << "\n";
+	return probability;
+}
+
+int CameraFeed::getWallProbability(Mat inputImage){
+	int probability = 0;
+	for (int r = 0; r < inputImage.rows; r++){
+		for (int c = 0; c < inputImage.cols; c++){
+
+		}
+	}
+	return probability;
+}
+
+int CameraFeed::getBoomerangProbability(Mat inputImage){
+	int probability = 0;
+	for (int r = 0; r < inputImage.rows; r++){
+		for (int c = 0; c < inputImage.cols; c++){
+
+		}
+	}
+	return probability;
+}
+
 int CameraFeed::chooseHandsign(Mat inputImage){
+	cout << "choose handsign \n";
 	int sentryHandsignProbability = 0;
 	int boulderHandsignProbability = 0; 
 	int boomerangHandsignProbability = 0;
 	int wallHandsignProbability = 0;
-	for (int r = 0; r < inputImage.rows; r++){
-		for (int c = 0; c < inputImage.cols; c++){
-			
-		}
-	}
-	int r = 0, c = 0;
-	sentryHandsignProbability = getSentryProbability(inputImage, r, c);
-	boulderHandsignProbability = getBoulderProbability(inputImage, r, c);
-	boomerangHandsignProbability = getBoomerangProbability(inputImage, r, c);
-	wallHandsignProbability = getWallProbability(inputImage, r, c);
+	sentryHandsignProbability = getSentryProbability(inputImage);
+	boulderHandsignProbability = getBoulderProbability(inputImage);
+	boomerangHandsignProbability = getBoomerangProbability(inputImage);
+	wallHandsignProbability = getWallProbability(inputImage);
 	if (sentryHandsignProbability < boulderHandsignProbability){
 		if (boulderHandsignProbability < boomerangHandsignProbability)
 			if (boomerangHandsignProbability < wallHandsignProbability)
