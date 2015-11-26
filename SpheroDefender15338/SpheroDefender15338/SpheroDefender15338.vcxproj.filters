@@ -18,16 +18,10 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SpheroCoordinate.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Battlefield.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CameraFeed.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Sphero.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SpheroControls.cpp">
@@ -41,15 +35,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Sphero.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SpheroCoordinate.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Utility.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Battlefield.h">
       <Filter>Header Files</Filter>
     </ClInclude>
