@@ -6,6 +6,8 @@
 using namespace std;
 using namespace cv;
 
+Minimap  placeSpell;
+
 Mat menuLeft, menuLeftText, menuLeftTextMask, inverseMenuLeftTextMask, menuTop, menu, menu2, topMenuMask, topMenuInverseMask, boomerang, stone, sentry, wall, battlefield, leftMenuMask, inverseLeftMenuMask; //Global variables for the spell images
 
 UserInterface::UserInterface()
@@ -198,97 +200,95 @@ void UserInterface::getStartEndPoint(Mat input, double &startX, double &startY, 
 			endX = x3;
 			endY = y3;
 		}
-		else if (triY < recY && b >= 0 && b < input.rows && ((0 - b) / slope == input.cols || (slope*input.cols + b) < input.rows)){//Startpoint 4, end point 2
+		else if (triY < recY && b >= 0 && b < input.rows && ((0 - b) / slope == input.cols && (slope*input.cols + b) < input.rows)){//Startpoint 4, end point 2
 			startX = x4;
 			startY = y4;
 			endX = x2;
 			endY = y2;
 		}
-		else if (triY > recY && b >= 0 && b < input.rows && ((0 - b) / slope == input.cols || (slope*input.cols + b) < input.rows)){//Startpoint 2, end point 4
+		else if (triY > recY && b >= 0 && b < input.rows && ((0 - b) / slope == input.cols && (slope*input.cols + b) < input.rows)){//Startpoint 2, end point 4
 			startX = x2;
 			startY = y2;
 			endX = x4;
 			endY = y4;
 		}
-		else if (slope > 0){
-			if (triY < recY && ((input.rows - b) / slope > 0 && (input.rows - b) / slope < input.cols) && (b >= 0 && b < input.rows)) {  //Startpoint 3, end point 4
-				startX = x3;
-				startY = y3;
-				endX = x4;
-				endY = y4;
-			}
-			else if (triY > recY && ((input.rows - b) / slope > 0 && (input.rows - b) / slope < input.cols) && (b >= 0 && b < input.rows)) {  //Startpoint 4, end point 3
-				startX = x4;
-				startY = y4;
-				endX = x3;
-				endY = y3;
-			}
-			else if (triY < recY && ((0 - b) / slope == input.cols && (slope*input.cols + b) < input.rows) && (slope < 0 && ((0 - b) / slope > 0 && (0 - b) / slope < input.cols))){ //StartPoint 2, end pint 1
-				startX = x2;
-				startY = y2;
-				endX = x1;
-				endY = y1;
-			}
-			else if (triY > recY && ((0 - b) / slope == input.cols && (slope*input.cols + b) < input.rows) && (slope < 0 && ((0 - b) / slope > 0 && (0 - b) / slope < input.cols))){ //StartPoint 1, end point 2
-				startX = x1;
-				startY = y1;
-				endX = x2;
-				endY = y2;
-			}
-			else if (triY < recY && (input.rows - b) / slope > 0 && (input.rows - b) / slope < input.cols && (0 - b) / slope > 0 && (0 - b) / slope < input.cols){ //StartPoint 3, end point 1
-				startX = x3;
-				startY = y3;
-				endX = x1;
-				endY = y1;
-			}
-			else if (triY > recY && (input.rows - b) / slope > 0 && (input.rows - b) / slope < input.cols && (0 - b) / slope > 0 && (0 - b) / slope < input.cols){ //StartPoint 1, end point 3
-				startX = x1;
-				startY = y1;
-				endX = x3;
-				endY = y3;
-			}
-			else  if (triY < recY && b >= 0 && b < input.rows && ((0 - b) / slope == input.cols || (slope*input.cols + b) < input.rows)){//Startpoint 4, end point 2
-				startX = x4;
-				startY = y4;
-				endX = x2;
-				endY = y2;
-			}
-			else if (triY > recY && b >= 0 && b < input.rows && ((0 - b) / slope == input.cols || (slope*input.cols + b) < input.rows)){//Startpoint 2, end point 4
-				startX = x2;
-				startY = y2;
-				endX = x4;
-				endY = y4;
-			}
-			else {
-				if (triX > recX){
-					startX = x4;
-					startY = y4;
-					endX = x2;
-					endY = y2;
-				}
-				else if (triX < recX){
-					startX = x2;
-					startY = y2;
-					endX = x4;
-					endY = y4;
-				}
-				else if (triY > recY){
-					startX = x1;
-					startY = y1;
-					endX = x3;
-					endY = y3;
-				}
-				else if (triY < recY){
-					startX = x3;
-					startY = y3;
-					endX = x1;
-					endY = y1;
-				}
-			}
+	}
+	else if (slope > 0){
+		if (triY < recY && ((input.rows - b) / slope > 0 && (input.rows - b) / slope < input.cols) && (b >= 0 && b < input.rows)) {  //Startpoint 3, end point 4
+			startX = x3;
+			startY = y3;
+			endX = x4;
+			endY = y4;
+		}
+		else if (triY > recY && ((input.rows - b) / slope > 0 && (input.rows - b) / slope < input.cols) && (b >= 0 && b < input.rows)) {  //Startpoint 4, end point 3
+			startX = x4;
+			startY = y4;
+			endX = x3;
+			endY = y3;
+		}
+		else if (triY < recY && ((0 - b) / slope == input.cols && (slope*input.cols + b) < input.rows) && (slope < 0 && ((0 - b) / slope > 0 && (0 - b) / slope < input.cols))){ //StartPoint 2, end pint 1
+			startX = x2;
+			startY = y2;
+			endX = x1;
+			endY = y1;
+		}
+		else if (triY > recY && ((0 - b) / slope == input.cols && (slope*input.cols + b) < input.rows) && (slope < 0 && ((0 - b) / slope > 0 && (0 - b) / slope < input.cols))){ //StartPoint 1, end point 2
+			startX = x1;
+			startY = y1;
+			endX = x2;
+			endY = y2;
+		}
+		else if (triY < recY && (input.rows - b) / slope > 0 && (input.rows - b) / slope < input.cols && (0 - b) / slope > 0 && (0 - b) / slope < input.cols){ //StartPoint 3, end point 1
+			startX = x3;
+			startY = y3;
+			endX = x1;
+			endY = y1;
+		}
+		else if (triY > recY && (input.rows - b) / slope > 0 && (input.rows - b) / slope < input.cols && (0 - b) / slope > 0 && (0 - b) / slope < input.cols){ //StartPoint 1, end point 3
+			startX = x1;
+			startY = y1;
+			endX = x3;
+			endY = y3;
+		}
+		else  if (triY < recY && b >= 0 && b < input.rows && ((0 - b) / slope == input.cols && (slope*input.cols + b) < input.rows)){//Startpoint 4, end point 2
+			startX = x4;
+			startY = y4;
+			endX = x2;
+			endY = y2;
+		}
+		else if (triY > recY && b >= 0 && b < input.rows && ((0 - b) / slope == input.cols && (slope*input.cols + b) < input.rows)){//Startpoint 2, end point 4
+			startX = x2;
+			startY = y2;
+			endX = x4;
+			endY = y4;
 		}
 	}
-	cout << startX << "," << startY;
-	cout << endX << "," << endY;
+	else {
+		if (triX > recX){
+			startX = x4;
+			startY = y4;
+			endX = x2;
+			endY = y2;
+		}
+		else if (triX < recX){
+			startX = x2;
+			startY = y2;
+			endX = x4;
+			endY = y4;
+		}
+		else if (triY > recY){
+			startX = x1;
+			startY = y1;
+			endX = x3;
+			endY = y3;
+		}
+		else if (triY < recY){
+			startX = x3;
+			startY = y3;
+			endX = x1;
+			endY = y1;
+		}
+	}
 }
 
 void UserInterface::rotation(Mat input, int degrees, int xOffset, int yOffset){
@@ -345,24 +345,35 @@ void UserInterface::addLayer(Mat input1, Mat input2, Mat output) { //Input image
 		}
 
 
+/*void UserInterface::boomerangSpell(Mat boomerang, double startX, double startY, double arrowX, double arrowY, int angle)
+{
+	double PI = 3.14159;
+	int direction = 0;
+	double xDistance = arrowX - startX;
+	double yDistance = arrowY - startY;
+	double distance = sqrt(xDistance*xDistance + yDistance*yDistance);
+	double radiusA = distance / 2;
+	double radiusB = distance / 3;
 
-//void UserInterface::boomerangSpell(Mat boomerang, double xCoord, double yCoord, int angle)
-//{
-//	int direction = 0;
-//	direction = tan(angle - 180); //opposite direction of the direction of the arrow
-//}
+	double picturePath = 2 * PI*sqrt(0.5*(radiusA + radiusB));
+}
+*/
 
-//void UserInterface::stoneSpell(Mat input, double xCoord, double yCoord, int angle)
-//{
-//	int speed = 4;
-//	double direction = angle;
-//	getStartEndPoint(input, xCoord, yCoord);
-//
-//}
+/*void UserInterface::stoneSpell(Mat input, int angle, double startX, double startY, double endX, double endY)
+{
+	//Finding the distance between startpoint and endpoint
+	double xDistance = endX - startX;
+	double yDistance = endY - startY;
+	double distance = sqrt(xDistance*xDistance + yDistance*yDistance);
+	//Find out how to move image
+}
+*/
 
 //void UserInterface::sentrySpell(Mat input, double xCoord, double yCoord, int angle)
 //{
 //	int direction = 0;
+//	direction = angle;
+//	rotation(sentry, angle, xCoord, yCoord);
 //}
 
 //void UserInterface::wallSpell(Mat wall, double xCoord, double yCoord, int angle)
