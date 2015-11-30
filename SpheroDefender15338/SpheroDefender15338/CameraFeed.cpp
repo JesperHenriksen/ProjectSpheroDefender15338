@@ -186,7 +186,8 @@ Mat CameraFeed::segmentImage(Mat inputFrame){
 	return outputFrame;
 }
 
-void CameraFeed::thresholdImage(Mat inputImage, Mat outputImage, int minThreshold, int maxThreshold, int newValue){
+void CameraFeed::thresholdImage(Mat inputImage, Mat outputImage, 
+	int minThreshold, int maxThreshold, int newValue){
 	for (int r = 0; r < inputImage.rows; r++){
 		for (int c = 0; c < inputImage.cols; c++){
 			if (inputImage.at<uchar>(r, c) >= minThreshold &&
@@ -197,6 +198,8 @@ void CameraFeed::thresholdImage(Mat inputImage, Mat outputImage, int minThreshol
 		}
 	}
 }
+
+
 void CameraFeed::thresholdImage(Mat inputImage, Mat outputImage, 
 	int minThresholdOne, int maxThresholdOne, int newValueOne, 
 	int minThresholdTwo, int maxThresholdTwo, int newValueTwo)
@@ -221,8 +224,7 @@ void CameraFeed::thresholdImage(Mat inputImage, Mat outputImage,
 void CameraFeed::thresholdImage(Mat inputImage, Mat outputImage, 
 	int minThresholdOne, int maxThresholdOne, int newValueOne,
 	int minThresholdTwo, int maxThresholdTwo, int newValueTwo,
-	int minThresholdThree, int maxThresholdThree, int newValueThree)
-{
+	int minThresholdThree, int maxThresholdThree, int newValueThree){
 	for (int r = 0; r < inputImage.rows; r++){
 		for (int c = 0; c < inputImage.cols; c++){
 			if (inputImage.at<uchar>(r, c) >= minThresholdOne &&
@@ -246,9 +248,11 @@ void CameraFeed::thresholdImage(Mat inputImage, Mat outputImage,
 	}
 }
 
-void CameraFeed::thresholdImageColor(Mat inputImage, Mat outputImage, int minThresholdRed, int maxThresholdRed, int newValueRed, 
-																	  int minThresholdGreen, int maxThresholdGreen, int newValueGreen,
-																	  int minThresholdBlue, int maxThresholdBlue, int newValueBlue){
+void CameraFeed::thresholdImageColor(Mat inputImage, Mat outputImage, 
+	int minThresholdRed, int maxThresholdRed, int newValueRed, 
+	int minThresholdGreen, int maxThresholdGreen, int newValueGreen,
+	int minThresholdBlue, int maxThresholdBlue, int newValueBlue) 
+{
 	for (int r = 0; r < inputImage.rows; r++){
 		for (int c = 0; c < inputImage.cols; c++){
 			if (inputImage.at<Vec3b>(r, c)[0] > minThresholdBlue && inputImage.at<Vec3b>(r, c)[0] < maxThresholdBlue)
@@ -269,13 +273,15 @@ void CameraFeed::thresholdImageColor(Mat inputImage, Mat outputImage, int minThr
 	}
 }
 
-void CameraFeed::thresholdHand(Mat inputImage, Mat outputImage, int minThresholdHue, int maxThresholdHue, int newValueHue){
+void CameraFeed::thresholdHand(Mat inputImage, Mat outputImage,
+	int minThresholdHue, int maxThresholdHue, int newValueHue)
+{
 	for (int r = 0; r < inputImage.rows; r++){
 		for (int c = 0; c < inputImage.cols; c++){
 			if (inputImage.at<Vec3b>(r, c)[0] >= minThresholdHue && 
 				inputImage.at<Vec3b>(r, c)[0] < maxThresholdHue &&
 				inputImage.at<Vec3b>(r, c)[1] > 30 &&
-				inputImage.at<Vec3b>(r, c)[2] > 20 && inputImage.at<Vec3b>(r, c)[2] < 240)
+				inputImage.at<Vec3b>(r, c)[2] > 60 && inputImage.at<Vec3b>(r, c)[2] < 240)
 			{
 				outputImage.at<Vec3b>(r, c)[0] = newValueHue;
 				outputImage.at<Vec3b>(r, c)[1] = newValueHue;

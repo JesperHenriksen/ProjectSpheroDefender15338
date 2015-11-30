@@ -40,8 +40,12 @@ int main(int, char)
 
 	//hand tracking variables
 	Mat handInput, handColorThreshold, handGscale, handThreshold;
-	Mat grassfire;
-
+	
+	
+	vector<vector<Point> > contours;
+	vector<Vec4i> hierachy;
+	int kernelSize = 11;
+	Mat handContours, kernel;;
 	//userInterface.getStartPoint(wizardBackground, x, y);
 	//cout << x << ", " << y;
 	/*UserInterface userInterface;
@@ -78,9 +82,8 @@ int main(int, char)
 		//	//imshow("threshold", thresholded);
 		//	angle = minimap.getAngleOfArrow(thresholded, 0, 100);
 		//	//cout << angle << " " << "\n";
-		//
+		
 		//threshold hand
-		int kernelSize = 5;
 		handInput = wizardWebcam.getImageFromWebcam();
 		imshow("input", handInput);
 		blur(handInput, handInput, Size(kernelSize, kernelSize));
@@ -89,7 +92,6 @@ int main(int, char)
 		minimapWebcam.thresholdHand(sat, handColorThreshold, 30, 90, 255);
 		cvtColor(handColorThreshold, handColorThreshold, CV_BGR2GRAY);
 		medianBlur(handColorThreshold, handColorThreshold, 9);
-		Mat kernel;
 		kernel.ones(kernelSize, kernelSize, CV_8UC1);
 		//opening
 		erode(handColorThreshold, handColorThreshold, kernel);
@@ -100,16 +102,9 @@ int main(int, char)
 		erode(handColorThreshold, handColorThreshold, kernel);
 
 		imshow("threshold", handColorThreshold);
-		//grassfire = Mat::zeros(handColorThreshold.rows, handColorThreshold.cols, handColorThreshold.type());
-		//wizardWebcam.grassFire(handColorThreshold, grassfire);
-		//wizardWebcam.grassFire(grassfire, grassfire);
-
+	
 		//recognize hand
-		Mat handContours;
 		handColorThreshold.copyTo(handContours);
-		RNG rng(12345);
-		vector<vector<Point> > contours;
-		vector<Vec4i> hierachy;
 		findContours(handContours, contours, hierachy, RETR_CCOMP, CHAIN_APPROX_SIMPLE);
 		vector <vector<Point>> hull(contours.size());
 		vector<vector<Vec4i>> convexDef(contours.size());
@@ -120,15 +115,15 @@ int main(int, char)
 			//if (contours.size() > 3)
 				//convexityDefects(Mat(contours[i]), hull[i], convexDef[i]);
 		}
-		Mat bob = Mat::zeros(handColorThreshold.size(), CV_8UC3);
-
+		Mat contoursMat = Mat::zeros(handColorThreshold.size(), CV_8UC3);
+		RNG rng(12345);
 		for (int i = 0; i < contours.size(); i++){
 			Scalar color = Scalar(rng.uniform(0, 255), rng.uniform(0, 255), rng.uniform(0, 255));
-			drawContours(bob, contours, i, color, 1, 8, hierachy, 0, Point());
-			drawContours(bob, hull, i, color, 1, 8, hierachy, 0, Point());
+			drawContours(contoursMat, contours, i, color, 1, 8, hierachy, 0, Point());
+			drawContours(contoursMat, hull, i, color, 1, 8, hierachy, 0, Point());
 
 		}
-		imshow("contours", bob);
+		imshow("contours", contoursMat);
 
 		int handsign = 0;
 		handsign = wizardWebcam.chooseHandsign(handColorThreshold);
