@@ -55,7 +55,7 @@ Mat CameraFeed::equalizeHistogram(Mat inputImage, Mat dst) {
 		}
 		//equalizedImage
 		int size = inputImage.rows * inputImage.cols;
-		float probability = 255.0 / size;
+		double probability = 255.0 / size;
 		for (int y = 0; y < inputImage.rows; y++) {
 			for (int x = 0; x < inputImage.cols; x++) {
 				result.at<unsigned char>(y, x) = ((cumuHistogram[inputImage.at<unsigned char>(y, x)]) * probability);
@@ -113,35 +113,7 @@ void CameraFeed::grassfireSecondRunthrough(Mat inputImage){
 	}
 }
 
-int CameraFeed::getSentryProbability(Mat inputImage, int r, int c){
-	return 0;
-}
-
-int CameraFeed::getBoulderProbability(Mat inputImage, int r, int c){
-	return 0;
-}
-
-int CameraFeed::getWallProbability(Mat inputImage, int r, int c){
-	
-	return 0;
-}
-
-int CameraFeed::getBoomerangProbability(Mat inputImage, int r, int c){
-	return 0;
-}
-
-
-int CameraFeed::getSentryProbability(Mat inputImage){
-	int probability = 0;
-	for (int r = 0; r < inputImage.rows; r++){
-		for (int c = 0; c < inputImage.cols; c++){
-
-		}
-	}
-	return probability;
-}
-
-int CameraFeed::getBoulderProbability(Mat inputImage){
+int CameraFeed::getStoneProbability(Mat inputImage){
 	int maxRow = 0, minRow = 0;
 	double height = 0.0, width = 0.0;
 	int maxCol = 0, minCol = 0;
@@ -169,11 +141,10 @@ int CameraFeed::getBoulderProbability(Mat inputImage){
 	}
 	height = maxCol - minCol;
 	width = maxRow - minRow;
-	double tempResult = 0.0;
+	double probability = 0.0;
 	if (height != 0 && width != 0) 
-		tempResult = (height / width) * 100;
-	double probability = (height / width) * 100;
-	cout << "does this change? " << tempResult <<" " << height << " " << width <<  "\n" ;
+		probability= (height / width) * 100;
+	cout << "does this change? " << probability <<" " << height << " " << width <<  "\n" ;
 	cout << " " << maxRow << " " << minRow << " " << maxCol << " " << minCol << "\n";
 	return probability;
 }
@@ -188,46 +159,15 @@ int CameraFeed::getWallProbability(Mat inputImage){
 	return probability;
 }
 
-int CameraFeed::getBoomerangProbability(Mat inputImage){
-	int probability = 0;
-	for (int r = 0; r < inputImage.rows; r++){
-		for (int c = 0; c < inputImage.cols; c++){
-
-		}
-	}
-	return probability;
-}
-
 int CameraFeed::chooseHandsign(Mat inputImage){
-	cout << "choose handsign \n";
-	int sentryHandsignProbability = 0;
-	int boulderHandsignProbability = 0; 
-	int boomerangHandsignProbability = 0;
+	int stoneHandsignProbability = 0;
 	int wallHandsignProbability = 0;
-	sentryHandsignProbability = getSentryProbability(inputImage);
-	boulderHandsignProbability = getBoulderProbability(inputImage);
-	boomerangHandsignProbability = getBoomerangProbability(inputImage);
+	stoneHandsignProbability = getStoneProbability(inputImage);
 	wallHandsignProbability = getWallProbability(inputImage);
-	if (sentryHandsignProbability < boulderHandsignProbability){
-		if (boulderHandsignProbability < boomerangHandsignProbability)
-			if (boomerangHandsignProbability < wallHandsignProbability)
-				return 4;
-			else
-				return 3;
-		else if (boulderHandsignProbability < wallHandsignProbability)
-			return 4;
-		else
-			return 2;
-	}
-	else if(sentryHandsignProbability < boomerangHandsignProbability){
-		if (boomerangHandsignProbability < wallHandsignProbability)
-			return 4;
-		else
-			return 3;
-	}
-	else if (sentryHandsignProbability < wallHandsignProbability){
-		return 1;
-	}
+	if (stoneHandsignProbability > wallHandsignProbability)
+		return 3;
+	else
+		return 4;
 	return 0;
 }
 
@@ -246,7 +186,8 @@ Mat CameraFeed::segmentImage(Mat inputFrame){
 	return outputFrame;
 }
 
-void CameraFeed::thresholdImage(Mat inputImage, Mat outputImage, int minThreshold, int maxThreshold, int newValue){
+void CameraFeed::thresholdImage(Mat inputImage, Mat outputImage, 
+	int minThreshold, int maxThreshold, int newValue){
 	for (int r = 0; r < inputImage.rows; r++){
 		for (int c = 0; c < inputImage.cols; c++){
 			if (inputImage.at<uchar>(r, c) >= minThreshold &&
@@ -257,6 +198,8 @@ void CameraFeed::thresholdImage(Mat inputImage, Mat outputImage, int minThreshol
 		}
 	}
 }
+
+
 void CameraFeed::thresholdImage(Mat inputImage, Mat outputImage, 
 	int minThresholdOne, int maxThresholdOne, int newValueOne, 
 	int minThresholdTwo, int maxThresholdTwo, int newValueTwo)
@@ -281,8 +224,7 @@ void CameraFeed::thresholdImage(Mat inputImage, Mat outputImage,
 void CameraFeed::thresholdImage(Mat inputImage, Mat outputImage, 
 	int minThresholdOne, int maxThresholdOne, int newValueOne,
 	int minThresholdTwo, int maxThresholdTwo, int newValueTwo,
-	int minThresholdThree, int maxThresholdThree, int newValueThree)
-{
+	int minThresholdThree, int maxThresholdThree, int newValueThree){
 	for (int r = 0; r < inputImage.rows; r++){
 		for (int c = 0; c < inputImage.cols; c++){
 			if (inputImage.at<uchar>(r, c) >= minThresholdOne &&
@@ -306,9 +248,11 @@ void CameraFeed::thresholdImage(Mat inputImage, Mat outputImage,
 	}
 }
 
-void CameraFeed::thresholdImageColor(Mat inputImage, Mat outputImage, int minThresholdRed, int maxThresholdRed, int newValueRed, 
-																	  int minThresholdGreen, int maxThresholdGreen, int newValueGreen,
-																	  int minThresholdBlue, int maxThresholdBlue, int newValueBlue){
+void CameraFeed::thresholdImageColor(Mat inputImage, Mat outputImage, 
+	int minThresholdRed, int maxThresholdRed, int newValueRed, 
+	int minThresholdGreen, int maxThresholdGreen, int newValueGreen,
+	int minThresholdBlue, int maxThresholdBlue, int newValueBlue) 
+{
 	for (int r = 0; r < inputImage.rows; r++){
 		for (int c = 0; c < inputImage.cols; c++){
 			if (inputImage.at<Vec3b>(r, c)[0] > minThresholdBlue && inputImage.at<Vec3b>(r, c)[0] < maxThresholdBlue)
@@ -329,13 +273,15 @@ void CameraFeed::thresholdImageColor(Mat inputImage, Mat outputImage, int minThr
 	}
 }
 
-void CameraFeed::thresholdHand(Mat inputImage, Mat outputImage, int minThresholdHue, int maxThresholdHue, int newValueHue){
+void CameraFeed::thresholdHand(Mat inputImage, Mat outputImage,
+	int minThresholdHue, int maxThresholdHue, int newValueHue)
+{
 	for (int r = 0; r < inputImage.rows; r++){
 		for (int c = 0; c < inputImage.cols; c++){
 			if (inputImage.at<Vec3b>(r, c)[0] >= minThresholdHue && 
 				inputImage.at<Vec3b>(r, c)[0] < maxThresholdHue &&
 				inputImage.at<Vec3b>(r, c)[1] > 30 &&
-				inputImage.at<Vec3b>(r, c)[2] > 20 )
+				inputImage.at<Vec3b>(r, c)[2] > 60 && inputImage.at<Vec3b>(r, c)[2] < 240)
 			{
 				outputImage.at<Vec3b>(r, c)[0] = newValueHue;
 				outputImage.at<Vec3b>(r, c)[1] = newValueHue;
@@ -447,6 +393,3 @@ void CameraFeed::converRGBToHSV(Mat inputImage, Mat imageHue, Mat imageSat, Mat 
 		}
 	}
 }
-
-
-

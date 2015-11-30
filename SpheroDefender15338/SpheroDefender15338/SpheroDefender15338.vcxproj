@@ -15,9 +15,7 @@
     <ClCompile Include="CameraFeed.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Minimap.cpp" />
-    <ClCompile Include="Sphero.cpp" />
     <ClCompile Include="SpheroControls.cpp" />
-    <ClCompile Include="SpheroCoordinate.cpp" />
     <ClCompile Include="UserInterface.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -25,11 +23,8 @@
     <ClInclude Include="CameraFeed.h" />
     <ClInclude Include="Minimap.h" />
     <ClInclude Include="resource.h" />
-    <ClInclude Include="Sphero.h" />
     <ClInclude Include="SpheroControls.h" />
-    <ClInclude Include="SpheroCoordinate.h" />
     <ClInclude Include="UserInterface.h" />
-    <ClInclude Include="Utility.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SpheroDefender15338.rc" />

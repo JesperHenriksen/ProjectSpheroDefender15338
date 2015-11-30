@@ -1,5 +1,4 @@
 #include "opencv2\opencv.hpp"
-#include "Sphero.h"
 #include "Minimap.h"
 #include "CameraFeed.h"
 #include <thread>
@@ -11,6 +10,14 @@ using namespace std;
 
 int main(int, char)
 {
+	int score;
+	clock_t timer;
+	static struct leaderboard {
+		int score = 0;
+		char name = ' ';
+		char playerType = ' ';
+	};
+
 	//webcam variables
 	CameraFeed wizardWebcam(0); 
 	CameraFeed minimapWebcam(1);
@@ -33,8 +40,12 @@ int main(int, char)
 
 	//hand tracking variables
 	Mat handInput, handColorThreshold, handGscale, handThreshold;
-	Mat grassfire;
-
+	
+	
+	vector<vector<Point> > contours;
+	vector<Vec4i> hierachy;
+	int kernelSize = 11;
+	Mat handContours, kernel;;
 	//userInterface.getStartPoint(wizardBackground, x, y);
 	//cout << x << ", " << y;
 	/*UserInterface userInterface;
@@ -71,17 +82,16 @@ int main(int, char)
 		//	//imshow("threshold", thresholded);
 		//	angle = minimap.getAngleOfArrow(thresholded, 0, 100);
 		//	//cout << angle << " " << "\n";
-		//
+		
 		//threshold hand
-		int kernelSize = 5;
 		handInput = wizardWebcam.getImageFromWebcam();
+		imshow("input", handInput);
 		blur(handInput, handInput, Size(kernelSize, kernelSize));
 		cvtColor(handInput, sat, COLOR_BGR2HSV);
 		sat.copyTo(handColorThreshold);
 		minimapWebcam.thresholdHand(sat, handColorThreshold, 30, 90, 255);
 		cvtColor(handColorThreshold, handColorThreshold, CV_BGR2GRAY);
 		medianBlur(handColorThreshold, handColorThreshold, 9);
-		Mat kernel;
 		kernel.ones(kernelSize, kernelSize, CV_8UC1);
 		//opening
 		erode(handColorThreshold, handColorThreshold, kernel);
@@ -92,16 +102,9 @@ int main(int, char)
 		erode(handColorThreshold, handColorThreshold, kernel);
 
 		imshow("threshold", handColorThreshold);
-		//grassfire = Mat::zeros(handColorThreshold.rows, handColorThreshold.cols, handColorThreshold.type());
-		//wizardWebcam.grassFire(handColorThreshold, grassfire);
-		//wizardWebcam.grassFire(grassfire, grassfire);
-
+	
 		//recognize hand
-		Mat handContours;
 		handColorThreshold.copyTo(handContours);
-		RNG rng(12345);
-		vector<vector<Point> > contours;
-		vector<Vec4i> hierachy;
 		findContours(handContours, contours, hierachy, RETR_CCOMP, CHAIN_APPROX_SIMPLE);
 		vector <vector<Point>> hull(contours.size());
 		vector<vector<Vec4i>> convexDef(contours.size());
@@ -109,20 +112,21 @@ int main(int, char)
 
 		for (int i = 0; i < contours.size(); i++) {
 			convexHull(Mat(contours[i]), hull[i], false);
-			if (contours.size() > 3)
-				convexityDefects(Mat(contours[i]), hull[i], convexDef[i]);
+			//if (contours.size() > 3)
+				//convexityDefects(Mat(contours[i]), hull[i], convexDef[i]);
 		}
-		Mat bob = Mat::zeros(handColorThreshold.size(), CV_8UC3);
-
+		Mat contoursMat = Mat::zeros(handColorThreshold.size(), CV_8UC3);
+		RNG rng(12345);
 		for (int i = 0; i < contours.size(); i++){
 			Scalar color = Scalar(rng.uniform(0, 255), rng.uniform(0, 255), rng.uniform(0, 255));
-			drawContours(bob, contours, i, color, 1, 8, hierachy, 0, Point());
-			drawContours(bob, hull, i, color, 1, 8, hierachy, 0, Point());
+			drawContours(contoursMat, contours, i, color, 1, 8, hierachy, 0, Point());
+			drawContours(contoursMat, hull, i, color, 1, 8, hierachy, 0, Point());
 
 		}
-		imshow("contours", bob);
+		imshow("contours", contoursMat);
 
-		int handsign = wizardWebcam.chooseHandsign(handColorThreshold);
+		int handsign = 0;
+		handsign = wizardWebcam.chooseHandsign(handColorThreshold);
 
 
 		//end of code
@@ -132,35 +136,3 @@ int main(int, char)
 	waitKey(0);
 	return 0;
 }
-
-//for (;;){
-//	Mat erosionKernel = Mat::ones(5,5,CV_8UC1);
-//	raw = wizardWebcam.getImageFromWebcam();
-//	raw.copyTo(frame);
-//	//wizardWebcam.thresholdImageColor(frame,frame,0,0,0,0,0,0,0,255,0);
-//	imshow("test", frame);
-//	frame.copyTo(gs);
-//	frame = wizardWebcam.convertRGBtoGS(frame);
-//	imshow("greyscale",gs);
-//	wizardWebcam.thresholdImage(frame, frame, 0, 50, 0, 50, 150, 255, 150, 255, 0);
-//	erode(frame,frame,erosionKernel);
-//	blob = wizardWebcam.grassFire(frame);
-//	imshow("fired the Grassfire",blob);
-//	imshow("input", raw);
-//	if (waitKey(30) >= 0)
-//		break;
-//}
-
-//for (;;) {
-//       frame = minimapWebcam.getImageFromWebcam();
-//       frame = minimapWebcam.convertRGBtoGS(frame);
-//       addWeighted(wizardBackground, 0.995, frame, 0.005, 0, wizardBackground); 
-//       foreground.zeros(frame.rows,frame.cols, frame.type());
-//       subtract(frame, wizardBackground, foreground);
-//       //medianBlur(image, image, 3);
-//       // medianBlur(foreground,foreground, 5);
-//	threshold(foreground, foreground,0,255,THRESH_BINARY);
-//	//imshow("New Image", newImage);
-//	imshow("final", foreground);
-//	if (waitKey(30) >= 0)
-//		break;
