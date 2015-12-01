@@ -178,8 +178,11 @@ double CameraFeed::getCircularity(double height, double width){
 }
 
 int CameraFeed::getStoneProbability(double height, double width, double circularity, double pixelAmount){
-	double ratio = width / height;
 	int stoneProbability = 0;
+	double ratio = 0;
+	if (width = !0)
+		ratio = height / width;
+
 	if (ratio > 0.8 && ratio < 1.2){
 		stoneProbability++;
 	}
@@ -194,8 +197,11 @@ int CameraFeed::getStoneProbability(double height, double width, double circular
 }
 
 int CameraFeed::getWallProbability(double height, double width, double circularity, int pixelAmount) {
-	double ratio = width / height;
 	int wallProbability = 0;
+	double ratio = 0;
+	if (width = !0)
+		ratio = height / width;
+
 	if (ratio > 0.55 && ratio < 0.75){
 		wallProbability++;
 	}
@@ -209,8 +215,11 @@ int CameraFeed::getWallProbability(double height, double width, double circulari
 }
 
 int CameraFeed::getBoomerangProbability(double height, double width, double circularity, int pixelAmount) {
-	double ratio = width / height;
 	int boomerangProbability = 0;
+	double ratio = 0;
+	if (width = !0)
+		ratio = height / width;
+
 	if (ratio > 00 && ratio < 00) {
 		boomerangProbability++;
 	}
@@ -224,8 +233,11 @@ int CameraFeed::getBoomerangProbability(double height, double width, double circ
 }
 
 int CameraFeed::getSentryProbability(double height, double width, double circularity, int pixelAmount) {
-	double ratio = width / height;
 	int sentryProbability = 0;
+	double ratio = 0;
+	if (width = !0)
+		ratio = height / width;
+
 	if (ratio > 00 && ratio < 00) {
 		sentryProbability++;
 	}
@@ -251,12 +263,34 @@ int CameraFeed::chooseHandsign(Mat inputImage){
 	double circularity = 0.0;
 	circularity = getCircularity(height, width);
 	cout << "Circularity: " << circularity << "\n blobPixelAmount: " << blobPixelAmount << "\n filledPercentage: " << filledPercentage << 
-		"\n HeightWidth: " << height << ", " << width << "\n Divided HW: " << width/height;
+		"\n HeightWidth: " << height << ", " << width << "\n Divided HW: " << height/width;
 	
 	stoneHandsignProbability = getStoneProbability(height, width, circularity, filledPercentage);
 	wallHandsignProbability = getWallProbability(height, width, circularity, filledPercentage);
 	boomerangHandsignProbability = getBoomerangProbability(height, width, circularity, filledPercentage);
 	sentryHandsignProbability = getSentryProbability(height, width, circularity, filledPercentage);
+
+	if (stoneHandsignProbability > wallHandsignProbability){
+		if (stoneHandsignProbability > boomerangHandsignProbability) {
+			if (stoneHandsignProbability > sentryHandsignProbability) {
+				return 1; //return stone
+			}
+			else
+				return 4; //return sentry
+		}
+		else if (boomerangHandsignProbability > sentryHandsignProbability) {
+			return 3; //return boomerang
+		}
+		else
+			return 4; //return sentry
+	}
+	else if (wallHandsignProbability > boomerangHandsignProbability){
+		if (wallHandsignProbability > sentryHandsignProbability) {
+			return 2; //return wall
+		}
+		else
+			return 4; //return sentry
+	}
 
 	return 0;
 }
