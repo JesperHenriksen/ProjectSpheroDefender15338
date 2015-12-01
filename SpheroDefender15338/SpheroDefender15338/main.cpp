@@ -129,8 +129,8 @@ int main(int, char)
 		//}
 		//imshow("contours", contoursMat);
 
-		//int handsign = 0;
-		//handsign = wizardWebcam.chooseHandsign(handColorThreshold);
+		int handsign = 0;
+		handsign = wizardWebcam.chooseHandsign(handColorThreshold);
 
 
 		//end of code

@@ -116,38 +116,109 @@ void CameraFeed::getHeightAndWidth(Mat inputImage, double &height, double &width
 	}
 	height = maxCol - minCol;
 	width = maxRow - minRow;
-	cout << "does this change?" <<" " << height << " " << width <<  "\n" ;
 }
 
 int CameraFeed::getPixelAmount(Mat inputImage){
 	int pixelAmount = 0;
 	for (int r = 0; r < inputImage.rows; r++){
 		for (int c = 0; c < inputImage.cols; c++){
-			if (inputImage.at<uchar>(c, r) != 0)
+			if (inputImage.at<uchar>(r,c) != 0)
 				pixelAmount++;
 		}
 	}
 	return pixelAmount;
 }
 
-double CameraFeed::getCircularity(Mat inputImage, double height, double width){
+double CameraFeed::getCircularity(double height, double width){
 	double radius = (height+width) / 2;
-	double perimeter = 2 * PI * radius;
-	cout << "perimeter: " << perimeter;
-	return perimeter;
+	double circlePerimeter = 2 * PI * radius;
+	double ellipsePerimeter = 2 * PI * sqrt(0.5*(height*height + width*width));
+	double circularity = ellipsePerimeter / circlePerimeter;
+	
+	return circularity;
+}
+
+int CameraFeed::getStoneProbability(double height, double width, double circularity, double pixelAmount){
+	double ratio = width / height;
+	int stoneProbability = 0;
+	if (ratio > 0.8 && ratio < 1.2){
+		stoneProbability++;
+	}
+	if (circularity > 0.8 && circularity < 1.2){
+		stoneProbability++;
+	}
+	if (pixelAmount > 0.7 && pixelAmount < 1){
+		stoneProbability++;
+	}
+
+	return stoneProbability;
+}
+
+int CameraFeed::getWallProbability(double height, double width, double circularity, int pixelAmount) {
+	double ratio = width / height;
+	int wallProbability = 0;
+	if (ratio > 0.55 && ratio < 0.75){
+		wallProbability++;
+	}
+	if (circularity > 0.8 && circularity < 1.2){
+		wallProbability++;
+	}
+	if (pixelAmount > 0.7 && pixelAmount < 1){
+		wallProbability++;
+	}
+	return wallProbability;
+}
+
+int CameraFeed::getBoomerangProbability(double height, double width, double circularity, int pixelAmount) {
+	double ratio = width / height;
+	int boomerangProbability = 0;
+	if (ratio > 00 && ratio < 00) {
+		boomerangProbability++;
+	}
+	if (circularity > 00 && circularity < 00) {
+		boomerangProbability++;
+	}
+	if (pixelAmount > 00 && pixelAmount < 00) {
+		boomerangProbability++;
+	}
+	return boomerangProbability;
+}
+
+int CameraFeed::getSentryProbability(double height, double width, double circularity, int pixelAmount) {
+	double ratio = width / height;
+	int sentryProbability = 0;
+	if (ratio > 00 && ratio < 00) {
+		sentryProbability++;
+	}
+	if (circularity > 00 && circularity < 00) {
+		sentryProbability++;
+	}
+	if (pixelAmount > 00 && pixelAmount < 00) {
+		sentryProbability++;
+	}
+	return sentryProbability;
 }
 
 int CameraFeed::chooseHandsign(Mat inputImage){
 	int stoneHandsignProbability = 0;
 	int wallHandsignProbability = 0;
+	int boomerangHandsignProbability = 0;
+	int sentryHandsignProbability = 0;
 	double height = 0, width = 0;
 	int blobPixelAmount = 0;
 	blobPixelAmount = getPixelAmount(inputImage);
 	getHeightAndWidth(inputImage, height, width);
-	if (stoneHandsignProbability > wallHandsignProbability)
-		return 3;
-	else
-		return 4;
+	double filledPercentage = blobPixelAmount / (height*width);
+	double circularity = 0.0;
+	circularity = getCircularity(height, width);
+	cout << "Circularity: " << circularity << "\n blobPixelAmount: " << blobPixelAmount << "\n filledPercentage: " << filledPercentage << 
+		"\n HeightWidth: " << height << ", " << width << "\n Divided HW: " << width/height;
+	
+	stoneHandsignProbability = getStoneProbability(height, width, circularity, filledPercentage);
+	wallHandsignProbability = getWallProbability(height, width, circularity, filledPercentage);
+	boomerangHandsignProbability = getBoomerangProbability(height, width, circularity, filledPercentage);
+	sentryHandsignProbability = getSentryProbability(height, width, circularity, filledPercentage);
+
 	return 0;
 }
 
