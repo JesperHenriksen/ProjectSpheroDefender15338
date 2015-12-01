@@ -79,10 +79,7 @@ public:
 		int minThresholdGreen, int maxThresholdGreen, int newValueGreen,
 		int minThresholdBlue, int maxThresholdBlue, int newValueBlue);
 
-	int CameraFeed::getSentryProbability(Mat inputImage, int r, int c);
-	int CameraFeed::getBoulderProbability(Mat inputImage, int r, int c);
-	int CameraFeed::getWallProbability(Mat inputImage, int r, int c);
-	int CameraFeed::getBoomerangProbability(Mat inputImage, int r, int c);
+
 
 	/**
 	@brief 
@@ -90,12 +87,10 @@ public:
 	@param inputImage
 		The input Mat variable.
 	@return
-		Returns 1 if sentry is the most probable, 
-		Returns 2 if boulder is the most probable,
-		Returns 3 if boomerang is the most probable,
+		Returns 3 if boulder is the most probable,
 		Returns 4 if wall is the most probable.
 	*/
-	int CameraFeed::chooseHandsign(Mat inputImage);
+	int chooseHandsign(Mat inputImage);
 private:
 	/**
 	@brief
@@ -104,15 +99,12 @@ private:
 		Input Mat frame which the channel is negated.
 	*/
 	Mat setZeroesInChannel(Mat inputFrame);
-	/**
-	@brief
-		Takes an inputImage checks if the blobs are connected
-	@param inputImage
-		inputImage is the image you want to change to be the connected blobs
-	*/
-	void grassfireSecondRunthrough(Mat inputImage);
 	double getHue(double R, double G, double B); //Declare the functions
 	double getSaturation(double R, double G, double B);
 	int getIntensity(int R, int G, int B);
+	double getCircularity(Mat inputImage, double height, double width);
+	void getHeightAndWidth(Mat inputImage, double &height, double &width);
+	int getPixelAmount(Mat inputImage);
+	
 };
 

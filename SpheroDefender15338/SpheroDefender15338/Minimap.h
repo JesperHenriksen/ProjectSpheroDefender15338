@@ -5,7 +5,7 @@ class Minimap
 public:
 	Minimap();
 	~Minimap();
-	Mat segmentImage(CameraFeed camfeed);
+//	Mat segmentImage(CameraFeed camfeed);
 	/**
 	@brief
 		Returns the angle value in degrees of the Arrow on the Minimap
@@ -20,9 +20,9 @@ public:
 	*/
 	double getAngleOfArrow(Mat inputImage, int thresholdMin, int thresholdMax);
 	void placeSpell(Mat inputFrame, int thresholdMin, int thresholdMax, double &xCoord, double &yCoord);
-	void thresholdImageArrow(Mat inputImage, Mat outputImage, int minThresholdRed, int maxThresholdRed, int newValueRed,
-		int minThresholdGreen, int maxThresholdGreen,
-		int minThresholdBlue, int maxThresholdBlue);
+	//void thresholdImageArrow(Mat inputImage, Mat outputImage, int minThresholdRed, int maxThresholdRed, int newValueRed,
+	/*	int minThresholdGreen, int maxThresholdGreen,
+		int minThresholdBlue, int maxThresholdBlue);*/
 	void Minimap::getCenterOfBlob(Mat inputImage, double &recCenterX, double &recCenterY,
 		double &triCenterY, double &triCenterX, int thresholdMin, int thresholdMax);
 	/**
