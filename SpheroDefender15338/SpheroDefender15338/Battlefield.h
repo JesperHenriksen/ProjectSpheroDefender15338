@@ -1,28 +1,25 @@
 #pragma once
-#include "Utility.h"
-#include "SpheroCoordinate.h"
-class Battlefield : public Utility
+#include "CameraFeed.h"
+#include "opencv2\opencv.hpp"
+
+using namespace cv;
+
+class Battlefield
 {
 public:
 	Battlefield();
 	~Battlefield();
-
-private:
+	void Battlefield::trackSphero(Mat background, CameraFeed webcamSphero, double &xCoordSphero, double &yCoordSphero);
 	/*!
-	Projects battlefield 
+	checks if shero is out of bounds
+	!*/
+	void spheroOutOfBounds();
+	/*!
+	Projects battlefield
 	!*/
 	void projectBattlefield();
 	/*!
 	Detects if sphero gets hit
 	!*/
 	void doesSheroGetHit();
-	/*!
-	send continues sphero position
-	!*/
-	SpheroCoordinate sendContinuesSpheroPosition();
-	/*!
-	checks if shero is out of bounds
-	!*/
-	void spheroOutOfBounds(SpheroCoordinate);
 };
-
