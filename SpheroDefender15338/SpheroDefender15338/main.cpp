@@ -100,33 +100,37 @@ int main(int, char)
 		//closing
 		dilate(handColorThreshold, handColorThreshold, kernel);
 		erode(handColorThreshold, handColorThreshold, kernel);
-
+		Mat grassfire;
+		grassfire = Mat::zeros(handColorThreshold.rows, handColorThreshold.cols, handColorThreshold.type());
+		minimapWebcam.grassFire(handColorThreshold, grassfire);
+		grassfire *= 25;
+		imshow("grassfire", grassfire);
 		imshow("threshold", handColorThreshold);
 	
-		//recognize hand
-		handColorThreshold.copyTo(handContours);
-		findContours(handContours, contours, hierachy, RETR_CCOMP, CHAIN_APPROX_SIMPLE);
-		vector <vector<Point>> hull(contours.size());
-		vector<vector<Vec4i>> convexDef(contours.size());
+		////recognize hand
+		//handColorThreshold.copyTo(handContours);
+		//findContours(handContours, contours, hierachy, RETR_CCOMP, CHAIN_APPROX_SIMPLE);
+		//vector <vector<Point>> hull(contours.size());
+		//vector<vector<Vec4i>> convexDef(contours.size());
 
 
-		for (int i = 0; i < contours.size(); i++) {
-			convexHull(Mat(contours[i]), hull[i], false);
-			//if (contours.size() > 3)
-				//convexityDefects(Mat(contours[i]), hull[i], convexDef[i]);
-		}
-		Mat contoursMat = Mat::zeros(handColorThreshold.size(), CV_8UC3);
-		RNG rng(12345);
-		for (int i = 0; i < contours.size(); i++){
-			Scalar color = Scalar(rng.uniform(0, 255), rng.uniform(0, 255), rng.uniform(0, 255));
-			drawContours(contoursMat, contours, i, color, 1, 8, hierachy, 0, Point());
-			drawContours(contoursMat, hull, i, color, 1, 8, hierachy, 0, Point());
+		//for (int i = 0; i < contours.size(); i++) {
+		//	convexHull(Mat(contours[i]), hull[i], false);
+		//	//if (contours.size() > 3)
+		//		//convexityDefects(Mat(contours[i]), hull[i], convexDef[i]);
+		//}
+		//Mat contoursMat = Mat::zeros(handColorThreshold.size(), CV_8UC3);
+		//RNG rng(12345);
+		//for (int i = 0; i < contours.size(); i++){
+		//	Scalar color = Scalar(rng.uniform(0, 255), rng.uniform(0, 255), rng.uniform(0, 255));
+		//	drawContours(contoursMat, contours, i, color, 1, 8, hierachy, 0, Point());
+		//	drawContours(contoursMat, hull, i, color, 1, 8, hierachy, 0, Point());
 
-		}
-		imshow("contours", contoursMat);
+		//}
+		//imshow("contours", contoursMat);
 
-		int handsign = 0;
-		handsign = wizardWebcam.chooseHandsign(handColorThreshold);
+		//int handsign = 0;
+		//handsign = wizardWebcam.chooseHandsign(handColorThreshold);
 
 
 		//end of code

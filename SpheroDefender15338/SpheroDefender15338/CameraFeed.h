@@ -99,13 +99,6 @@ private:
 		Input Mat frame which the channel is negated.
 	*/
 	Mat setZeroesInChannel(Mat inputFrame);
-	/**
-	@brief
-		Takes an inputImage checks if the blobs are connected
-	@param inputImage
-		inputImage is the image you want to change to be the connected blobs
-	*/
-	void grassfireSecondRunthrough(Mat inputImage);
 	double getHue(double R, double G, double B); //Declare the functions
 	double getSaturation(double R, double G, double B);
 	int getIntensity(int R, int G, int B);

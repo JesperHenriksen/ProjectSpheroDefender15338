@@ -24,95 +24,70 @@ Mat CameraFeed::getImageFromWebcam(){
 	return frame;
 }
 
-void CameraFeed::inputImageFixing(Mat inputImage, Mat dst, int minThreshold, int maxThreshold){
-	for (int r = 0; r < inputImage.rows; r++){
-		for (int c = 0; c < inputImage.cols; c++){
-			dst.at<uchar>(r, c) = (255 / (maxThreshold - minThreshold)) * (inputImage.at<uchar>(r, c) - minThreshold);
-		}
-	}
-}
-
-Mat CameraFeed::equalizeHistogram(Mat inputImage, Mat dst) {
-	Mat result = inputImage.clone();
-	result.zeros(inputImage.rows, inputImage.cols, inputImage.type());
-	if (inputImage.data && !inputImage.empty()) {
-		int histogram[256]; //Array for storing histogram values
-		int cumuHistogram[256]; //Array for storing the cumulative histogram values
-		int grayscale = 256;
-		//inputImage histogram
-		for (int i = 0; i < grayscale; i++) {
-			histogram[i] = 0;
-		}
-		for (int y = 0; y < inputImage.rows; y++) {
-			for (int x = 0; x < inputImage.cols; x++) {
-				histogram[inputImage.at<unsigned char>(y, x)]++;
-			}
-		}
-
-		//cumulativeHistogram
-		cumuHistogram[0] = histogram[0];
-		for (int i = 1; i < grayscale; i++) {
-			histogram[i] = histogram[i - 1] + cumuHistogram[i];
-		}
-		//equalizedImage
-		int size = inputImage.rows * inputImage.cols;
-		double probability = 255.0 / size;
-		for (int y = 0; y < inputImage.rows; y++) {
-			for (int x = 0; x < inputImage.cols; x++) {
-				result.at<unsigned char>(y, x) = ((cumuHistogram[inputImage.at<unsigned char>(y, x)]) * probability);
-			}
-		}
-	}
-	return result;
-}
-
 void CameraFeed::grassFire(Mat inputImage, Mat output){
-	int currentID = 150;
-	bool foundInfo = false;
-	for (int y = 0; y < inputImage.rows; y++) { //runs through the pixels
-		for (int x = 0; x < inputImage.cols; x++) {
-			foundInfo = false;
+	int currentID = 1;
+	for (int y = 1; y < inputImage.rows; y++) { //runs through the pixels
+		for (int x = 1; x < inputImage.cols; x++) {
 			//if there is informations in the input pixel and
 			//if both of the kernel pixels is inside the bounderies of the inputimage
-			if (inputImage.at<uchar>(y, x) > 60 && (x - 1) >= 0 && (y - 1) >= 0) {
-				if ((x - 1) >= 0) // if there is a pixel behind the current pixel
-					if (output.at<uchar>(y, x - 1) != 0)  // if there is information in the pixel behind the current pixel
-						if (output.at<uchar>(y, x - 1) < output.at<uchar>(y, x)){
-							output.at<uchar>(y, x) = output.at<uchar>(y, x - 1); // set the current pixel value to the value of the x
-							foundInfo = true;
-						}
-				if ((y - 1) >= 0) //if there is a pixel above the current pixel
-					if (output.at<uchar>(y - 1, x) != 0) // if there is information above the current pixel
-						if (output.at<uchar>(y - 1, x) < output.at<uchar>(y, x)){
-							output.at<uchar>(y, x) = output.at<uchar>(y - 1, x); // set the current pixel value to the value of the y7
-							foundInfo = true;
-						}
-				if (inputImage.at<uchar>(y, x) > 60 && foundInfo == false){ //if there is no information in the north pixel or the east pixel 
+			if (inputImage.at<uchar>(y, x) > 60) {
+				if (output.at<uchar>(y - 1, x) != 0){
+					output.at<uchar>(y, x) = output.at<uchar>(y - 1, x); // set the current pixel value to the value of the y
+				}
+				if (output.at<uchar>(y, x - 1) != 0) {
+					output.at<uchar>(y, x) = output.at<uchar>(y, x - 1); // set the current pixel value to the value of the x
+				}
+				if (output.at<uchar>(y, x) == 0) { //if there is no information in the north pixel or the east pixel 
 					output.at<uchar>(y, x) = currentID; //otherwise set the pixel to the current id
-					currentID+= 50;//increase id
+					currentID ++;//increase id
 				}
 			}
-			
 		}
 	}
-	grassfireSecondRunthrough(output); //connect the connected blobs 
-}
 
-void CameraFeed::grassfireSecondRunthrough(Mat inputImage){
-	for (int y = inputImage.rows - 1; y > 0; y--) { //runs through the pixels backwards
-		for (int x = inputImage.cols - 1; x > 0; x--) {
-			if (inputImage.at<uchar>(y, x) != 0){
-				if ((y - 1) >= 0 || (x - 1) >= 0) {
-					if (inputImage.at<uchar>(y - 1, x) > inputImage.at<uchar>(y, x))
-						inputImage.at<uchar>(y - 1, x) = inputImage.at<uchar>(y, x);
+	//connect the connected blobs 
+	for (int y = 1; y < inputImage.rows; y++) { //runs through the pixels
+		for (int x = 1; x < inputImage.cols; x++) {
+			//if there is informations in the input pixel and
+			//if both of the kernel pixels is inside the bounderies of the inputimage
+			if (output.at<uchar>(y, x) != 0) {
+				if (output.at<uchar>(y - 1, x) != 0)
+					if (output.at<uchar>(y - 1, x) < output.at<uchar>(y, x)){
+						output.at<uchar>(y, x) = output.at<uchar>(y - 1, x); // set the current pixel value to the value of the y
+					}
+					else{
+						output.at<uchar>(y - 1, x) = output.at<uchar>(y, x); 
+					}
+				if (output.at<uchar>(y, x - 1) != 0)
+					if (output.at<uchar>(y, x - 1) < output.at<uchar>(y, x)) {
+						output.at<uchar>(y, x) = output.at<uchar>(y, x - 1); // set the current pixel value to the value of the x
+					}
+					else{
+						output.at<uchar>(y, x - 1) = output.at<uchar>(y, x); 
+					}
+
+			}
+		}
+	}
+
+	for (int y = output.rows - 1; y > 0; y--) { //runs through the pixels backwards
+		for (int x = output.cols - 1; x > 0; x--) {
+			if (output.at<uchar>(y, x) != 0){
+				if (output.at<uchar>(y - 1, x) != 0)
+					if (output.at<uchar>(y - 1, x) < output.at<uchar>(y, x))
+						output.at<uchar>(y, x) = output.at<uchar>(y - 1, x);
 					else
-						inputImage.at<uchar>(y, x - 1) = inputImage.at<uchar>(y, x);
-
-				}				
+						output.at<uchar>(y - 1, x) = output.at<uchar>(y, x);
+				if (output.at<uchar>(y, x - 1) != 0)
+					if (output.at<uchar>(y, x - 1) < output.at<uchar>(y, x))
+						output.at<uchar>(y, x) = output.at<uchar>(y, x - 1);
+					else
+						output.at<uchar>(y, x - 1) = output.at<uchar>(y, x);
 			}
 		}
 	}
 }
+
 
 int CameraFeed::getStoneProbability(Mat inputImage){
 	int maxRow = 0, minRow = 0;
