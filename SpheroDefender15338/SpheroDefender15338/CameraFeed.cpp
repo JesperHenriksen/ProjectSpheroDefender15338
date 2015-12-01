@@ -45,44 +45,83 @@ void CameraFeed::grassFire(Mat inputImage, Mat output){
 		}
 	}
 
-	//connect the connected blobs 
-	for (int y = 1; y < inputImage.rows; y++) { //runs through the pixels
-		for (int x = 1; x < inputImage.cols; x++) {
-			//if there is informations in the input pixel and
-			//if both of the kernel pixels is inside the bounderies of the inputimage
+	//give the same ID in the connected blobs with forward loop followed by a backwards loop
+	//forward loop
+	for (int y = 1; y < inputImage.rows - 2 ; y++) { //runs through the pixels
+		for (int x = 1; x < inputImage.cols - 2; x++) {
+			//if there is informations in the input pixel
 			if (output.at<uchar>(y, x) != 0) {
-				if (output.at<uchar>(y - 1, x) != 0)
-					if (output.at<uchar>(y - 1, x) < output.at<uchar>(y, x)){
-						output.at<uchar>(y, x) = output.at<uchar>(y - 1, x); // set the current pixel value to the value of the y
+				//west
+				if (output.at<uchar>(y, x - 1) != 0) { // if west pixel value is NOT equal to 0
+					if (output.at<uchar>(y, x - 1) < output.at<uchar>(y, x)){ // if west pixel value is smaller than current pixel value
+						output.at<uchar>(y, x) = output.at<uchar>(y, x - 1); // set the current pixel value to the value of West
 					}
 					else{
-						output.at<uchar>(y - 1, x) = output.at<uchar>(y, x); 
+						output.at<uchar>(y, x - 1) = output.at<uchar>(y, x); // set west pixel value to the value of current pixel
 					}
-				if (output.at<uchar>(y, x - 1) != 0)
-					if (output.at<uchar>(y, x - 1) < output.at<uchar>(y, x)) {
-						output.at<uchar>(y, x) = output.at<uchar>(y, x - 1); // set the current pixel value to the value of the x
+				}
+				//north west
+				if (output.at<uchar>(y - 1, x - 1) != 0) {// if north west pixel value is NOT equal to 0
+					if (output.at<uchar>(y - 1, x - 1) < output.at<uchar>(y, x)) { // if north west pixel value is smaller than current pixel value
+						output.at<uchar>(y, x) = output.at<uchar>(y - 1, x - 1); // set the current pixel value to the value of north west
 					}
 					else{
-						output.at<uchar>(y, x - 1) = output.at<uchar>(y, x); 
+						output.at<uchar>(y - 1, x - 1) = output.at<uchar>(y, x); //set north west pixel value to the value of current pixel
 					}
-
+				}
+				//north
+				if (output.at<uchar>(y - 1, x) != 0) { // if north pixel value is NOT equal to 0
+					if (output.at<uchar>(y - 1, x) < output.at<uchar>(y, x)) { // if north pixel value is smaller than current pixel value
+						output.at<uchar>(y, x) = output.at<uchar>(y - 1, x); // set the current pixel value to the value of north
+					}
+					else{
+						output.at<uchar>(y - 1, x) = output.at<uchar>(y, x); // set north pixel value to the value of current pixel
+					}
+				}
+				//north east
+				if (output.at<uchar>(y - 1, x + 1) != 0) { // if north east pixel value is NOT equal to 0
+					if (output.at<uchar>(y - 1, x + 1) < output.at<uchar>(y, x)) { // if north east pixel value is smaller than current pixel value
+						output.at<uchar>(y, x) = output.at<uchar>(y - 1, x + 1); // set the current pixel value to the value of north east
+					}
+					else{
+						output.at<uchar>(y - 1, x + 1) = output.at<uchar>(y, x); //set north east value to current pixel value
+					}
+				}
 			}
 		}
 	}
-
-	for (int y = output.rows - 1; y > 0; y--) { //runs through the pixels backwards
-		for (int x = output.cols - 1; x > 0; x--) {
+	//backwards loop
+	for (int y = output.rows - 2; y > 1; y--) { //runs through the pixels backwards
+		for (int x = output.cols - 2; x > 1; x--) {
 			if (output.at<uchar>(y, x) != 0){
-				if (output.at<uchar>(y - 1, x) != 0)
-					if (output.at<uchar>(y - 1, x) < output.at<uchar>(y, x))
-						output.at<uchar>(y, x) = output.at<uchar>(y - 1, x);
+				//east
+				if (output.at<uchar>(y, x + 1) != 0){ // if east pixel value is NOT equal to 0
+					if (output.at<uchar>(y, x + 1) < output.at<uchar>(y, x)) // if east pixel value is smaller than current pixel value
+						output.at<uchar>(y, x) = output.at<uchar>(y, x + 1); // set the current pixel value to the value of east
 					else
-						output.at<uchar>(y - 1, x) = output.at<uchar>(y, x);
-				if (output.at<uchar>(y, x - 1) != 0)
-					if (output.at<uchar>(y, x - 1) < output.at<uchar>(y, x))
-						output.at<uchar>(y, x) = output.at<uchar>(y, x - 1);
+						output.at<uchar>(y, x + 1) = output.at<uchar>(y, x); // set value of east to the current pixel value
+				}
+				//south east
+				if (output.at<uchar>(y + 1, x + 1) != 0) { // if south east pixel value is NOT equal to 0
+					if (output.at<uchar>(y + 1, x + 1) < output.at<uchar>(y, x)) // if south east pixel value is smaller than current pixel value
+						output.at<uchar>(y, x) = output.at<uchar>(y + 1, x + 1); // set the current pixel value to the value of south east
 					else
-						output.at<uchar>(y, x - 1) = output.at<uchar>(y, x);
+						output.at<uchar>(y + 1, x + 1) = output.at<uchar>(y, x); // set value of south east to the current pixel value
+				}
+				//south
+				if (output.at<uchar>(y + 1, x) != 0) { // if south pixel value is NOT equal to 0
+					if (output.at<uchar>(y + 1, x) < output.at<uchar>(y, x)) // if south pixel value is smaller than current pixel value
+						output.at<uchar>(y, x) = output.at<uchar>(y + 1, x); // set the current pixel value to the value of south 
+					else
+						output.at<uchar>(y + 1, x) = output.at<uchar>(y, x); // set value of south to the current pixel value
+				}
+				//south west
+				if (output.at<uchar>(y + 1, x - 1) != 0) { // if south west pixel value is NOT equal to 0
+					if (output.at<uchar>(y + 1, x - 1) < output.at<uchar>(y, x)) // if south west pixel value is smaller than current pixel value
+						output.at<uchar>(y, x) = output.at<uchar>(y + 1, x - 1); // set the current pixel value to the value of south west
+					else
+						output.at<uchar>(y + 1, x - 1) = output.at<uchar>(y, x); // set value of south west to the current pixel value
+				}
 			}
 		}
 	}
@@ -365,7 +404,7 @@ void CameraFeed::thresholdHand(Mat inputImage, Mat outputImage,
 		for (int c = 0; c < inputImage.cols; c++){
 			if (inputImage.at<Vec3b>(r, c)[0] >= minThresholdHue && 
 				inputImage.at<Vec3b>(r, c)[0] < maxThresholdHue &&
-				inputImage.at<Vec3b>(r, c)[1] > 30 &&
+				inputImage.at<Vec3b>(r, c)[1] > 60 &&
 				inputImage.at<Vec3b>(r, c)[2] > 60 && inputImage.at<Vec3b>(r, c)[2] < 240)
 			{
 				outputImage.at<Vec3b>(r, c)[0] = newValueHue;
