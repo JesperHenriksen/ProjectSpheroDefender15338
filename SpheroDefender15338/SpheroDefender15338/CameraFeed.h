@@ -90,7 +90,7 @@ public:
 		Returns 3 if boulder is the most probable,
 		Returns 4 if wall is the most probable.
 	*/
-	int CameraFeed::chooseHandsign(Mat inputImage);
+	int chooseHandsign(Mat inputImage);
 private:
 	/**
 	@brief
@@ -102,9 +102,13 @@ private:
 	double getHue(double R, double G, double B); //Declare the functions
 	double getSaturation(double R, double G, double B);
 	int getIntensity(int R, int G, int B);
-
-	int getStoneProbability(Mat inputImage);
-	int getWallProbability(Mat inputImage);
+	double getCircularity(double height, double width);
+	void getHeightAndWidth(Mat inputImage, double &height, double &width);
+	int getPixelAmount(Mat inputImage);
+	int getStoneProbability(double height, double width, double circularity, double pixelAmount);
+	int getWallProbability(double height, double width, double circularity, int pixelAmount);
+	int getBoomerangProbability(double height, double width, double circularity, int pixelAmount);
+	int getSentryProbability(double height, double width, double circularity, int pixelAmount);
 	
 };
 

@@ -4,6 +4,7 @@
 
 using namespace cv;
 using namespace std;
+double PI = 3.14159;
 
 CameraFeed::CameraFeed(int capture)
 {
@@ -44,53 +45,91 @@ void CameraFeed::grassFire(Mat inputImage, Mat output){
 		}
 	}
 
-	//connect the connected blobs 
-	for (int y = 1; y < inputImage.rows; y++) { //runs through the pixels
-		for (int x = 1; x < inputImage.cols; x++) {
-			//if there is informations in the input pixel and
-			//if both of the kernel pixels is inside the bounderies of the inputimage
+	//give the same ID in the connected blobs with forward loop followed by a backwards loop
+	//forward loop
+	for (int y = 1; y < inputImage.rows - 2 ; y++) { //runs through the pixels
+		for (int x = 1; x < inputImage.cols - 2; x++) {
+			//if there is informations in the input pixel
 			if (output.at<uchar>(y, x) != 0) {
-				if (output.at<uchar>(y - 1, x) != 0)
-					if (output.at<uchar>(y - 1, x) < output.at<uchar>(y, x)){
-						output.at<uchar>(y, x) = output.at<uchar>(y - 1, x); // set the current pixel value to the value of the y
+				//west
+				if (output.at<uchar>(y, x - 1) != 0) { // if west pixel value is NOT equal to 0
+					if (output.at<uchar>(y, x - 1) < output.at<uchar>(y, x)){ // if west pixel value is smaller than current pixel value
+						output.at<uchar>(y, x) = output.at<uchar>(y, x - 1); // set the current pixel value to the value of West
 					}
 					else{
-						output.at<uchar>(y - 1, x) = output.at<uchar>(y, x); 
+						output.at<uchar>(y, x - 1) = output.at<uchar>(y, x); // set west pixel value to the value of current pixel
 					}
-				if (output.at<uchar>(y, x - 1) != 0)
-					if (output.at<uchar>(y, x - 1) < output.at<uchar>(y, x)) {
-						output.at<uchar>(y, x) = output.at<uchar>(y, x - 1); // set the current pixel value to the value of the x
+				}
+				//north west
+				if (output.at<uchar>(y - 1, x - 1) != 0) {// if north west pixel value is NOT equal to 0
+					if (output.at<uchar>(y - 1, x - 1) < output.at<uchar>(y, x)) { // if north west pixel value is smaller than current pixel value
+						output.at<uchar>(y, x) = output.at<uchar>(y - 1, x - 1); // set the current pixel value to the value of north west
 					}
 					else{
-						output.at<uchar>(y, x - 1) = output.at<uchar>(y, x); 
+						output.at<uchar>(y - 1, x - 1) = output.at<uchar>(y, x); //set north west pixel value to the value of current pixel
 					}
-
+				}
+				//north
+				if (output.at<uchar>(y - 1, x) != 0) { // if north pixel value is NOT equal to 0
+					if (output.at<uchar>(y - 1, x) < output.at<uchar>(y, x)) { // if north pixel value is smaller than current pixel value
+						output.at<uchar>(y, x) = output.at<uchar>(y - 1, x); // set the current pixel value to the value of north
+					}
+					else{
+						output.at<uchar>(y - 1, x) = output.at<uchar>(y, x); // set north pixel value to the value of current pixel
+					}
+				}
+				//north east
+				if (output.at<uchar>(y - 1, x + 1) != 0) { // if north east pixel value is NOT equal to 0
+					if (output.at<uchar>(y - 1, x + 1) < output.at<uchar>(y, x)) { // if north east pixel value is smaller than current pixel value
+						output.at<uchar>(y, x) = output.at<uchar>(y - 1, x + 1); // set the current pixel value to the value of north east
+					}
+					else{
+						output.at<uchar>(y - 1, x + 1) = output.at<uchar>(y, x); //set north east value to current pixel value
+					}
+				}
 			}
 		}
 	}
-
-	for (int y = output.rows - 1; y > 0; y--) { //runs through the pixels backwards
-		for (int x = output.cols - 1; x > 0; x--) {
+	//backwards loop
+	for (int y = output.rows - 2; y > 1; y--) { //runs through the pixels backwards
+		for (int x = output.cols - 2; x > 1; x--) {
 			if (output.at<uchar>(y, x) != 0){
-				if (output.at<uchar>(y - 1, x) != 0)
-					if (output.at<uchar>(y - 1, x) < output.at<uchar>(y, x))
-						output.at<uchar>(y, x) = output.at<uchar>(y - 1, x);
+				//east
+				if (output.at<uchar>(y, x + 1) != 0){ // if east pixel value is NOT equal to 0
+					if (output.at<uchar>(y, x + 1) < output.at<uchar>(y, x)) // if east pixel value is smaller than current pixel value
+						output.at<uchar>(y, x) = output.at<uchar>(y, x + 1); // set the current pixel value to the value of east
 					else
-						output.at<uchar>(y - 1, x) = output.at<uchar>(y, x);
-				if (output.at<uchar>(y, x - 1) != 0)
-					if (output.at<uchar>(y, x - 1) < output.at<uchar>(y, x))
-						output.at<uchar>(y, x) = output.at<uchar>(y, x - 1);
+						output.at<uchar>(y, x + 1) = output.at<uchar>(y, x); // set value of east to the current pixel value
+				}
+				//south east
+				if (output.at<uchar>(y + 1, x + 1) != 0) { // if south east pixel value is NOT equal to 0
+					if (output.at<uchar>(y + 1, x + 1) < output.at<uchar>(y, x)) // if south east pixel value is smaller than current pixel value
+						output.at<uchar>(y, x) = output.at<uchar>(y + 1, x + 1); // set the current pixel value to the value of south east
 					else
-						output.at<uchar>(y, x - 1) = output.at<uchar>(y, x);
+						output.at<uchar>(y + 1, x + 1) = output.at<uchar>(y, x); // set value of south east to the current pixel value
+				}
+				//south
+				if (output.at<uchar>(y + 1, x) != 0) { // if south pixel value is NOT equal to 0
+					if (output.at<uchar>(y + 1, x) < output.at<uchar>(y, x)) // if south pixel value is smaller than current pixel value
+						output.at<uchar>(y, x) = output.at<uchar>(y + 1, x); // set the current pixel value to the value of south 
+					else
+						output.at<uchar>(y + 1, x) = output.at<uchar>(y, x); // set value of south to the current pixel value
+				}
+				//south west
+				if (output.at<uchar>(y + 1, x - 1) != 0) { // if south west pixel value is NOT equal to 0
+					if (output.at<uchar>(y + 1, x - 1) < output.at<uchar>(y, x)) // if south west pixel value is smaller than current pixel value
+						output.at<uchar>(y, x) = output.at<uchar>(y + 1, x - 1); // set the current pixel value to the value of south west
+					else
+						output.at<uchar>(y + 1, x - 1) = output.at<uchar>(y, x); // set value of south west to the current pixel value
+				}
 			}
 		}
 	}
 }
 
 
-int CameraFeed::getStoneProbability(Mat inputImage){
+void CameraFeed::getHeightAndWidth(Mat inputImage, double &height, double &width){
 	int maxRow = 0, minRow = 0;
-	double height = 0.0, width = 0.0;
 	int maxCol = 0, minCol = 0;
 	bool firstEncounter = true;
 	for (int r = 0; r < inputImage.rows; r++){
@@ -116,33 +155,109 @@ int CameraFeed::getStoneProbability(Mat inputImage){
 	}
 	height = maxCol - minCol;
 	width = maxRow - minRow;
-	double probability = 0.0;
-	if (height != 0 && width != 0) 
-		probability= (height / width) * 100;
-	cout << "does this change? " << probability <<" " << height << " " << width <<  "\n" ;
-	cout << " " << maxRow << " " << minRow << " " << maxCol << " " << minCol << "\n";
-	return probability;
 }
 
-int CameraFeed::getWallProbability(Mat inputImage){
-	int probability = 0;
+int CameraFeed::getPixelAmount(Mat inputImage){
+	int pixelAmount = 0;
 	for (int r = 0; r < inputImage.rows; r++){
 		for (int c = 0; c < inputImage.cols; c++){
-
+			if (inputImage.at<uchar>(r,c) != 0)
+				pixelAmount++;
 		}
 	}
-	return probability;
+	return pixelAmount;
+}
+
+double CameraFeed::getCircularity(double height, double width){
+	double radius = (height+width) / 2;
+	double circlePerimeter = 2 * PI * radius;
+	double ellipsePerimeter = 2 * PI * sqrt(0.5*(height*height + width*width));
+	double circularity = ellipsePerimeter / circlePerimeter;
+	
+	return circularity;
+}
+
+int CameraFeed::getStoneProbability(double height, double width, double circularity, double pixelAmount){
+	double ratio = width / height;
+	int stoneProbability = 0;
+	if (ratio > 0.8 && ratio < 1.2){
+		stoneProbability++;
+	}
+	if (circularity > 0.8 && circularity < 1.2){
+		stoneProbability++;
+	}
+	if (pixelAmount > 0.7 && pixelAmount < 1){
+		stoneProbability++;
+	}
+
+	return stoneProbability;
+}
+
+int CameraFeed::getWallProbability(double height, double width, double circularity, int pixelAmount) {
+	double ratio = width / height;
+	int wallProbability = 0;
+	if (ratio > 0.55 && ratio < 0.75){
+		wallProbability++;
+	}
+	if (circularity > 0.8 && circularity < 1.2){
+		wallProbability++;
+	}
+	if (pixelAmount > 0.7 && pixelAmount < 1){
+		wallProbability++;
+	}
+	return wallProbability;
+}
+
+int CameraFeed::getBoomerangProbability(double height, double width, double circularity, int pixelAmount) {
+	double ratio = width / height;
+	int boomerangProbability = 0;
+	if (ratio > 00 && ratio < 00) {
+		boomerangProbability++;
+	}
+	if (circularity > 00 && circularity < 00) {
+		boomerangProbability++;
+	}
+	if (pixelAmount > 00 && pixelAmount < 00) {
+		boomerangProbability++;
+	}
+	return boomerangProbability;
+}
+
+int CameraFeed::getSentryProbability(double height, double width, double circularity, int pixelAmount) {
+	double ratio = width / height;
+	int sentryProbability = 0;
+	if (ratio > 00 && ratio < 00) {
+		sentryProbability++;
+	}
+	if (circularity > 00 && circularity < 00) {
+		sentryProbability++;
+	}
+	if (pixelAmount > 00 && pixelAmount < 00) {
+		sentryProbability++;
+	}
+	return sentryProbability;
 }
 
 int CameraFeed::chooseHandsign(Mat inputImage){
 	int stoneHandsignProbability = 0;
 	int wallHandsignProbability = 0;
-	stoneHandsignProbability = getStoneProbability(inputImage);
-	wallHandsignProbability = getWallProbability(inputImage);
-	if (stoneHandsignProbability > wallHandsignProbability)
-		return 3;
-	else
-		return 4;
+	int boomerangHandsignProbability = 0;
+	int sentryHandsignProbability = 0;
+	double height = 0, width = 0;
+	int blobPixelAmount = 0;
+	blobPixelAmount = getPixelAmount(inputImage);
+	getHeightAndWidth(inputImage, height, width);
+	double filledPercentage = blobPixelAmount / (height*width);
+	double circularity = 0.0;
+	circularity = getCircularity(height, width);
+	cout << "Circularity: " << circularity << "\n blobPixelAmount: " << blobPixelAmount << "\n filledPercentage: " << filledPercentage << 
+		"\n HeightWidth: " << height << ", " << width << "\n Divided HW: " << width/height;
+	
+	stoneHandsignProbability = getStoneProbability(height, width, circularity, filledPercentage);
+	wallHandsignProbability = getWallProbability(height, width, circularity, filledPercentage);
+	boomerangHandsignProbability = getBoomerangProbability(height, width, circularity, filledPercentage);
+	sentryHandsignProbability = getSentryProbability(height, width, circularity, filledPercentage);
+
 	return 0;
 }
 
@@ -255,7 +370,7 @@ void CameraFeed::thresholdHand(Mat inputImage, Mat outputImage,
 		for (int c = 0; c < inputImage.cols; c++){
 			if (inputImage.at<Vec3b>(r, c)[0] >= minThresholdHue && 
 				inputImage.at<Vec3b>(r, c)[0] < maxThresholdHue &&
-				inputImage.at<Vec3b>(r, c)[1] > 30 &&
+				inputImage.at<Vec3b>(r, c)[1] > 60 &&
 				inputImage.at<Vec3b>(r, c)[2] > 60 && inputImage.at<Vec3b>(r, c)[2] < 240)
 			{
 				outputImage.at<Vec3b>(r, c)[0] = newValueHue;
