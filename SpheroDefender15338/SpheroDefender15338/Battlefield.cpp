@@ -41,7 +41,7 @@ void Battlefield::trackSphero(Mat background, CameraFeed webcamSphero, double &x
 	subtract(frame, background, foreground); // subtract the background
 	medianBlur(foreground, foreground, 5); // remove salt pepper noise
 	webcamSphero.thresholdImage(foreground, foreground, 0, 0, 0, 0, 0, 0, 240, 255, 255); // make high values completly white
-	cvtColor(foreground, foreground, CV_8SC1); // convert from HSV to grayscale	
+	cvtColor(foreground, foreground, CV_8UC1); // convert from HSV to grayscale	
 	minimap.placeSpell(foreground, 200, 256, xCoordSphero, yCoordSphero); // find middle point of pixels within the threshold
 
 }
