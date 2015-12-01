@@ -102,8 +102,9 @@ private:
 	double getHue(double R, double G, double B); //Declare the functions
 	double getSaturation(double R, double G, double B);
 	int getIntensity(int R, int G, int B);
+	double getCircularity(Mat inputImage, double height, double width);
 	void getHeightAndWidth(Mat inputImage, double &height, double &width);
 	int getPixelAmount(Mat inputImage);
-
+	
 };
 

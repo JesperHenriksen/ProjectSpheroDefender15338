@@ -4,6 +4,7 @@
 
 using namespace cv;
 using namespace std;
+double PI = 3.14159;
 
 CameraFeed::CameraFeed(int capture)
 {
@@ -129,6 +130,12 @@ int CameraFeed::getPixelAmount(Mat inputImage){
 	return pixelAmount;
 }
 
+double CameraFeed::getCircularity(Mat inputImage, double height, double width){
+	double radius = (height+width) / 2;
+	double perimeter = 2 * PI * radius;
+	cout << "perimeter: " << perimeter;
+	return perimeter;
+}
 
 int CameraFeed::chooseHandsign(Mat inputImage){
 	int stoneHandsignProbability = 0;

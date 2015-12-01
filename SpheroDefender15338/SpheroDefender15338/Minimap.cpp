@@ -13,9 +13,7 @@ Minimap::~Minimap()
 {
 }
 
-void Minimap::getCenterOfBlob(Mat inputImage,
-	double &recCenterX, double &recCenterY, 
-	double &triCenterX, double &triCenterY, 
+void Minimap::getCenterOfBlob(Mat inputImage, double &recCenterX, double &recCenterY, double &triCenterX, double &triCenterY,
 	int thresholdMin, int thresholdMax)
 {
 	int recCollectiveX = 0, recCollectiveY = 0, recTotalPixels = 0;
@@ -42,7 +40,6 @@ void Minimap::getCenterOfBlob(Mat inputImage,
 		triCenterX = triCollectiveX / triTotalPixels;
 		triCenterY = triCollectiveY / triTotalPixels;
 	}
-
 }
 
 double Minimap::getAngleOfArrow(Mat inputImage, int thresholdMin, int thresholdMax){
@@ -74,36 +71,36 @@ void Minimap::placeSpell(Mat inputImage, int thresholdMin, int thresholdMax, dou
     }
 }
 
-Mat Minimap::segmentImage(CameraFeed camfeed){ 
-	Mat inputArrow, outputArrow, imageThreshold;
-	inputArrow = camfeed.getImageFromWebcam();
-	outputArrow = camfeed.getImageFromWebcam();
-	inputArrow = camfeed.convertRGBtoGS(inputArrow);
-	outputArrow = camfeed.convertRGBtoGS(outputArrow);
-	camfeed.thresholdImage(inputArrow, outputArrow, 60, 255, 0);
-	camfeed.thresholdImage(outputArrow, outputArrow, 0, 60, 255);
-	medianBlur(outputArrow, outputArrow, 5);
-	imshow("MiniMap", outputArrow);
-	return outputArrow;
-}
+//Mat Minimap::segmentImage(CameraFeed camfeed){ 
+//	Mat inputArrow, outputArrow, imageThreshold;
+//	inputArrow = camfeed.getImageFromWebcam();
+//	outputArrow = camfeed.getImageFromWebcam();
+//	inputArrow = camfeed.convertRGBtoGS(inputArrow);
+//	outputArrow = camfeed.convertRGBtoGS(outputArrow);
+//	camfeed.thresholdImage(inputArrow, outputArrow, 60, 255, 0);
+//	camfeed.thresholdImage(outputArrow, outputArrow, 0, 60, 255);
+//	medianBlur(outputArrow, outputArrow, 5);
+//	imshow("MiniMap", outputArrow);
+//	return outputArrow;
+//}
 
 
-void Minimap::thresholdImageArrow(Mat inputImage, Mat outputImage, int minThresholdRed, int maxThresholdRed, int newValueRed,
-	int minThresholdGreen, int maxThresholdGreen,
-	int minThresholdBlue, int maxThresholdBlue){
-	for (int r = 0; r < inputImage.rows; r++){
-		for (int c = 0; c < inputImage.cols; c++){
-			if (inputImage.at<Vec3b>(r, c)[0] > minThresholdBlue && inputImage.at<Vec3b>(r, c)[0] < maxThresholdBlue)
-				if (inputImage.at<Vec3b>(r, c)[1] >minThresholdGreen && inputImage.at<Vec3b>(r, c)[1] < maxThresholdGreen)
-					if (inputImage.at<Vec3b>(r, c)[2] > minThresholdRed && inputImage.at<Vec3b>(r, c)[2] < maxThresholdRed){
-						outputImage.at<Vec3b>(r, c)[2] = newValueRed;
-						outputImage.at<Vec3b>(r, c)[1] = newValueRed;
-						outputImage.at<Vec3b>(r, c)[0] = newValueRed;
-					}
-					else
-						outputImage.at<Vec3b>(r, c)[2] = inputImage.at<Vec3b>(r, c)[2];
-		}
-	}
-}
+//void Minimap::thresholdImageArrow(Mat inputImage, Mat outputImage, int minThresholdRed, int maxThresholdRed, int newValueRed,
+//	int minThresholdGreen, int maxThresholdGreen,
+//	int minThresholdBlue, int maxThresholdBlue){
+//	for (int r = 0; r < inputImage.rows; r++){
+//		for (int c = 0; c < inputImage.cols; c++){
+//			if (inputImage.at<Vec3b>(r, c)[0] > minThresholdBlue && inputImage.at<Vec3b>(r, c)[0] < maxThresholdBlue)
+//				if (inputImage.at<Vec3b>(r, c)[1] >minThresholdGreen && inputImage.at<Vec3b>(r, c)[1] < maxThresholdGreen)
+//					if (inputImage.at<Vec3b>(r, c)[2] > minThresholdRed && inputImage.at<Vec3b>(r, c)[2] < maxThresholdRed){
+//						outputImage.at<Vec3b>(r, c)[2] = newValueRed;
+//						outputImage.at<Vec3b>(r, c)[1] = newValueRed;
+//						outputImage.at<Vec3b>(r, c)[0] = newValueRed;
+//					}
+//					else
+//						outputImage.at<Vec3b>(r, c)[2] = inputImage.at<Vec3b>(r, c)[2];
+//		}
+//	}
+//}
 
 
