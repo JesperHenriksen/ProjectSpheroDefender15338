@@ -79,9 +79,9 @@ void CameraFeed::grassFire(Mat inputImage, Mat output){
 						output.at<uchar>(y - 1, x) = output.at<uchar>(y, x);
 				if (output.at<uchar>(y, x - 1) != 0)
 					if (output.at<uchar>(y, x - 1) < output.at<uchar>(y, x))
-						output.at<uchar>(y, x - 1) = output.at<uchar>(y, x);
-					else
 						output.at<uchar>(y, x) = output.at<uchar>(y, x - 1);
+					else
+						output.at<uchar>(y, x - 1) = output.at<uchar>(y, x);
 			}
 		}
 	}
