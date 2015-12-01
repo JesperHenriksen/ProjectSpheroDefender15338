@@ -112,6 +112,7 @@ private:
 
 	int getStoneProbability(Mat inputImage);
 	int getWallProbability(Mat inputImage);
+	double getCircularity(Mat inputImage, double height, double width);
 	
 };
 
