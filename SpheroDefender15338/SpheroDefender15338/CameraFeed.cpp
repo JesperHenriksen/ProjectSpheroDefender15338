@@ -88,9 +88,8 @@ void CameraFeed::grassFire(Mat inputImage, Mat output){
 }
 
 
-int CameraFeed::getStoneProbability(Mat inputImage){
+void CameraFeed::getHeightAndWidth(Mat inputImage, double &height, double &width){
 	int maxRow = 0, minRow = 0;
-	double height = 0.0, width = 0.0;
 	int maxCol = 0, minCol = 0;
 	bool firstEncounter = true;
 	for (int r = 0; r < inputImage.rows; r++){
@@ -116,29 +115,28 @@ int CameraFeed::getStoneProbability(Mat inputImage){
 	}
 	height = maxCol - minCol;
 	width = maxRow - minRow;
-	double probability = 0.0;
-	if (height != 0 && width != 0) 
-		probability= (height / width) * 100;
-	cout << "does this change? " << probability <<" " << height << " " << width <<  "\n" ;
-	cout << " " << maxRow << " " << minRow << " " << maxCol << " " << minCol << "\n";
-	return probability;
+	cout << "does this change?" <<" " << height << " " << width <<  "\n" ;
 }
 
-int CameraFeed::getWallProbability(Mat inputImage){
-	int probability = 0;
+int CameraFeed::getPixelAmount(Mat inputImage){
+	int pixelAmount = 0;
 	for (int r = 0; r < inputImage.rows; r++){
 		for (int c = 0; c < inputImage.cols; c++){
-
+			if (inputImage.at<uchar>(c, r) != 0)
+				pixelAmount++;
 		}
 	}
-	return probability;
+	return pixelAmount;
 }
+
 
 int CameraFeed::chooseHandsign(Mat inputImage){
 	int stoneHandsignProbability = 0;
 	int wallHandsignProbability = 0;
-	stoneHandsignProbability = getStoneProbability(inputImage);
-	wallHandsignProbability = getWallProbability(inputImage);
+	double height = 0, width = 0;
+	int blobPixelAmount = 0;
+	blobPixelAmount = getPixelAmount(inputImage);
+	getHeightAndWidth(inputImage, height, width);
 	if (stoneHandsignProbability > wallHandsignProbability)
 		return 3;
 	else
