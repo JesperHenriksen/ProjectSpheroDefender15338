@@ -87,8 +87,10 @@ public:
 	@param inputImage
 		The input Mat variable.
 	@return
-		Returns 3 if boulder is the most probable,
-		Returns 4 if wall is the most probable.
+		Returns 1 if stone is the most probable,
+		Returns 2 if wall is the most probable,
+		Returns 3 if boomerang is the most probable,
+		Returns 4 if sentry is the most probable.
 	*/
 	int chooseHandsign(Mat inputImage);
 	void thresholdGrassfireID(Mat inputImage, Mat &output);
