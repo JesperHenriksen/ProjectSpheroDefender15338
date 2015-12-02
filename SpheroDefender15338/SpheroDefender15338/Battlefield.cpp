@@ -14,16 +14,49 @@ Battlefield::~Battlefield()
 {
 }
 
-void projectBattlefield(){
 
-}
 
-void doesSpheroGetHit(){
 
-}
+boolean isSpheroOutOfBounds(Mat image, int spheroPosCols, int spehoPosRows){
+	// find position of green pixels at min y, max y, min x and max x
 
-void spheroOutOfBounds(){
+	// find position of red pixels at corners
 
+	// make a rect 
+	// check if sphero pos is outside the rect
+	int greenMin = 30;
+	int greenMax = 90;
+	int maxRow = 0, minRow = 0;
+	int maxCol = 0, minCol = 0;
+	cvtColor(image, image, CV_BGR2HSV);
+
+	// this has to happen once
+	for (r = 0; r < image.rows; r++){
+		for (c = 0; c < image.cols; c++){
+			if (image.at<Vec3b>(r, c)[0] > greenMin && image.at<Vec3b>(r, c)[0] < greenMax){
+				if (r < minRow)
+					minRow = r;
+				if (r > maxRow)
+					maxRow = r;
+				if (c < minCol)
+					minCol = c;
+				if (c > maxCol)
+					maxCol = c;
+
+			}
+		}
+	}
+	// this has to happen continues
+	if (spheroPosRows < minRow ||
+		spheroPosRows > maxRow ||
+		spheroPosCols < minCols ||
+		spheroPosCols > maxCols){
+		//return something that indicates sphero is out of bounds
+		return true;
+	}
+	else{
+		return false;
+	}
 }
 
 void Battlefield::trackSphero(Mat background, CameraFeed webcamSphero, double &xCoordSphero, double &yCoordSphero) {
