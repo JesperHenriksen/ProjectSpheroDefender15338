@@ -17,7 +17,7 @@ Battlefield::~Battlefield()
 
 
 
-boolean isSpheroOutOfBounds(Mat image, int spheroPosCols, int spehoPosRows){
+bool isSpheroOutOfBounds(Mat image, int spheroPosCols, int spheroPosRows){
 	// find position of green pixels at min y, max y, min x and max x
 
 	// find position of red pixels at corners
@@ -31,8 +31,8 @@ boolean isSpheroOutOfBounds(Mat image, int spheroPosCols, int spehoPosRows){
 	cvtColor(image, image, CV_BGR2HSV);
 
 	// this has to happen once
-	for (r = 0; r < image.rows; r++){
-		for (c = 0; c < image.cols; c++){
+	for (int r = 0; r < image.rows; r++){
+		for (int c = 0; c < image.cols; c++){
 			if (image.at<Vec3b>(r, c)[0] > greenMin && image.at<Vec3b>(r, c)[0] < greenMax){
 				if (r < minRow)
 					minRow = r;
@@ -49,8 +49,8 @@ boolean isSpheroOutOfBounds(Mat image, int spheroPosCols, int spehoPosRows){
 	// this has to happen continues
 	if (spheroPosRows < minRow ||
 		spheroPosRows > maxRow ||
-		spheroPosCols < minCols ||
-		spheroPosCols > maxCols){
+		spheroPosCols < minCol ||
+		spheroPosCols > maxCol){
 		//return something that indicates sphero is out of bounds
 		return true;
 	}
