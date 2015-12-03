@@ -4,6 +4,7 @@
 #include <thread>
 #include "UserInterface.h"
 #include <list>
+#include "Pipeserver.h"
 
 using namespace cv;
 using namespace std;
@@ -17,7 +18,6 @@ int main(int, char)
 		char name = ' ';
 		char playerType = ' ';
 	};
-
 	//webcam variables
 	CameraFeed wizardWebcam(0); 
 	CameraFeed minimapWebcam(1);
