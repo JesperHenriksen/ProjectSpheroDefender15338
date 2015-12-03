@@ -108,7 +108,7 @@ private:
 	int getIntensity(int R, int G, int B);
 	double getCircularity(double height, double width);
 	void getHeightAndWidth(Mat inputImage, double &height, double &width);
-	int getPixelAmount(Mat inputImage);
+	int getPixelAmountAndGravity(Mat inputImage, double &gravityX, double &gravityY);
 
 	int getStoneProbability(double height, double width, double circularity, double pixelAmount);
 	int getWallProbability(double height, double width, double circularity, int pixelAmount);

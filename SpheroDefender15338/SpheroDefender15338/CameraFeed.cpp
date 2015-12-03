@@ -180,32 +180,39 @@ void CameraFeed::getHeightAndWidth(Mat inputImage, double &height, double &width
 			}
 		}
 	}
-	height = maxCol - minCol;
-	width = maxRow - minRow;
+	width = maxCol - minCol;
+	height = maxRow - minRow;
 }
 
-int CameraFeed::getPixelAmount(Mat inputImage){
-	int pixelAmount = 0;
+int CameraFeed::getPixelAmountAndGravity(Mat inputImage, double &gravityX, double &gravityY){
+	int pixelAmount = 0, tempX = 0, tempY = 0;
 	for (int r = 0; r < inputImage.rows; r++){
 		for (int c = 0; c < inputImage.cols; c++){
-			if (inputImage.at<uchar>(r,c) != 0)
+			if (inputImage.at<uchar>(r, c) != 0){
+				tempX += c;
+				tempY += r;
 				pixelAmount++;
+			}
 		}
 	}
+	gravityX = tempX / pixelAmount;
+	gravityY = tempY / pixelAmount;
 	return pixelAmount;
 }
 
 double CameraFeed::getCircularity(double height, double width){
-	double radius = (height+width) / 2;
+	double radius = width / 2;
 	double circlePerimeter = 2 * PI * radius;
-	double ellipsePerimeter = 2 * PI * sqrt(0.5*(height*height + width*width));
-	double circularity = ellipsePerimeter / circlePerimeter;
+	double circleArea = PI * radius * radius;
+	//double ellipsePerimeter = 2 * PI * sqrt(0.5*(height*height + width*width));
+	double ellipsePerimeter = 2*sqrt(PI * circleArea);
+	double circularity = circlePerimeter / ellipsePerimeter;
 	
 	return circularity;
 }
 
 int CameraFeed::getStoneProbability(double height, double width, double circularity, double pixelAmount){
-	int stoneProbability = 0;
+	int stoneProbability = 100;
 	double ratio = 0;
 	if (width = !0)
 		ratio = height / width;
@@ -284,13 +291,18 @@ int CameraFeed::chooseHandsign(Mat inputImage){
 	int sentryHandsignProbability = 0;
 	double height = 0, width = 0;
 	int blobPixelAmount = 0;
-	blobPixelAmount = getPixelAmount(inputImage);
+	double gravityX = 0, gravityY = 0;
+	blobPixelAmount = getPixelAmountAndGravity(inputImage, gravityX, gravityY);
 	getHeightAndWidth(inputImage, height, width);
 	double filledPercentage = blobPixelAmount / (height*width);
 	double circularity = 0.0;
 	circularity = getCircularity(height, width);
-	cout << "\n\nCircularity: " << circularity << "\n blobPixelAmount: " << blobPixelAmount << "\n filledPercentage: " << filledPercentage << 
-		"\n HeightWidth: " << height << ", " << width << "\n Divided HW: " << height/width;
+	gravityX = gravityX / width;
+	gravityY = gravityY / height;
+	cout << "Circularity: " << circularity << "\nblobPixelAmount: " << blobPixelAmount 
+		<< "\nfilledPercentage: " << filledPercentage << "\nHeightWidth: " << height 
+		<< ", " << width << "\nDivided HW: " << width/height << 
+		"\nGravity: " << gravityX <<", " << gravityY << "\n\n";
 	
 	stoneHandsignProbability = getStoneProbability(height, width, circularity, filledPercentage);
 	wallHandsignProbability = getWallProbability(height, width, circularity, filledPercentage);
@@ -431,8 +443,8 @@ void CameraFeed::thresholdHand(Mat inputImage, Mat outputImage,
 		for (int c = 0; c < inputImage.cols; c++){
 			if (inputImage.at<Vec3b>(r, c)[0] >= minThresholdHue && 
 				inputImage.at<Vec3b>(r, c)[0] < maxThresholdHue &&
-				inputImage.at<Vec3b>(r, c)[1] > 60 &&
-				inputImage.at<Vec3b>(r, c)[2] > 60 && inputImage.at<Vec3b>(r, c)[2] < 240)
+				inputImage.at<Vec3b>(r, c)[1] > 40 &&
+				inputImage.at<Vec3b>(r, c)[2] > 40 && inputImage.at<Vec3b>(r, c)[2] < 240)
 			{
 				outputImage.at<Vec3b>(r, c)[0] = newValueHue;
 				outputImage.at<Vec3b>(r, c)[1] = newValueHue;

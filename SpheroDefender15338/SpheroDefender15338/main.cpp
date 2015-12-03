@@ -52,25 +52,25 @@ int main(int, char)
 		//imshow("threshold arrow", arrowThreshold);
 
 		//get the angle of arrow
-		angleInput = minimapWebcam.getImageFromWebcam();
-		angleInput *= 1.5;
-		medianBlur(angleInput, angleInput, 5);
-		minimapWebcam.thresholdImageColor(angleInput, angleInput, 80, 255, 255, 100, 255, 255, 100, 255, 255);
-		minimapWebcam.thresholdImageColor(angleInput, angleInput, 0, 80, 0, 0, 100, 0, 0, 100, 0);
-		angleGrayscale = minimapWebcam.convertRGBtoGS(angleInput);
-		angleGrayscale = angleGrayscale * 1.5;
-		medianBlur(angleGrayscale, angleGrayscale, 7);
-		angleGrayscale *= 2;
-		angleGrayscale.copyTo(thresholded);
-		minimapWebcam.thresholdImage(thresholded, thresholded, 150, 255, 255, 60, 150, 100, 0, 60, 0);
-		angle = minimap.getAngleOfArrow(thresholded, 0, 100);
+		//angleInput = minimapWebcam.getImageFromWebcam();
+		//angleInput *= 1.5;
+		//medianBlur(angleInput, angleInput, 5);
+		//minimapWebcam.thresholdImageColor(angleInput, angleInput, 80, 255, 255, 100, 255, 255, 100, 255, 255);
+		//minimapWebcam.thresholdImageColor(angleInput, angleInput, 0, 80, 0, 0, 100, 0, 0, 100, 0);
+		//angleGrayscale = minimapWebcam.convertRGBtoGS(angleInput);
+		//angleGrayscale = angleGrayscale * 1.5;
+		//medianBlur(angleGrayscale, angleGrayscale, 7);
+		//angleGrayscale *= 2;
+		//angleGrayscale.copyTo(thresholded);
+		//minimapWebcam.thresholdImage(thresholded, thresholded, 150, 255, 255, 60, 150, 100, 0, 60, 0);
+		//angle = minimap.getAngleOfArrow(thresholded, 0, 100);
 		//cout << angle << " " << "\n";
 		//imshow("threshold", thresholded);
 		//imshow("raw", angleInput);
 		
 		//threshold hand
 		handInput = wizardWebcam.getImageFromWebcam();
-		blur(handInput, handInput, Size(kernelSize, kernelSize));
+		//blur(handInput, handInput, Size(kernelSize, kernelSize));
 		cvtColor(handInput, sat, COLOR_BGR2HSV);
 		sat.copyTo(handColorThreshold);
 		minimapWebcam.thresholdHand(sat, handColorThreshold, 30, 90, 255);
@@ -91,10 +91,10 @@ int main(int, char)
 		handColorThreshold.copyTo(fixedGrassfire);
 		minimapWebcam.thresholdGrassfireID(grassfire,fixedGrassfire);
 
-		/*imshow("threshold", handColorThreshold);
-		imshow("grassfire", grassfire);
+		imshow("threshold", handColorThreshold);
+		//imshow("grassfire", grassfire);
 		imshow("fixed grassfire", fixedGrassfire);
-		imshow("input", handInput);*/
+		imshow("input", handInput);
 
 		//recognize hand
 		int handsign = 0;
