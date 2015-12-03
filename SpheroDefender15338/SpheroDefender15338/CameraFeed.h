@@ -93,6 +93,8 @@ public:
 		Returns 4 if sentry is the most probable.
 	*/
 	int chooseHandsign(Mat inputImage);
+	void thresholdGrassfireID(Mat inputImage, Mat &output);
+
 private:
 	/**
 	@brief
@@ -106,7 +108,8 @@ private:
 	int getIntensity(int R, int G, int B);
 	double getCircularity(double height, double width);
 	void getHeightAndWidth(Mat inputImage, double &height, double &width);
-	int getPixelAmount(Mat inputImage);
+	int getPixelAmountAndGravity(Mat inputImage, double &gravityX, double &gravityY);
+
 	int getStoneProbability(double height, double width, double circularity, double pixelAmount);
 	int getWallProbability(double height, double width, double circularity, int pixelAmount);
 	int getBoomerangProbability(double height, double width, double circularity, int pixelAmount);
