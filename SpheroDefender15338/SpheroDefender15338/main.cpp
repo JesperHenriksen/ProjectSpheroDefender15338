@@ -1,6 +1,7 @@
 #include "opencv2\opencv.hpp"
 #include "Minimap.h"
 #include "CameraFeed.h"
+#include "Battlefield.h"
 #include <thread>
 #include "UserInterface.h"
 #include <list>
@@ -112,6 +113,11 @@ int main(int, char)
 		//findContours(handContours, contours, hierachy, RETR_CCOMP, CHAIN_APPROX_SIMPLE);
 		//vector <vector<Point>> hull(contours.size());
 		//vector<vector<Vec4i>> convexDef(contours.size());
+
+		//Sphero out of bounds
+		Battlefield battlefield;
+
+		battlefield.spheroOutOfBounds()
 
 
 		//for (int i = 0; i < contours.size(); i++) {
