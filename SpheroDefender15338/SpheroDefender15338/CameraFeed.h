@@ -106,14 +106,9 @@ private:
 	double getHue(double R, double G, double B); //Declare the functions
 	double getSaturation(double R, double G, double B);
 	int getIntensity(int R, int G, int B);
-	double getCircularity(double height, double width);
 	void getHeightAndWidth(Mat inputImage, double &height, double &width);
 	int getPixelAmountAndGravity(Mat inputImage, double &gravityX, double &gravityY);
-
-	int getStoneProbability(double height, double width, double circularity, double pixelAmount);
-	int getWallProbability(double height, double width, double circularity, int pixelAmount);
-	int getBoomerangProbability(double height, double width, double circularity, int pixelAmount);
-	int getSentryProbability(double height, double width, double circularity, int pixelAmount);
-	
+	int distanceBetweenPoints(Point a, Point b);
+	//int swapping[](int x[]);
 };
 

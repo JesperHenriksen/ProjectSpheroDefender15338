@@ -9,7 +9,7 @@ class Battlefield
 public:
 	Battlefield();
 	~Battlefield();
-	void Battlefield::trackSphero(Mat background, CameraFeed webcamSphero, double &xCoordSphero, double &yCoordSphero);
+	void trackSphero(CameraFeed webcamSphero, double &xCoordSphero, double &yCoordSphero);
 	/*!
 	checks if shero is out of bounds
 	!*/
