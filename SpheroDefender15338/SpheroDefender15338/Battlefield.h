@@ -14,12 +14,5 @@ public:
 	checks if shero is out of bounds
 	!*/
 	void spheroOutOfBounds();
-	/*!
-	Projects battlefield
-	!*/
-	void projectBattlefield();
-	/*!
-	Detects if sphero gets hit
-	!*/
-	void doesSheroGetHit();
+
 };
