@@ -4,7 +4,7 @@
 #include <thread>
 #include "UserInterface.h"
 #include <list>
-#include "Pipeserver.h"
+#include "Battlefield.h"
 #include <time.h>
 
 using namespace cv;
@@ -20,21 +20,23 @@ int main(int, char)
 	//webcam variables
 	CameraFeed wizardWebcam(0); 
 	CameraFeed minimapWebcam(1);
+	CameraFeed battlefieldWebcam(2);
 
 	Mat raw, blob, wizardBackground = wizardWebcam.getImageFromWebcam();
     Mat foreground;
 	//arrow variables
 	Mat arrowInput, arrowThreshold, arrowGrayscale;
 	Minimap minimap;
-	double x = 0.0, y = 0.0;
+	double spheroX = 0.0, spheroY = 0.0; 
 	double minimapXCoord = 0, minimapYCoord = 0;
+
 	//angle
 	double angle = 0;
 	Mat angleInput, thresholded, angleGrayscale;
 
 	//hand tracking variables
 	Mat handInput, handColorThreshold, handGscale, handThreshold;
-	
+
 	int kernelSize = 11;
 	Mat kernel;
 	Mat sat, hue, intensity;
@@ -69,7 +71,7 @@ int main(int, char)
 		//imshow("threshold", thresholded);
 		//imshow("raw", angleInput);
 		
-		//threshold hand
+		////threshold hand
 		handInput = wizardWebcam.getImageFromWebcam();
 		//blur(handInput, handInput, Size(kernelSize, kernelSize));
 		cvtColor(handInput, sat, COLOR_BGR2HSV);
@@ -95,11 +97,34 @@ int main(int, char)
 		imshow("threshold", handColorThreshold);
 		//imshow("grassfire", grassfire);
 		imshow("fixed grassfire", fixedGrassfire);
-		imshow("input", handInput);
+		//imshow("input", handInput);
 
 		//recognize hand
 		int handsign = 0;
-		handsign = wizardWebcam.chooseHandsign(handColorThreshold);
+		handsign = wizardWebcam.chooseHandsign(fixedGrassfire);
+		cout << "handsign = " << handsign << "\n";
+		switch (handsign){
+		case 1: 
+			cout << "Stone \n";
+			break;
+		case 2:
+			cout << "Wall\n";
+			break;
+		case 3:
+			cout << "Boomerang\n";
+			break;
+		case 4:
+			cout << "Sentry\n";
+			break;
+		default:
+			cout << "No handsign found\n";
+			break;
+		}
+		//Mat battlefieldInput = battlefieldWebcam.getImageFromWebcam();
+		//imshow("battlefield", battlefieldInput);
+		//Battlefield battlefield;
+		//battlefield.trackSphero(battlefieldWebcam,spheroX,spheroY);
+		//cout << spheroX  << ", " << spheroY << "\n";
 
 		//end of code
 		if (waitKey(30) >= 0)
