@@ -19,7 +19,6 @@ UserInterface::UserInterface()
 	wall = imread("../../../../../Google Drev/MTA15338/Project (1)/Design/Obstacles/WallHObstacle.png", 1);
 	menuLeft = imread("../../../../../Google Drev/MTA15338/Project (1)/Design/ProgramLayers/MenuLeft.png", 1);
 	menuTop = imread("../../../../../Google Drev/MTA15338/Project (1)/Design/ProgramLayers/MenuTop.png", 1);
-	battlefield = imread("../../../../../Google Drev/MTA15338/Project (1)/Design/ProgramLayers/Battlefield.png", 1);
 	leftMenuMask = imread("../../../../../Google Drev/MTA15338/Project (1)/Design/LeftMenuMask.png", 1);
 	cvtColor(leftMenuMask, leftMenuMask, CV_RGB2GRAY);
 	inverseLeftMenuMask = imread("../../../../../Google Drev/MTA15338/Project (1)/Design/LeftMenuInverseMask.png", 1);

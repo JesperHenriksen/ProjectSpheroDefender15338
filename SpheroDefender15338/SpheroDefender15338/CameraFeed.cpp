@@ -25,11 +25,11 @@ Mat CameraFeed::getImageFromWebcam(){
 }
 
 void CameraFeed::thresholdGrassfireID(Mat inputGrassfire, Mat &output){
-	int whatamidoing = 0;
+
 	int maxCount = 0, maxCountID = 0;
 	int currentCount = 0;
 	Mat bob = Mat::zeros(inputGrassfire.rows, inputGrassfire.cols, inputGrassfire.type());
-	for (int ID = 1; ID < 10; ID++) {
+	for (int ID = 1; ID < 20; ID++) {
 		for (int y = 1; y < inputGrassfire.rows; y++) { //runs through the pixels
 			for (int x = 1; x < inputGrassfire.cols; x++) {
 				if (ID == inputGrassfire.at<uchar>(y, x)){
@@ -217,13 +217,13 @@ int CameraFeed::chooseHandsign(Mat inputImage){
 	HW = HW * 100;
 	int currentX = filledPercentage, currentY = HW;
 	//static values for different handsigns
-	Point wall(74, 67), stone(80, 100), boomerang(44, 92), sentry(60, 38);
+	Point wall(74, 67), stone(70, 100), boomerang(44, 92), sentry(60, 38);
 	Point currentPoint(currentX, currentY);
 	int distanceWall = abs(this->distanceBetweenPoints(wall, currentPoint));
 	int distanceStone = abs(this->distanceBetweenPoints(stone, currentPoint));
 	int distanceSentry = abs(this->distanceBetweenPoints(sentry, currentPoint));
 	int distanceBoomerang = abs(this->distanceBetweenPoints(boomerang, currentPoint));
-
+	
 	int shortestDistance[4] = {
 		distanceStone,
 		distanceWall,
@@ -243,32 +243,15 @@ int CameraFeed::chooseHandsign(Mat inputImage){
 			}
 		}
 	}
-	/*cout << "\nfilledPercentage: " << currentX << "\nHeightWidth: " << height 
-		<< ", " << width << "\nDivided HW: " << currentY << " distance " << distanceWall << "\n";
-*/
 	cout << distanceWall << " " << distanceStone << " " << distanceSentry << " " << distanceBoomerang << "\n" <<
 		shortestDistance[0] << " " << shortestDistance[1] << " " << shortestDistance[2] << " " << shortestDistance[3] << "\n" <<
-		handsignArray[0] << " " << handsignArray[1] << " " << handsignArray[2] << " " << handsignArray[3] << "\n";
-	if (shortestDistance[0] < 10){
+		handsignArray[0] << " " << handsignArray[1] << " " << handsignArray[2] << " " << handsignArray[3] << "\n" <<
+		filledPercentage << " " << HW << "\n";
+	if (shortestDistance[0] < 11 && shortestDistance[0] >= 0){
 		return handsignArray[0];
 	} else
 		return 0;
 }
-
-//int swapping[](int x[]){
-//	int wasISwapped = 0, temp = 0;
-//	for (int i = 0; i < x.length - 1; i++){ //when i is smaller than the length of x-array, loops through x-arra. 
-//		if (x[i] > x[i + 1]){ //when position i is greater than position i + 1
-//			temp = x[i]; //temp equals i'th position in the array. (saves the value of the i'th position)
-//			x[i] = x[i + 1]; //assign position i to position i + 1. 
-//			x[i + 1] = temp; //assign position i + 1 to temp (position i).
-//			wasISwapped++;
-//		}
-//	}
-//	if (wasISwapped != 0) //if any number was swapped then
-//		swapping(x); //recursion. swapping calls itself with the new array.
-//	return x;
-//}
 
 int CameraFeed::distanceBetweenPoints(Point a, Point b){
 	return sqrt(pow(a.x - b.x, 2) + pow(a.y - b.y, 2));
@@ -383,8 +366,8 @@ void CameraFeed::thresholdHand(Mat inputImage, Mat outputImage,
 		for (int c = 0; c < inputImage.cols; c++){
 			if (inputImage.at<Vec3b>(r, c)[0] >= minThresholdHue && 
 				inputImage.at<Vec3b>(r, c)[0] < maxThresholdHue &&
-				inputImage.at<Vec3b>(r, c)[1] > 40 &&
-				inputImage.at<Vec3b>(r, c)[2] > 40 && inputImage.at<Vec3b>(r, c)[2] < 240)
+				inputImage.at<Vec3b>(r, c)[1] > 60 &&
+				inputImage.at<Vec3b>(r, c)[2] > 60 && inputImage.at<Vec3b>(r, c)[2] < 240)
 			{
 				outputImage.at<Vec3b>(r, c)[0] = newValueHue;
 				outputImage.at<Vec3b>(r, c)[1] = newValueHue;

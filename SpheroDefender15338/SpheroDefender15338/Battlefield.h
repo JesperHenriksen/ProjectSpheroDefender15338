@@ -13,6 +13,7 @@ public:
 	/*!
 	checks if shero is out of bounds
 	!*/
-	void spheroOutOfBounds();
-
+	bool isSpheroOutOfBounds(Mat image, double spheroPosCols, double spheroPosRows);
+	void throwSpell(Mat inputImage, double minimapXCoord, double minimapYCoord, int handsign, double scalar);
+	void removeObstacle(Mat inputImage, Mat resetImage, double spheroX, double spheroY, double scalar);
 };
