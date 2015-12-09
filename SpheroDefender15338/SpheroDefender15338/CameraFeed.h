@@ -87,10 +87,14 @@ public:
 	@param inputImage
 		The input Mat variable.
 	@return
-		Returns 3 if boulder is the most probable,
-		Returns 4 if wall is the most probable.
+		Returns 1 if stone is the most probable,
+		Returns 2 if wall is the most probable,
+		Returns 3 if boomerang is the most probable,
+		Returns 4 if sentry is the most probable.
 	*/
-	int CameraFeed::chooseHandsign(Mat inputImage);
+	int chooseHandsign(Mat inputImage);
+	void thresholdGrassfireID(Mat inputImage, Mat &output);
+
 private:
 	/**
 	@brief
@@ -99,19 +103,12 @@ private:
 		Input Mat frame which the channel is negated.
 	*/
 	Mat setZeroesInChannel(Mat inputFrame);
-	/**
-	@brief
-		Takes an inputImage checks if the blobs are connected
-	@param inputImage
-		inputImage is the image you want to change to be the connected blobs
-	*/
-	void grassfireSecondRunthrough(Mat inputImage);
 	double getHue(double R, double G, double B); //Declare the functions
 	double getSaturation(double R, double G, double B);
 	int getIntensity(int R, int G, int B);
-
-	int getStoneProbability(Mat inputImage);
-	int getWallProbability(Mat inputImage);
-	
+	void getHeightAndWidth(Mat inputImage, double &height, double &width);
+	int getPixelAmountAndGravity(Mat inputImage, double &gravityX, double &gravityY);
+	int distanceBetweenPoints(Point a, Point b);
+	//int swapping[](int x[]);
 };
 

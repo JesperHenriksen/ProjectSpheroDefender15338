@@ -1,95 +1,101 @@
 #include "opencv2\opencv.hpp"
 #include "Minimap.h"
 #include "CameraFeed.h"
-#include <thread>
 #include "UserInterface.h"
-#include <list>
+#include "Battlefield.h"
+
 
 using namespace cv;
 using namespace std;
 
 int main(int, char)
 {
-	int score;
-	clock_t timer;
-	static struct leaderboard {
-		int score = 0;
-		char name = ' ';
-		char playerType = ' ';
-	};
-
-	//webcam variables
-	CameraFeed wizardWebcam(0); 
-	CameraFeed minimapWebcam(1);
-
-	//Mat angleBackground = minimapWebcam.getImageFromWebcam();
-	Mat raw, blob, wizardBackground = wizardWebcam.getImageFromWebcam();
-
-    Mat foreground;
 	
-	//UserInterface userInterface;
+	//webcam variables
+	CameraFeed wizardWebcam(1); 
+	//CameraFeed minimapWebcam(2);
+	//CameraFeed battlefieldWebcam(0);
+	Battlefield battlefield;
 
+	Mat raw, blob, wizardBackground = wizardWebcam.getImageFromWebcam();
+    Mat foreground;
 	//arrow variables
-	Mat frame, gs;
+	Mat arrowInput, arrowThreshold, arrowGrayscale;
 	Minimap minimap;
-	double x = 0.0, y = 0.0;
+	double spheroX = 0.0, spheroY = 0.0; 
 	double minimapXCoord = 0, minimapYCoord = 0;
+
 	//angle
 	double angle = 0;
-	Mat angleInput, thresholded, angleGrayscale;
+	Mat angleInput, angleThresholded, angleGrayscale;
+
 
 	//hand tracking variables
-	Mat handInput, handColorThreshold, handGscale, handThreshold;
-	Mat grassfire;
-
-	//userInterface.getStartPoint(wizardBackground, x, y);
-	//cout << x << ", " << y;
-	/*UserInterface userInterface;
-	userInterface.interfaceLayers();
-	imshow("left menu", userInterface.getMenu());
-	*/
-
-	Mat sat, hue, intensity;
+	bool isImageGood = false;
+	char userInput;
+	Mat handInput, handColorThreshold, handGscale, handThreshold, handBackground = wizardWebcam.getImageFromWebcam();
 
 	
+	Mat grassfire, fixedGrassfire;
+	int handsign = 0;
+	
+	int kernelSize = 11;
+	Mat kernel;
+	Mat sat, hue, intensity;
+	
+	//battlefield variables
+	Mat battlefieldInput, spheroTracking, battlefieldReset, battlefieldProjected;
+	battlefieldInput = imread("../../../../../Google Drev/MTA15338/Project/Design/ProgramLayers/BattlefieldSmall.png", 1);
+	battlefieldReset = imread("../../../../../Google Drev/MTA15338/Project/Design/ProgramLayers/BattlefieldSmall.png", 1);
+	battlefieldProjected = imread("../../../../../Google Drev/MTA15338/Project/Design/ProgramLayers/BattlefieldMedium.png", 1);
+
+	//imshow("handBackground", handBackground);
+	//while (!isImageGood){
+	//	cout << "Is this background image good? (y/n)";
+	//	cin >> userInput;
+	//	if (userInput == 'y')
+	//		isImageGood = true;
+	//	else
+	//		handBackground = wizardWebcam.getImageFromWebcam();
+	//	imshow("handBackground", handBackground);
+
+	//};
+
 	for (;;){
 
-		//	// get coordinates for arrow
-		//	frame = minimapWebcam.getImageFromWebcam();
-		//	frame = minimapWebcam.convertRGBtoGS(frame);
-		//	frame.copyTo(gs);
-		//	wizardWebcam.thresholdImage(frame,frame,100,255,0,0,100,255);
-		//	//minimap.placeSpell(frame, 50,255,minimapXCoord,minimapYCoord);
-
-
-		//	//get the angle of arrow
-		//	angleInput = minimapWebcam.getImageFromWebcam();
-		//	angleInput *= 1.5;
-		//	//imshow("raw", angleInput);
-		//	medianBlur(angleInput, angleInput, 5);
-		//	minimapWebcam.thresholdImageColor(angleInput, angleInput, 80, 255, 255, 100, 255, 255, 100, 255, 255);
-		//	minimapWebcam.thresholdImageColor(angleInput, angleInput, 0, 80, 0, 0, 100, 0, 0, 100, 0);
-		//	angleGrayscale = minimapWebcam.convertRGBtoGS(angleInput);
-		//	angleGrayscale = angleGrayscale * 1.5;
-		//	medianBlur(angleGrayscale, angleGrayscale, 7);
-		//	angleGrayscale *= 2;
-		//	angleGrayscale.copyTo(thresholded);
-		//	minimapWebcam.thresholdImage(thresholded, thresholded, 150, 255, 255, 60, 150, 100, 0, 60, 0);
-		//	//imshow("threshold", thresholded);
-		//	angle = minimap.getAngleOfArrow(thresholded, 0, 100);
-		//	//cout << angle << " " << "\n";
+		//// get coordinates for arrow
+		////get the angle of arrow
+		//angleInput = minimapWebcam.getImageFromWebcam();
+	 //	angleInput *= 1.5;
+		//medianBlur(angleInput, angleInput, 5);
+		//minimapWebcam.thresholdImageColor(angleInput, angleInput, 80, 255, 255, 100, 255, 255, 100, 255, 255);
+		//minimapWebcam.thresholdImageColor(angleInput, angleInput, 0, 80, 0, 0, 100, 0, 0, 100, 0);
+		//angleGrayscale = minimapWebcam.convertRGBtoGS(angleInput);
+		//angleGrayscale = angleGrayscale * 1.5;
+		//medianBlur(angleGrayscale, angleGrayscale, 7);
+		//angleGrayscale *= 2;
+		//angleGrayscale.copyTo(angleThresholded);
+		//minimapWebcam.thresholdImage(angleThresholded, angleThresholded, 150, 256, 200, 60, 150, 100, 0, 60, 0);
+		//angle = minimap.getAngleOfArrow(angleThresholded, 0, 100);
+		//angleThresholded.copyTo(arrowThreshold);
+		//minimapWebcam.thresholdImage(arrowThreshold, arrowThreshold, 0, 150, 255);
+		//minimapWebcam.thresholdImage(arrowThreshold, arrowThreshold, 190, 210, 0);
+		//minimap.placeSpell(arrowThreshold, 250,256,minimapXCoord,minimapYCoord);
 		//
+		//imshow("raw", angleInput);
+		//imshow("angle threshold arrow", angleThresholded);
+		//imshow("threshold arrow position", arrowThreshold);
+		
+		//cout << angle << " " << minimapXCoord << ", " << minimapYCoord << "\n";
+
 		//threshold hand
-		int kernelSize = 5;
 		handInput = wizardWebcam.getImageFromWebcam();
-		imshow("input", handInput);
-		blur(handInput, handInput, Size(kernelSize, kernelSize));
+		//handInput = handInput - handBackground;
 		cvtColor(handInput, sat, COLOR_BGR2HSV);
 		sat.copyTo(handColorThreshold);
-		minimapWebcam.thresholdHand(sat, handColorThreshold, 30, 90, 255);
+		wizardWebcam.thresholdHand(sat, handColorThreshold, 30, 90, 255);
 		cvtColor(handColorThreshold, handColorThreshold, CV_BGR2GRAY);
 		medianBlur(handColorThreshold, handColorThreshold, 9);
-		Mat kernel;
 		kernel.ones(kernelSize, kernelSize, CV_8UC1);
 		//opening
 		erode(handColorThreshold, handColorThreshold, kernel);
@@ -98,41 +104,50 @@ int main(int, char)
 		//closing
 		dilate(handColorThreshold, handColorThreshold, kernel);
 		erode(handColorThreshold, handColorThreshold, kernel);
+		grassfire = Mat::zeros(handColorThreshold.rows, handColorThreshold.cols, handColorThreshold.type());
+		wizardWebcam.grassFire(handColorThreshold, grassfire);
+		handColorThreshold.copyTo(fixedGrassfire);
+		wizardWebcam.thresholdGrassfireID(grassfire,fixedGrassfire);
 
+		//imshow("grassfire", grassfire);
 		imshow("threshold", handColorThreshold);
-		//grassfire = Mat::zeros(handColorThreshold.rows, handColorThreshold.cols, handColorThreshold.type());
-		//wizardWebcam.grassFire(handColorThreshold, grassfire);
-		//wizardWebcam.grassFire(grassfire, grassfire);
+		imshow("fixed grassfire", fixedGrassfire);
+		imshow("input", handInput);
 
 		//recognize hand
-		Mat handContours;
-		handColorThreshold.copyTo(handContours);
-		RNG rng(12345);
-		vector<vector<Point> > contours;
-		vector<Vec4i> hierachy;
-		findContours(handContours, contours, hierachy, RETR_CCOMP, CHAIN_APPROX_SIMPLE);
-		vector <vector<Point>> hull(contours.size());
-		vector<vector<Vec4i>> convexDef(contours.size());
-
-
-		for (int i = 0; i < contours.size(); i++) {
-			convexHull(Mat(contours[i]), hull[i], false);
-			//if (contours.size() > 3)
-				//convexityDefects(Mat(contours[i]), hull[i], convexDef[i]);
+		handsign = wizardWebcam.chooseHandsign(fixedGrassfire);
+		//cout << "handsign = " << handsign << "\n";
+		switch (handsign){
+		case 1: 
+			cout << "Stone \n";
+			break;
+		case 2:
+			cout << "Wall\n";
+			break;
+		case 3:
+			cout << "Boomerang\n";
+			break;
+		case 4:
+			cout << "Sentry\n";
+			break;
+		default:
+			cout << "No handsign found\n";
+			break;
 		}
-		Mat bob = Mat::zeros(handColorThreshold.size(), CV_8UC3);
-
-		for (int i = 0; i < contours.size(); i++){
-			Scalar color = Scalar(rng.uniform(0, 255), rng.uniform(0, 255), rng.uniform(0, 255));
-			drawContours(bob, contours, i, color, 1, 8, hierachy, 0, Point());
-			drawContours(bob, hull, i, color, 1, 8, hierachy, 0, Point());
-
-		}
-		imshow("contours", bob);
-
-		int handsign = 0;
-		handsign = wizardWebcam.chooseHandsign(handColorThreshold);
-
+		////spheroTracking = battlefieldWebcam.getImageFromWebcam();
+		////imshow("battlefield", spheroTracking);
+		//battlefield.trackSphero(battlefieldWebcam,spheroX,spheroY);
+		////cout << spheroX  << ", " << spheroY << "\n";
+		////bool bob = battlefield.isSpheroOutOfBounds(battlefieldInput, spheroX, spheroY);
+		////cout << bob << "\n";
+		//if (handsign != 0){
+		//	battlefield.throwSpell(battlefieldInput, minimapXCoord, minimapYCoord, handsign, 1);
+		//	battlefield.throwSpell(battlefieldProjected, minimapXCoord, minimapYCoord, handsign, 2);
+		//}
+		//battlefield.removeObstacle(battlefieldInput, battlefieldReset, spheroX, spheroY, 1);
+		//battlefield.removeObstacle(battlefieldProjected, battlefieldReset, spheroX, spheroY, 2);
+		////imshow("battlefield YARGH", battlefieldInput);
+		////imshow("battlefield projection yes", battlefieldProjected);
 
 		//end of code
 		if (waitKey(30) >= 0)
