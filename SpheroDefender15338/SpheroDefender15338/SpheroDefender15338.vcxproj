@@ -15,7 +15,6 @@
     <ClCompile Include="CameraFeed.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Minimap.cpp" />
-    <ClCompile Include="PipeServer.cpp" />
     <ClCompile Include="SpheroControls.cpp" />
     <ClCompile Include="UserInterface.cpp" />
   </ItemGroup>
@@ -23,7 +22,6 @@
     <ClInclude Include="Battlefield.h" />
     <ClInclude Include="CameraFeed.h" />
     <ClInclude Include="Minimap.h" />
-    <ClInclude Include="PipeServer.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="SpheroControls.h" />
     <ClInclude Include="UserInterface.h" />
@@ -32,6 +30,7 @@
     <ResourceCompile Include="SpheroDefender15338.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="..\..\..\..\..\Google Drev\MTA15338\LaTeX\billeder\Design\Battlefield_V2Boarder.png" />
     <Image Include="..\..\..\..\..\Google Drev\MTA15338\Project (1)\Design\LeftMenuInverseMask.png" />
     <Image Include="..\..\..\..\..\Google Drev\MTA15338\Project (1)\Design\LeftMenuMask.png" />
     <Image Include="..\..\..\..\..\Google Drev\MTA15338\Project (1)\Design\Obstacles\ArcaneHObstacle.png" />

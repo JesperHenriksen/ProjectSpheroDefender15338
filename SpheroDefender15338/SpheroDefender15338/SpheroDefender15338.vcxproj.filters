@@ -33,9 +33,6 @@
     <ClCompile Include="UserInterface.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PipeServer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Battlefield.h">
@@ -54,9 +51,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="PipeServer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -100,6 +94,9 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="..\..\..\..\..\Google Drev\MTA15338\Project (1)\Design\TextMenuMaskInverse.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\..\..\..\..\Google Drev\MTA15338\LaTeX\billeder\Design\Battlefield_V2Boarder.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
