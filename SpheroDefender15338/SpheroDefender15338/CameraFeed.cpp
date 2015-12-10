@@ -214,10 +214,10 @@ int CameraFeed::chooseHandsign(Mat inputImage){
 	//gravityY = gravityY / height;
 	double HW = width / height;
 	filledPercentage = filledPercentage * 100;
-	HW = HW * 100;
+	HW = HW * 70;
 	int currentX = filledPercentage, currentY = HW;
 	//static values for different handsigns
-	Point wall(74, 67), stone(70, 100), boomerang(44, 92), sentry(60, 38);
+	Point wall(74, 47), stone(70, 70), boomerang(44, 65), sentry(60, 27);
 	Point currentPoint(currentX, currentY);
 	int distanceWall = abs(this->distanceBetweenPoints(wall, currentPoint));
 	int distanceStone = abs(this->distanceBetweenPoints(stone, currentPoint));
@@ -243,11 +243,11 @@ int CameraFeed::chooseHandsign(Mat inputImage){
 			}
 		}
 	}
-	cout << distanceWall << " " << distanceStone << " " << distanceSentry << " " << distanceBoomerang << "\n" <<
+	cout << /*distanceWall << " " << distanceStone << " " << distanceSentry << " " << distanceBoomerang << "\n" <<
 		shortestDistance[0] << " " << shortestDistance[1] << " " << shortestDistance[2] << " " << shortestDistance[3] << "\n" <<
-		handsignArray[0] << " " << handsignArray[1] << " " << handsignArray[2] << " " << handsignArray[3] << "\n" <<
-		filledPercentage << " " << HW << "\n";
-	if (shortestDistance[0] < 11 && shortestDistance[0] >= 0){
+		handsignArray[0] << " " << handsignArray[1] << " " << handsignArray[2] << " " << handsignArray[3] << "\n" <<*/
+		"\nFilledPercent " << filledPercentage << "\nHW " << HW << "\n";
+	if (shortestDistance[0] < 15 && shortestDistance[0] >= 0){
 		return handsignArray[0];
 	} else
 		return 0;
@@ -367,7 +367,7 @@ void CameraFeed::thresholdHand(Mat inputImage, Mat outputImage,
 			if (inputImage.at<Vec3b>(r, c)[0] >= minThresholdHue && 
 				inputImage.at<Vec3b>(r, c)[0] < maxThresholdHue &&
 				inputImage.at<Vec3b>(r, c)[1] > 60 &&
-				inputImage.at<Vec3b>(r, c)[2] > 60 && inputImage.at<Vec3b>(r, c)[2] < 240)
+				inputImage.at<Vec3b>(r, c)[2] > 60 && inputImage.at<Vec3b>(r, c)[2] < 230)
 			{
 				outputImage.at<Vec3b>(r, c)[0] = newValueHue;
 				outputImage.at<Vec3b>(r, c)[1] = newValueHue;
