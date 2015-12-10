@@ -9,11 +9,11 @@ class Battlefield
 public:
 	Battlefield();
 	~Battlefield();
-	bool isSpheroOutOfBounds(Mat image, int spheroPosCols, int spheroPosRows);
-	void Battlefield::trackSphero(Mat background, CameraFeed webcamSphero, double &xCoordSphero, double &yCoordSphero);
+	void trackSphero(CameraFeed webcamSphero, double &xCoordSphero, double &yCoordSphero);
 	/*!
 	checks if shero is out of bounds
 	!*/
-	void spheroOutOfBounds();
-
+	bool isSpheroOutOfBounds(Mat image, double spheroPosCols, double spheroPosRows);
+	void throwSpell(Mat inputImage, double minimapXCoord, double minimapYCoord, int handsign, double scalar);
+	void removeObstacle(Mat inputImage, Mat resetImage, double spheroX, double spheroY, double scalar);
 };

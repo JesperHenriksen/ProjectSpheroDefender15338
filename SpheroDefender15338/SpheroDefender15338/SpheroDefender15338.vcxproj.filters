@@ -96,5 +96,8 @@
     <Image Include="..\..\..\..\..\Google Drev\MTA15338\Project (1)\Design\TextMenuMaskInverse.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="..\..\..\..\..\Google Drev\MTA15338\LaTeX\billeder\Design\Battlefield_V2Boarder.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>
