@@ -1,10 +1,11 @@
 #include "opencv2\opencv.hpp"
 #include "Minimap.h"
 #include "CameraFeed.h"
+#include "Battlefield.h"
 #include <thread>
 #include "UserInterface.h"
 #include <list>
-#include "Pipeserver.h"
+
 #include <time.h>
 
 using namespace cv;
@@ -20,6 +21,7 @@ int main(int, char)
 	//webcam variables
 	CameraFeed wizardWebcam(0); 
 	CameraFeed minimapWebcam(1);
+	CameraFeed battlefieldWebcam(2);
 
 	Mat raw, blob, wizardBackground = wizardWebcam.getImageFromWebcam();
     Mat foreground;
@@ -30,6 +32,7 @@ int main(int, char)
 	double minimapXCoord = 0, minimapYCoord = 0;
 	//angle
 	double angle = 0;
+	Mat battlefieldinput;
 	Mat angleInput, thresholded, angleGrayscale;
 
 	//hand tracking variables
@@ -69,37 +72,43 @@ int main(int, char)
 		//imshow("threshold", thresholded);
 		//imshow("raw", angleInput);
 		
-		//threshold hand
-		handInput = wizardWebcam.getImageFromWebcam();
-		//blur(handInput, handInput, Size(kernelSize, kernelSize));
-		cvtColor(handInput, sat, COLOR_BGR2HSV);
-		sat.copyTo(handColorThreshold);
-		minimapWebcam.thresholdHand(sat, handColorThreshold, 30, 90, 255);
-		cvtColor(handColorThreshold, handColorThreshold, CV_BGR2GRAY);
-		medianBlur(handColorThreshold, handColorThreshold, 9);
-		kernel.ones(kernelSize, kernelSize, CV_8UC1);
-		//opening
-		erode(handColorThreshold, handColorThreshold, kernel);
-		medianBlur(handColorThreshold, handColorThreshold, 9);
-		dilate(handColorThreshold, handColorThreshold, kernel);
-		//closing
-		dilate(handColorThreshold, handColorThreshold, kernel);
-		erode(handColorThreshold, handColorThreshold, kernel);
-		Mat grassfire;
-		grassfire = Mat::zeros(handColorThreshold.rows, handColorThreshold.cols, handColorThreshold.type());
-		minimapWebcam.grassFire(handColorThreshold, grassfire);
-		Mat fixedGrassfire;
-		handColorThreshold.copyTo(fixedGrassfire);
-		minimapWebcam.thresholdGrassfireID(grassfire,fixedGrassfire);
+		////threshold hand
+		//handInput = wizardWebcam.getImageFromWebcam();
+		////blur(handInput, handInput, Size(kernelSize, kernelSize));
+		//cvtColor(handInput, sat, COLOR_BGR2HSV);
+		//sat.copyTo(handColorThreshold);
+		//minimapWebcam.thresholdHand(sat, handColorThreshold, 30, 90, 255);
+		//cvtColor(handColorThreshold, handColorThreshold, CV_BGR2GRAY);
+		//medianBlur(handColorThreshold, handColorThreshold, 9);
+		//kernel.ones(kernelSize, kernelSize, CV_8UC1);
+		////opening
+		//erode(handColorThreshold, handColorThreshold, kernel);
+		//medianBlur(handColorThreshold, handColorThreshold, 9);
+		//dilate(handColorThreshold, handColorThreshold, kernel);
+		////closing
+		//dilate(handColorThreshold, handColorThreshold, kernel);
+		//erode(handColorThreshold, handColorThreshold, kernel);
+		//Mat grassfire;
+		//grassfire = Mat::zeros(handColorThreshold.rows, handColorThreshold.cols, handColorThreshold.type());
+		//minimapWebcam.grassFire(handColorThreshold, grassfire);
+		//Mat fixedGrassfire;
+		//handColorThreshold.copyTo(fixedGrassfire);
+		//minimapWebcam.thresholdGrassfireID(grassfire,fixedGrassfire);
 
-		imshow("threshold", handColorThreshold);
-		//imshow("grassfire", grassfire);
-		imshow("fixed grassfire", fixedGrassfire);
-		imshow("input", handInput);
+		//imshow("threshold", handColorThreshold);
+		////imshow("grassfire", grassfire);
+		//imshow("fixed grassfire", fixedGrassfire);
+		//imshow("input", handInput);
 
+		//Sphero out of bounds
+		Battlefield battlefield;
+		battlefieldinput = minimapWebcam.getImageFromWebcam();
+		bool bob = battlefield.isSpheroOutOfBounds(battlefieldinput, 0 , 100 );
+		imshow("battlefield", battlefieldinput);
+		cout << bob << "\n";
 		//recognize hand
 		int handsign = 0;
-		handsign = wizardWebcam.chooseHandsign(handColorThreshold);
+//		handsign = wizardWebcam.chooseHandsign(handColorThreshold);
 
 		//end of code
 		if (waitKey(30) >= 0)

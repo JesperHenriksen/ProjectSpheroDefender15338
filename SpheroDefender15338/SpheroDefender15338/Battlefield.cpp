@@ -17,7 +17,7 @@ Battlefield::~Battlefield()
 
 
 
-bool isSpheroOutOfBounds(Mat image, int spheroPosCols, int spheroPosRows){
+bool Battlefield::isSpheroOutOfBounds(Mat image, int spheroPosCols, int spheroPosRows){
 	// find position of green pixels at min y, max y, min x and max x
 
 	// find position of red pixels at corners
