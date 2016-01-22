@@ -303,8 +303,6 @@ int CameraFeed::chooseHandsign(Mat inputImage){
 		return 0;
 }
 
-
-
 Mat CameraFeed::convertRGBtoGS(Mat inputFrame){
 	Mat outputFrame;
 	cvtColor(inputFrame, inputFrame, CV_RGB2GRAY);
