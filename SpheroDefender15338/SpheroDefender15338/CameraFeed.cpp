@@ -1,4 +1,5 @@
 #include "CameraFeed.h"
+#include "Points.h"
 #include "opencv2/opencv.hpp"
 #include "math.h"
 
@@ -29,7 +30,7 @@ void CameraFeed::thresholdGrassfireID(Mat inputGrassfire, Mat &output){
 	int maxCount = 0, maxCountID = 0;
 	int currentCount = 0;
 	Mat bob = Mat::zeros(inputGrassfire.rows, inputGrassfire.cols, inputGrassfire.type());
-	for (int ID = 1; ID < 20; ID++) {
+	for (int ID = 0; ID < 30; ID++) {
 		for (int y = 1; y < inputGrassfire.rows; y++) { //runs through the pixels
 			for (int x = 1; x < inputGrassfire.cols; x++) {
 				if (ID == inputGrassfire.at<uchar>(y, x)){
@@ -50,6 +51,17 @@ void CameraFeed::thresholdGrassfireID(Mat inputGrassfire, Mat &output){
 		}
 	}
 	output = output.mul(bob);
+}
+
+void CameraFeed::subtractImage(Mat inputImage, Mat background, Mat output){
+	int value = 0;
+	for (int y = 0; y < inputImage.rows; y++) { 
+		for (int x = 0; x < inputImage.cols; x++) {
+			output.at<Vec3b>(y, x)[0] = abs(inputImage.at<Vec3b>(y, x)[0] - background.at<Vec3b>(y, x)[0]);
+			output.at<Vec3b>(y, x)[1] = abs(inputImage.at<Vec3b>(y, x)[1] - background.at<Vec3b>(y, x)[1]);
+			output.at<Vec3b>(y, x)[2] = abs(inputImage.at<Vec3b>(y, x)[2] - background.at<Vec3b>(y, x)[2]);
+		}
+	}
 }
 
 void CameraFeed::grassFire(Mat inputImage, Mat output){
@@ -194,10 +206,47 @@ int CameraFeed::getPixelAmountAndGravity(Mat inputImage, double &gravityX, doubl
 				pixelAmount++;
 			}
 		}
+	} 
+	if (pixelAmount != 0){
+		gravityX = tempX / pixelAmount;
+		gravityY = tempY / pixelAmount;
 	}
-	gravityX = tempX / pixelAmount;
-	gravityY = tempY / pixelAmount;
 	return pixelAmount;
+}
+
+double CameraFeed::getCircularity(Mat inputImage) {
+	int numberOfPixels = 0, numberOfPixelsInEdge = 0;
+	for (int r = 0; r < inputImage.rows; r++){
+		for (int c = 0; c < inputImage.cols; c++){
+			if (r - 1 >= 0 && c - 1 >= 0 && r + 1 <= 480 && c <= 640){
+				if (inputImage.at<uchar>(r, c) == 255) {
+					numberOfPixels++;
+					if (inputImage.at<uchar>(r - 1, c) != 255){
+						numberOfPixelsInEdge++;
+						continue;
+					}
+					if (inputImage.at<uchar>(r + 1, c) != 255){
+						numberOfPixelsInEdge++;
+						continue;
+					}
+					if (inputImage.at<uchar>(r, c - 1) != 255){
+						numberOfPixelsInEdge++;
+						continue;
+					}
+					if (inputImage.at<uchar>(r, c + 1) != 255){
+						numberOfPixelsInEdge++;
+						continue;
+					}
+				}
+			}
+		}
+	}
+	double result = 0;
+	if (numberOfPixels != 0){
+		result = numberOfPixelsInEdge / (2 * sqrt(PI*numberOfPixels));
+	}
+	result *= 50;
+	return result;
 }
 
 int CameraFeed::chooseHandsign(Mat inputImage){
@@ -208,21 +257,21 @@ int CameraFeed::chooseHandsign(Mat inputImage){
 	blobPixelAmount = getPixelAmountAndGravity(inputImage, gravityX, gravityY);
 	getHeightAndWidth(inputImage, height, width);
 	double filledPercentage = blobPixelAmount / (height*width);
-	//double circularity = 0.0;
-	//circularity = getCircularity(height, width);
+	double circularity = 0;
+	circularity = getCircularity(inputImage);
 	//gravityX = gravityX / width;
 	//gravityY = gravityY / height;
 	double HW = width / height;
 	filledPercentage = filledPercentage * 100;
 	HW = HW * 70;
-	int currentX = filledPercentage, currentY = HW;
+	int currentX = filledPercentage, currentY = HW, currentZ = circularity;
 	//static values for different handsigns
-	Point wall(74, 47), stone(70, 70), boomerang(44, 65), sentry(60, 27);
-	Point currentPoint(currentX, currentY);
-	int distanceWall = abs(this->distanceBetweenPoints(wall, currentPoint));
-	int distanceStone = abs(this->distanceBetweenPoints(stone, currentPoint));
-	int distanceSentry = abs(this->distanceBetweenPoints(sentry, currentPoint));
-	int distanceBoomerang = abs(this->distanceBetweenPoints(boomerang, currentPoint));
+	Points wall(74, 47, 55), stone(70, 70, 52), boomerang(44, 65, 66), sentry(60, 27, 68);
+	Points currentPoint(currentX, currentY, currentZ);
+	int distanceWall = abs(wall.distanceToPoint(currentPoint));
+	int distanceStone = abs(stone.distanceToPoint(currentPoint));
+	int distanceSentry = abs(sentry.distanceToPoint(currentPoint));
+	int distanceBoomerang = abs(boomerang.distanceToPoint(currentPoint));
 	
 	int shortestDistance[4] = {
 		distanceStone,
@@ -246,16 +295,15 @@ int CameraFeed::chooseHandsign(Mat inputImage){
 	cout << /*distanceWall << " " << distanceStone << " " << distanceSentry << " " << distanceBoomerang << "\n" <<
 		shortestDistance[0] << " " << shortestDistance[1] << " " << shortestDistance[2] << " " << shortestDistance[3] << "\n" <<
 		handsignArray[0] << " " << handsignArray[1] << " " << handsignArray[2] << " " << handsignArray[3] << "\n" <<*/
-		"\nFilledPercent " << filledPercentage << "\nHW " << HW << "\n";
+		"\nFilledPercent " << filledPercentage << "\nHW " << HW << "\n" <<
+		"circularity " << circularity << "\n";
 	if (shortestDistance[0] < 15 && shortestDistance[0] >= 0){
 		return handsignArray[0];
 	} else
 		return 0;
 }
 
-int CameraFeed::distanceBetweenPoints(Point a, Point b){
-	return sqrt(pow(a.x - b.x, 2) + pow(a.y - b.y, 2));
-}
+
 
 Mat CameraFeed::convertRGBtoGS(Mat inputFrame){
 	Mat outputFrame;
@@ -366,8 +414,8 @@ void CameraFeed::thresholdHand(Mat inputImage, Mat outputImage,
 		for (int c = 0; c < inputImage.cols; c++){
 			if (inputImage.at<Vec3b>(r, c)[0] >= minThresholdHue && 
 				inputImage.at<Vec3b>(r, c)[0] < maxThresholdHue &&
-				inputImage.at<Vec3b>(r, c)[1] > 60 &&
-				inputImage.at<Vec3b>(r, c)[2] > 60 && inputImage.at<Vec3b>(r, c)[2] < 230)
+				inputImage.at<Vec3b>(r, c)[1] > 30 &&
+				inputImage.at<Vec3b>(r, c)[2] > 30 && inputImage.at<Vec3b>(r, c)[2] < 230)
 			{
 				outputImage.at<Vec3b>(r, c)[0] = newValueHue;
 				outputImage.at<Vec3b>(r, c)[1] = newValueHue;

@@ -18,6 +18,8 @@ public:
 	Mat convertRGBtoGS(Mat inputFrame);
 	void converRGBToHSV(Mat inputImage, Mat imageHue, Mat imageSat, Mat imageInt);
 	Mat segmentImage(Mat inputFrame);
+	double getCircularity(Mat inputImage);
+	void subtractImage(Mat inputImage, Mat background, Mat output);
 	Mat equalizeHistogram(Mat inputImage, Mat dst);
 	void inputImageFixing(Mat inputImage, Mat dst, int minThreshold, int maxThreshold);
 	/**

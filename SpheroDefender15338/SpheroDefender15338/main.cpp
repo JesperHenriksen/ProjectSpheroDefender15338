@@ -12,7 +12,7 @@ int main(int, char)
 {
 	
 	//webcam variables
-	CameraFeed wizardWebcam(0); 
+	CameraFeed wizardWebcam(1); 
 	CameraFeed minimapWebcam(0);
 	CameraFeed battlefieldWebcam(0);
 	Battlefield battlefield;
@@ -39,7 +39,7 @@ int main(int, char)
 	Mat grassfire, fixedGrassfire;
 	int handsign = 0;
 	
-	int kernelSize = 11;
+	int kernelSize = 15;
 	Mat kernel;
 	Mat sat, hue, intensity;
 	
@@ -93,30 +93,36 @@ int main(int, char)
 		{
 			//threshold hand
 			handInput = wizardWebcam.getImageFromWebcam();
-			//handInput = handInput - handBackground;
+			//Mat handSubtracted;
+			//handSubtracted = Mat::zeros(handInput.rows, handInput.cols, );
+			//wizardWebcam.subtractImage(handInput, handBackground, handSubtracted);
 			cvtColor(handInput, sat, COLOR_BGR2HSV);
 			sat.copyTo(handColorThreshold);
-			wizardWebcam.thresholdHand(sat, handColorThreshold, 30, 90, 255);
+			blur(handColorThreshold, handColorThreshold, Size(7,7));
+			wizardWebcam.thresholdHand(sat, handColorThreshold, 35, 80, 255);
 			cvtColor(handColorThreshold, handColorThreshold, CV_BGR2GRAY);
 			medianBlur(handColorThreshold, handColorThreshold, 9);
 			kernel.ones(kernelSize, kernelSize, CV_8UC1);
-			//opening
-			erode(handColorThreshold, handColorThreshold, kernel);
-			medianBlur(handColorThreshold, handColorThreshold, 9);
-			dilate(handColorThreshold, handColorThreshold, kernel);
+
 			//closing
 			dilate(handColorThreshold, handColorThreshold, kernel);
+			medianBlur(handColorThreshold, handColorThreshold, 9);
 			erode(handColorThreshold, handColorThreshold, kernel);
+			//opening
+			erode(handColorThreshold, handColorThreshold, kernel);
+			dilate(handColorThreshold, handColorThreshold, kernel);
+		
 			grassfire = Mat::zeros(handColorThreshold.rows, handColorThreshold.cols, handColorThreshold.type());
 			wizardWebcam.grassFire(handColorThreshold, grassfire);
 			handColorThreshold.copyTo(fixedGrassfire);
 			wizardWebcam.thresholdGrassfireID(grassfire,fixedGrassfire);
+			medianBlur(fixedGrassfire, fixedGrassfire, 13);
 
 			//imshow("grassfire", grassfire);
-			//imshow("threshold", handColorThreshold);
+			imshow("threshold", handColorThreshold);
 			imshow("fixed grassfire", fixedGrassfire);
 			imshow("input", handInput);
-
+			
 			//recognize hand
 			handsign = wizardWebcam.chooseHandsign(fixedGrassfire);
 			//cout << "handsign = " << handsign << "\n";
