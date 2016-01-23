@@ -68,7 +68,7 @@ void CameraFeed::grassFire(Mat inputImage, Mat output){
 	int currentID = 1;
 	for (int y = 1; y < inputImage.rows; y++) { //runs through the pixels
 		for (int x = 1; x < inputImage.cols; x++) {
-			//if there is informations in the input pixel and
+			//if there is informations in the input pixel
 			if (inputImage.at<uchar>(y, x) > 60) {
 				if (output.at<uchar>(y - 1, x) != 0){
 					output.at<uchar>(y, x) = output.at<uchar>(y - 1, x); // set the current pixel value to the north pixel value

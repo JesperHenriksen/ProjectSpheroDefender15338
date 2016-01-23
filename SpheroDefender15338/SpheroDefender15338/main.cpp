@@ -9,8 +9,8 @@ using namespace cv;
 using namespace std;
 
 int main(int, char)
-{
-	
+{	
+
 	//webcam variables
 	CameraFeed wizardWebcam(1); 
 	CameraFeed minimapWebcam(0);
@@ -67,17 +67,17 @@ int main(int, char)
 			// get coordinates for arrow
 			//get the angle of arrow
 			angleInput = minimapWebcam.getImageFromWebcam();
-			angleInput *= 1.5;
-			medianBlur(angleInput, angleInput, 5);
-			minimapWebcam.thresholdImageColor(angleInput, angleInput, 80, 255, 255, 100, 255, 255, 100, 255, 255);
-			minimapWebcam.thresholdImageColor(angleInput, angleInput, 0, 80, 0, 0, 100, 0, 0, 100, 0);
-			angleGrayscale = minimapWebcam.convertRGBtoGS(angleInput);
-			angleGrayscale = angleGrayscale * 1.5;
-			medianBlur(angleGrayscale, angleGrayscale, 7);
-			angleGrayscale *= 2;
-			angleGrayscale.copyTo(angleThresholded);
-			minimapWebcam.thresholdImage(angleThresholded, angleThresholded, 150, 256, 200, 60, 150, 100, 0, 60, 0);
-			angle = minimap.getAngleOfArrow(angleThresholded, 0, 100);
+			angleInput *= 1.5; // 1.5 * all pixel values. Makes image brighter
+			medianBlur(angleInput, angleInput, 5); 
+			minimapWebcam.thresholdImageColor(angleInput, angleInput, 80, 255, 255, 100, 255, 255, 100, 255, 255);  //Params: input,output, minRed,maxRed,newRed,minGreen,maxGreen,newGreen,minBlue,maxBlue,newBlue
+			minimapWebcam.thresholdImageColor(angleInput, angleInput, 0, 80, 0, 0, 100, 0, 0, 100, 0); //Params: input,output, minRed,maxRed,newRed,minGreen,maxGreen,newGreen,minBlue,maxBlue,newBlue
+			angleGrayscale = minimapWebcam.convertRGBtoGS(angleInput); //convert to grayscale
+			angleGrayscale = angleGrayscale * 1.5; //1.5 * all pixel values. Makes image brighter
+			medianBlur(angleGrayscale, angleGrayscale, 7); 
+			angleGrayscale *= 2; //2 * all pixel values. Makes image brighter
+			angleGrayscale.copyTo(angleThresholded); //copies image to new Mat variable
+			minimapWebcam.thresholdImage(angleThresholded, angleThresholded, 150, 256, 200, 60, 150, 100, 0, 60, 0); //Params: input,output,firstMin,firstMax,firstNew,secondMin,secondMax,secondNew,thirdMin,thirdMax,thirdNew
+			angle = minimap.getAngleOfArrow(angleThresholded, 0, 100); //see minimap
 			angleThresholded.copyTo(arrowThreshold);
 			minimapWebcam.thresholdImage(arrowThreshold, arrowThreshold, 0, 150, 255);
 			minimapWebcam.thresholdImage(arrowThreshold, arrowThreshold, 190, 210, 0);
@@ -96,13 +96,13 @@ int main(int, char)
 			//Mat handSubtracted;
 			//handSubtracted = Mat::zeros(handInput.rows, handInput.cols, );
 			//wizardWebcam.subtractImage(handInput, handBackground, handSubtracted);
-			cvtColor(handInput, sat, COLOR_BGR2HSV);
+			cvtColor(handInput, sat, COLOR_BGR2HSV); //converts handInput to HSV and saves in sat. See bottom of CameraFeed
 			sat.copyTo(handColorThreshold);
-			blur(handColorThreshold, handColorThreshold, Size(7,7));
-			wizardWebcam.thresholdHand(sat, handColorThreshold, 35, 80, 255);
-			cvtColor(handColorThreshold, handColorThreshold, CV_BGR2GRAY);
+			blur(handColorThreshold, handColorThreshold, Size(7,7)); //mean blur
+			wizardWebcam.thresholdHand(sat, handColorThreshold, 35, 80, 255); // threshold HSV image. 35-80 is green
+			cvtColor(handColorThreshold, handColorThreshold, CV_BGR2GRAY); // (R + G + B) / 3
 			medianBlur(handColorThreshold, handColorThreshold, 9);
-			kernel.ones(kernelSize, kernelSize, CV_8UC1);
+			kernel.ones(kernelSize, kernelSize, CV_8UC1); //Mat.ones makes a matrix with ones in all entries. Mat.ones(sizeX, sizeY, 8 bit unsigned one channel);
 
 			//closing
 			dilate(handColorThreshold, handColorThreshold, kernel);
@@ -112,9 +112,9 @@ int main(int, char)
 			erode(handColorThreshold, handColorThreshold, kernel);
 			dilate(handColorThreshold, handColorThreshold, kernel);
 		
-			grassfire = Mat::zeros(handColorThreshold.rows, handColorThreshold.cols, handColorThreshold.type());
-			wizardWebcam.grassFire(handColorThreshold, grassfire);
-			handColorThreshold.copyTo(fixedGrassfire);
+			grassfire = Mat::zeros(handColorThreshold.rows, handColorThreshold.cols, handColorThreshold.type()); //Mat::zeros makes zeros in all entries.
+			wizardWebcam.grassFire(handColorThreshold, grassfire);  // see grassfire line 67
+			handColorThreshold.copyTo(fixedGrassfire); 
 			wizardWebcam.thresholdGrassfireID(grassfire,fixedGrassfire);
 			medianBlur(fixedGrassfire, fixedGrassfire, 13);
 
@@ -144,20 +144,20 @@ int main(int, char)
 				break;
 			}
 		}
-		////spheroTracking = battlefieldWebcam.getImageFromWebcam();
-		////imshow("battlefield", spheroTracking);
-		////battlefield.trackSphero(battlefieldWebcam,spheroX,spheroY);
-		////cout << spheroX  << ", " << spheroY << "\n";
-		////bool bob = battlefield.isSpheroOutOfBounds(battlefieldInput, spheroX, spheroY);
-		////cout << bob << "\n";
-		////if (handsign != 0){
-		////	battlefield.throwSpell(battlefieldInput, minimapXCoord, minimapYCoord, handsign, 1);
-		////	battlefield.throwSpell(battlefieldProjected, minimapXCoord, minimapYCoord, handsign, 2);
-		////}
-		////battlefield.removeObstacle(battlefieldInput, battlefieldReset, spheroX, spheroY, 1);
-		////battlefield.removeObstacle(battlefieldProjected, battlefieldProjectedReset, spheroX, spheroY, 2);
-		////imshow("battlefield YARGH", battlefieldInput);
-		////imshow("battlefield projection yes", battlefieldProjected);
+		//spheroTracking = battlefieldWebcam.getImageFromWebcam();
+		//imshow("battlefield", spheroTracking);
+		//battlefield.trackSphero(battlefieldWebcam,spheroX,spheroY);
+		//cout << spheroX  << ", " << spheroY << "\n";
+		//bool bob = battlefield.isSpheroOutOfBounds(battlefieldInput, spheroX, spheroY);
+		//cout << bob << "\n";
+		//if (handsign != 0){
+		//	battlefield.throwSpell(battlefieldInput, minimapXCoord, minimapYCoord, handsign, 1);
+		//	battlefield.throwSpell(battlefieldProjected, minimapXCoord, minimapYCoord, handsign, 2);
+		//}
+		//battlefield.removeObstacle(battlefieldInput, battlefieldReset, spheroX, spheroY, 1);
+		//battlefield.removeObstacle(battlefieldProjected, battlefieldProjectedReset, spheroX, spheroY, 2);
+		//imshow("battlefield YARGH", battlefieldInput);
+		//imshow("battlefield projection yes", battlefieldProjected);
 
 		//end of code
 		if (waitKey(30) >= 0)

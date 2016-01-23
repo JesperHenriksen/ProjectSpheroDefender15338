@@ -14,7 +14,7 @@ Minimap::~Minimap()
 }
 
 void Minimap::getCenterOfBlob(Mat inputImage, double &recCenterX, double &recCenterY, double &triCenterX, double &triCenterY,
-	int thresholdMin, int thresholdMax)
+	int thresholdMin, int thresholdMax) // &varible is when you pass my reference. Pass by reference changes the value for the rest of the program and not only for the function which calls it.
 {
 	int recCollectiveX = 0, recCollectiveY = 0, recTotalPixels = 0;
 	int triCollectiveX = 0, triCollectiveY = 0, triTotalPixels = 0;
